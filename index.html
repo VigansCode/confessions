@@ -283,16 +283,24 @@
             border-top: 1px solid var(--border-color);
         }
         
-        .confession .timestamp {
+        .confession .timestamp,
+        .confession .views {
             font-size: 0.8rem;
             color: var(--text-light);
             display: flex;
             align-items: center;
+            margin-right: 15px;
         }
         
-        .timestamp i {
+        .timestamp i,
+        .views i {
             margin-right: 5px;
             font-size: 0.75rem;
+        }
+        
+        .meta-info {
+            display: flex;
+            align-items: center;
         }
         
         .confession .actions {
@@ -342,9 +350,17 @@
             color: var(--primary-color);
         }
         
+        /* Color-coded reactions */
+        .react-button.like i { color: #3b5998; }
+        .react-button.love i { color: #e25b5b; }
+        .react-button.haha i { color: #f7b928; }
+        .react-button.wow i { color: #54c7ec; }
+        .react-button.sad i { color: #8a8d91; }
+        
         .reaction-count {
             font-size: 0.8rem;
             margin-left: 2px;
+            font-weight: bold;
             color: var(--text-light);
         }
         
@@ -674,6 +690,7 @@
                     id: 'conf_' + Date.now(),
                     text: text,
                     timestamp: new Date().toISOString(),
+                    views: 0, // Added view counter
                     reactions: {
                         like: 0,
                         love: 0,
@@ -753,6 +770,9 @@
                         const metaElement = document.createElement('div');
                         metaElement.className = 'meta';
                         
+                        const metaInfoElement = document.createElement('div');
+                        metaInfoElement.className = 'meta-info';
+                        
                         const timestampElement = document.createElement('div');
                         timestampElement.className = 'timestamp';
                         
@@ -761,6 +781,11 @@
                         const formattedTime = formatDate(date);
                         
                         timestampElement.innerHTML = `<i class="far fa-clock"></i> ${formattedTime}`;
+                        
+                        // Add view count to the meta element
+                        const viewsElement = document.createElement('div');
+                        viewsElement.className = 'views';
+                        viewsElement.innerHTML = `<i class="far fa-eye"></i> ${confession.views || 0} views`;
                         
                         // Create reactions section
                         const actionsElement = document.createElement('div');
@@ -778,7 +803,7 @@
                         reactions.forEach(reaction => {
                             const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
                             const button = document.createElement('button');
-                            button.className = 'react-button';
+                            button.className = `react-button ${reaction.name}`;
                             button.innerHTML = `<i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>`;
                             button.onclick = function() {
                                 reactToConfession(confession.id, reaction.name);
@@ -803,7 +828,10 @@
                             deleteConfession(confession.id);
                         };
                         
-                        metaElement.appendChild(timestampElement);
+                        metaInfoElement.appendChild(timestampElement);
+                        metaInfoElement.appendChild(viewsElement);
+                        
+                        metaElement.appendChild(metaInfoElement);
                         metaElement.appendChild(actionsElement);
                         
                         confessionElement.appendChild(textElement);
@@ -811,6 +839,9 @@
                         confessionElement.appendChild(deleteButton);
                         
                         confessionsContainer.appendChild(confessionElement);
+                        
+                        // Increment view count when confession is displayed
+                        incrementViewCount(confession.id);
                     } catch (error) {
                         console.error("Error rendering confession:", error, confession);
                     }
@@ -942,6 +973,9 @@
             const randomIndex = Math.floor(Math.random() * confessions.length);
             const randomConfession = confessions[randomIndex];
             
+            // Increment view count
+            incrementViewCount(randomConfession.id);
+            
             // Highlight it temporarily
             const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
             
@@ -1005,6 +1039,9 @@
                 return;
             }
             
+            // Increment view for confession of the day
+            incrementViewCount(cotd.id);
+            
             // Create the confession of day element
             cotdContainer.innerHTML = `
                 <div class="container">
@@ -1012,8 +1049,13 @@
                     <div class="confession confession-of-day" data-id="${cotd.id}">
                         <p>${cotd.text}</p>
                         <div class="meta">
-                            <div class="timestamp">
-                                <i class="far fa-clock"></i> ${formatDate(new Date(cotd.timestamp))}
+                            <div class="meta-info">
+                                <div class="timestamp">
+                                    <i class="far fa-clock"></i> ${formatDate(new Date(cotd.timestamp))}
+                                </div>
+                                <div class="views">
+                                    <i class="far fa-eye"></i> ${cotd.views || 0} views
+                                </div>
                             </div>
                             <div class="actions">
                                 ${createReactionButtons(cotd)}
@@ -1040,7 +1082,7 @@
             
             return reactions.map(reaction => {
                 const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
-                return `<button class="react-button" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
+                return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
                     <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
                 </button>`;
             }).join('');
@@ -1087,6 +1129,9 @@
             const sharedConfessionId = urlParams.get('confession');
             
             if (sharedConfessionId) {
+                // Increment view count when accessed via shared link
+                incrementViewCount(sharedConfessionId);
+                
                 const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
                 const sharedConfession = confessions.find(c => c.id === sharedConfessionId);
                 
@@ -1112,6 +1157,31 @@
                 }
             }
         }
-        </script>
-    </body>
-    </html>
+        
+        function incrementViewCount(confessionId) {
+            try {
+                let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+                const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+                
+                if (confessionIndex !== -1) {
+                    // Initialize views counter if it doesn't exist
+                    if (typeof confessions[confessionIndex].views !== 'number') {
+                        confessions[confessionIndex].views = 0;
+                    }
+                    
+                    // Increment the view count
+                    confessions[confessionIndex].views++;
+                    
+                    // Save back to local storage
+                    localStorage.setItem('confessions', JSON.stringify(confessions));
+                    
+                    return confessions[confessionIndex].views;
+                }
+            } catch (error) {
+                console.error("Error incrementing view count:", error);
+            }
+            return 0;
+        }
+    </script>
+</body>
+</html>
