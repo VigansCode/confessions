@@ -397,7 +397,499 @@
             text-align: center;
             color: var(--text-light);
             padding: 30px 20px;
-        <!DOCTYPE html>
+            font-style: italic;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            border: 1px dashed var(--border-color);
+        }
+        
+        [data-theme="dark"] .no-confessions {
+            background-color: rgba(0,0,0,0.2);
+        }
+        
+        .no-confessions i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-light);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            animation: pulse 3s infinite;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            #theme-toggle {
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <div class="logo">
+        <i class="fas fa-feather-alt"></i>
+    </div>
+    
+    <h1>Anonymous Confessions</h1>
+    
+    <div id="confession-of-day-container"></div>
+    
+    <div class="container confession-form">
+        <h2><i class="fas fa-comment-dots"></i> Share Your Confession</h2>
+        <form id="confession-form">
+            <div class="textarea-container">
+                <textarea id="confession-text" placeholder="Type your confession here... (anonymous)" required></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+            <button type="submit"><i class="fas fa-paper-plane"></i> Submit Confession</button>
+        </form>
+        <div class="button-group">
+            <button id="random-confession"><i class="fas fa-random"></i> Random Confession</button>
+        </div>
+        <div id="admin-access">
+            <details>
+                <summary><i class="fas fa-lock"></i> Admin Access</summary>
+                <div style="margin-top: 15px;">
+                    <input type="password" id="admin-password" placeholder="Enter admin password">
+                    <button id="admin-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <div id="admin-panel" style="margin-top: 10px; display: none;">
+                        <button id="clear-all"><i class="fas fa-trash-alt"></i> Clear All Confessions</button>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2><i class="fas fa-book-open"></i> Recent Confessions</h2>
+        <div id="confessions-list" class="confessions-list">
+            <div class="no-confessions">
+                <i class="fas fa-feather"></i>
+                No confessions yet. Be the first to share!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for saved theme preference or default to 'light'
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeToggleIcon(savedTheme);
+            
+            document.getElementById('theme-toggle').addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeToggleIcon(newTheme);
+            });
+            
+            function updateThemeToggleIcon(theme) {
+                const iconElement = document.querySelector('#theme-toggle i');
+                if (theme === 'dark') {
+                    iconElement.className = 'fas fa-sun';
+                } else {
+                    iconElement.className = 'fas fa-moon';
+                }
+            }
+            
+            // Character count functionality
+            const textArea = document.getElementById('confession-text');
+            const charCount = document.querySelector('.character-count');
+            
+            textArea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count + (count === 1 ? ' character' : ' characters');
+            });
+            
+            // Load confessions from local storage
+            loadConfessions();
+            setConfessionOfDay();
+            
+            // Add event listener for random confession button
+            document.getElementById('random-confession').addEventListener('click', showRandomConfession);
+            
+            // Add event listener for admin login
+            document.getElementById('admin-login').addEventListener('click', function() {
+                const password = document.getElementById('admin-password').value;
+                const adminPanel = document.getElementById('admin-panel');
+                
+                // Simple password check
+                if (password === 'admin123') {
+                    adminPanel.style.display = 'block';
+                    document.getElementById('admin-password').value = '';
+                    document.body.classList.add('admin-mode');
+                } else {
+                    alert('Incorrect password');
+                }
+            });
+            
+            // Auto-archive old confessions (older than 30 days)
+            autoArchiveOldConfessions();
+        });
+        
+        // Handle form submission
+        document.getElementById('confession-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const confessionText = document.getElementById('confession-text').value.trim();
+            
+            if (confessionText) {
+                addConfession(confessionText);
+                document.getElementById('confession-text').value = '';
+                document.querySelector('.character-count').textContent = '0 characters';
+            }
+        });
+        
+        // Add event listener for clearing all confessions
+        document.getElementById('clear-all').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all confessions?')) {
+                localStorage.removeItem('confessions');
+                localStorage.removeItem('archived_confessions');
+                localStorage.removeItem('confession_of_day');
+                localStorage.removeItem('last_cotd_update');
+                loadConfessions();
+                setConfessionOfDay();
+            }
+        });
+        
+        function addConfession(text) {
+            // Create confession object with a unique ID
+            const confession = {
+                id: 'conf_' + Date.now(),
+                text: text,
+                timestamp: new Date().toISOString(),
+                reactions: {
+                    like: 0,
+                    love: 0,
+                    haha: 0,
+                    wow: 0,
+                    sad: 0
+                }
+            };
+            
+            // Get existing confessions from local storage
+            let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            
+            // Add new confession to the beginning of the array
+            confessions.unshift(confession);
+            
+            // Save updated confessions to local storage
+            localStorage.setItem('confessions', JSON.stringify(confessions));
+            
+            // Refresh the displayed confessions
+            loadConfessions();
+            
+            // Check if we need to set a new confession of the day
+            const lastUpdate = localStorage.getItem('last_cotd_update');
+            if (!lastUpdate) {
+                setConfessionOfDay();
+            }
+        }
+        
+        function loadConfessions() {
+            const confessionsContainer = document.getElementById('confessions-list');
+            const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            
+            if (confessions.length === 0) {
+                confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions yet. Be the first to share!</div>';
+                return;
+            }
+            
+            confessionsContainer.innerHTML = '';
+            
+            confessions.forEach(confession => {
+                const confessionElement = document.createElement('div');
+                confessionElement.className = 'confession';
+                confessionElement.setAttribute('data-id', confession.id);
+                
+                const textElement = document.createElement('p');
+                textElement.textContent = confession.text;
+                
+                const metaElement = document.createElement('div');
+                metaElement.className = 'meta';
+                
+                const timestampElement = document.createElement('div');
+                timestampElement.className = 'timestamp';
+                
+                // Format the timestamp
+                const date = new Date(confession.timestamp);
+                const formattedTime = formatDate(date);
+                
+                timestampElement.innerHTML = `<i class="far fa-clock"></i> ${formattedTime}`;
+                
+                // Create reactions section
+                const actionsElement = document.createElement('div');
+                actionsElement.className = 'actions';
+                
+                // Add reaction buttons
+                const reactions = [
+                    { name: 'like', icon: 'fas fa-thumbs-up' },
+                    { name: 'love', icon: 'fas fa-heart' },
+                    { name: 'haha', icon: 'fas fa-laugh' },
+                    { name: 'wow', icon: 'fas fa-surprise' },
+                    { name: 'sad', icon: 'fas fa-sad-tear' }
+                ];
+                
+                reactions.forEach(reaction => {
+                    const count = confession.reactions[reaction.name] || 0;
+                    const button = document.createElement('button');
+                    button.className = 'react-button';
+                    button.innerHTML = `<i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>`;
+                    button.onclick = function() {
+                        reactToConfession(confession.id, reaction.name);
+                    };
+                    actionsElement.appendChild(button);
+                });
+                
+                // Add share button
+                const shareButton = document.createElement('button');
+                shareButton.className = 'share-button';
+                shareButton.innerHTML = `<i class="fas fa-share-alt"></i>`;
+                shareButton.onclick = function() {
+                    shareConfession(confession.id, confession.text);
+                };
+                actionsElement.appendChild(shareButton);
+                
+                // Add delete button for admin mode
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'admin-action';
+                deleteButton.innerHTML = '<i class="fas fa-times"></i>';
+                deleteButton.onclick = function() {
+                    deleteConfession(confession.id);
+                };
+                
+                metaElement.appendChild(timestampElement);
+                metaElement.appendChild(actionsElement);
+                
+                confessionElement.appendChild(textElement);
+                confessionElement.appendChild(metaElement);
+                confessionElement.appendChild(deleteButton);
+                
+                confessionsContainer.appendChild(confessionElement);
+            });
+        }
+        
+        function formatDate(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            
+            if (diffSec < 60) {
+                return 'just now';
+            } else if (diffMin < 60) {
+                return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+            } else if (diffHour < 24) {
+                return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
+            } else {
+                return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+            }
+        }
+        
+        function reactToConfession(confessionId, reactionType) {
+            let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+            
+            if (confessionIndex !== -1) {
+                // Increment the reaction count
+                confessions[confessionIndex].reactions[reactionType]++;
+                
+                // Save back to local storage
+                localStorage.setItem('confessions', JSON.stringify(confessions));
+                
+                // Update the UI
+                loadConfessions();
+            }
+        }
+        
+        function shareConfession(confessionId, text) {
+            // Create a shareable link with the confession ID as a parameter
+            const shareUrl = `${window.location.href.split('?')[0]}?confession=${confessionId}`;
+            
+            // Create a temporary textarea to copy the URL
+            const textarea = document.createElement('textarea');
+            textarea.value = shareUrl;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            alert('Link copied to clipboard! Share it with others to show them this confession.');
+            
+            // Alternative: Open share dialog if Web Share API is available
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Anonymous Confession',
+                    text: text.substring(0, 50) + '...',
+                    url: shareUrl
+                })
+                .catch(err => console.error('Error sharing:', err));
+            }
+        }
+        
+        function deleteConfession(confessionId) {
+            if (confirm('Are you sure you want to delete this confession?')) {
+                let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+                confessions = confessions.filter(c => c.id !== confessionId);
+                localStorage.setItem('confessions', JSON.stringify(confessions));
+                
+                // Check if this was the confession of the day
+                const cotd = localStorage.getItem('confession_of_day');
+                if (cotd === confessionId) {
+                    // Reset confession of the day
+                    setConfessionOfDay();
+                }
+                
+                loadConfessions();
+            }
+        }
+        
+        function showRandomConfession() {
+            const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            
+            if (confessions.length === 0) {
+                alert('No confessions available to show.');
+                return;
+            }
+            
+            // Get a random confession
+            const randomIndex = Math.floor(Math.random() * confessions.length);
+            const randomConfession = confessions[randomIndex];
+            
+            // Highlight it temporarily
+            const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
+            
+            if (confessionElement) {
+                // Scroll to the confession
+                confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Highlight effect
+                confessionElement.style.backgroundColor = 'var(--primary-light)';
+                confessionElement.style.borderColor = '#fbc531';
+                
+                // Reset after animation
+                setTimeout(() => {
+                    confessionElement.style.backgroundColor = '';
+                    confessionElement.style.borderColor = '';
+                    confessionElement.style.transition = 'background-color 1s ease, border-color 1s ease';
+                }, 2000);
+            }
+        }
+        
+        function setConfessionOfDay() {
+            // Check if we need to update (once per day)
+            const now = new Date();
+            const lastUpdate = localStorage.getItem('last_cotd_update');
+            const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : null;
+            
+            // Update if never updated or last update was yesterday or earlier
+            if (!lastUpdate || lastUpdateDate.toDateString() !== now.toDateString()) {
+                const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+                
+                if (confessions.length > 0) {
+                    // Choose a random confession
+                    const randomIndex = Math.floor(Math.random() * confessions.length);
+                    const cotdId = confessions[randomIndex].id;
+                    
+                    localStorage.setItem('confession_of_day', cotdId);
+                    localStorage.setItem('last_cotd_update', now.toISOString());
+                } else {
+                    localStorage.removeItem('confession_of_day');
+                }
+            }
+            
+            displayConfessionOfDay();
+        }
+        
+        function displayConfessionOfDay() {
+            const cotdContainer = document.getElementById('confession-of-day-container');
+            const cotdId = localStorage.getItem('confession_of_day');
+            
+            if (!cotdId) {
+                cotdContainer.innerHTML = '';
+                return;
+            }
+            
+            const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            const cotd = confessions.find(c => c.id === cotdId);
+            
+            if (!cotd) {
+                localStorage.removeItem('<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
