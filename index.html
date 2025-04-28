@@ -352,6 +352,7 @@
         
         /* Color-coded reactions */
         .react-button.like i { color: #3b5998; }
+        .react-button.dislike i { color: #8b0000; } /* Dark red color for dislike */
         .react-button.love i { color: #e25b5b; }
         .react-button.haha i { color: #f7b928; }
         .react-button.wow i { color: #54c7ec; }
@@ -693,6 +694,7 @@
                     views: 0, // Added view counter
                     reactions: {
                         like: 0,
+                        dislike: 0, // Added dislike reaction
                         love: 0,
                         haha: 0,
                         wow: 0,
@@ -794,6 +796,7 @@
                         // Add reaction buttons
                         const reactions = [
                             { name: 'like', icon: 'fas fa-thumbs-up' },
+                            { name: 'dislike', icon: 'fas fa-thumbs-down' }, // Added dislike button
                             { name: 'love', icon: 'fas fa-heart' },
                             { name: 'haha', icon: 'fas fa-laugh' },
                             { name: 'wow', icon: 'fas fa-surprise' },
@@ -894,6 +897,7 @@
                     if (!confessions[confessionIndex].reactions) {
                         confessions[confessionIndex].reactions = {
                             like: 0,
+                            dislike: 0, // Added dislike reaction
                             love: 0,
                             haha: 0,
                             wow: 0,
@@ -1074,6 +1078,7 @@
         function createReactionButtons(confession) {
             const reactions = [
                 { name: 'like', icon: 'fas fa-thumbs-up' },
+                { name: 'dislike', icon: 'fas fa-thumbs-down' }, // Added dislike button
                 { name: 'love', icon: 'fas fa-heart' },
                 { name: 'haha', icon: 'fas fa-laugh' },
                 { name: 'wow', icon: 'fas fa-surprise' },
