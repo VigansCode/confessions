@@ -87,9 +87,17 @@
             <textarea id="confession-text" placeholder="Type your confession here... (anonymous)" required></textarea>
             <button type="submit">Submit Confession</button>
         </form>
-        <div id="admin-panel" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; display: none;">
-            <h3>Admin Panel</h3>
-            <button id="clear-all" style="background-color: #e74c3c;">Clear All Confessions</button>
+        <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+            <details>
+                <summary style="cursor: pointer; color: #777;">Admin Access</summary>
+                <div style="margin-top: 10px;">
+                    <input type="password" id="admin-password" placeholder="Enter admin password" style="padding: 8px; margin-right: 10px;">
+                    <button id="admin-login" style="background-color: #444;">Login</button>
+                    <div id="admin-panel" style="margin-top: 10px; display: none;">
+                        <button id="clear-all" style="background-color: #e74c3c;">Clear All Confessions</button>
+                    </div>
+                </div>
+            </details>
         </div>
     </div>
     
@@ -105,18 +113,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadConfessions();
             
-            // Check if admin mode should be shown (using Ctrl+Shift+A shortcut)
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                    const adminPanel = document.getElementById('admin-panel');
-                    const password = prompt('Enter admin password:');
-                    
-                    // Simple password check (you should change this password)
-                    if (password === 'admin123') {
-                        adminPanel.style.display = adminPanel.style.display === 'none' ? 'block' : 'none';
-                    } else if (password !== null) {
-                        alert('Incorrect password');
-                    }
+            // Add event listener for admin login
+            document.getElementById('admin-login').addEventListener('click', function() {
+                const password = document.getElementById('admin-password').value;
+                const adminPanel = document.getElementById('admin-panel');
+                
+                // Simple password check (you should change this password)
+                if (password === 'admin123') {
+                    adminPanel.style.display = 'block';
+                    document.getElementById('admin-password').value = '';
+                } else {
+                    alert('Incorrect password');
                 }
             });
         });
