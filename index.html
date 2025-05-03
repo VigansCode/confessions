@@ -329,6 +329,10 @@
             padding: 10px;
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            right: 0;
+            top: 100%;
+            margin-top: 5px;
+            min-width: 150px;
         }
         
         .share-options.active {
@@ -713,6 +717,8 @@
             margin-top: 15px;
             padding-top: 10px;
             border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .confession .timestamp,
@@ -721,23 +727,26 @@
             color: var(--text-light);
             display: flex;
             align-items: center;
-            margin-right: 15px;
+            margin: 0;
         }
         
         .timestamp i,
         .views i {
             margin-right: 5px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         
         .meta-info {
             display: flex;
             align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         
         .confession .actions {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            align-items: center;
         }
         
         .confession-of-day {
@@ -762,13 +771,19 @@
         .react-button {
             background: none;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            padding: 5px;
+            padding: 0 8px;
             margin: 0;
             box-shadow: none;
             color: var(--text-light);
             transition: transform 0.2s ease, color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            height: 32px;
+            min-width: 45px;
+            justify-content: center;
         }
         
         .react-button:hover {
@@ -791,10 +806,12 @@
         .react-button.sad i { color: #8a8d91; }
         
         .reaction-count {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-left: 2px;
-            font-weight: bold;
+            font-weight: 600;
             color: var(--text-light);
+            min-width: 16px;
+            text-align: left;
         }
         
         .share-button,
@@ -809,17 +826,20 @@
             color: var(--text-light);
             transition: transform 0.2s ease, color 0.2s ease;
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            min-width: 32px;
         }
         
         .share-button:hover {
-            transform: scale(1.2);
             background: none;
             box-shadow: none;
             color: var(--primary-color);
         }
         
         .report-button:hover {
-            transform: scale(1.2);
             background: none;
             box-shadow: none;
             color: var(--danger-color);
@@ -1091,6 +1111,22 @@
             .nav-links {
                 flex-wrap: wrap;
                 justify-content: center;
+            }
+            
+            .confession .meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .confession .actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            
+            .react-button {
+                min-width: auto;
+                padding: 0 5px;
             }
         }
     </style>
@@ -1757,18 +1793,18 @@
                         ${createReactionButtons(confession)}
                         <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
                             <i class="fas fa-share-alt"></i>
-                            <div class="share-options" id="share-options-${confession.id}">
-                                <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
-                                    <i class="fab fa-twitter"></i> Twitter
-                                </button>
-                                <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
-                                    <i class="fas fa-link"></i> Copy Link
-                                </button>
-                                <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
-                                    <i class="fas fa-image"></i> Create Card
-                                </button>
-                            </div>
                         </button>
+                        <div class="share-options" id="share-options-${confession.id}">
+                            <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
+                                <i class="fab fa-twitter"></i> Twitter
+                            </button>
+                            <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
+                                <i class="fas fa-link"></i> Copy Link
+                            </button>
+                            <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
+                                <i class="fas fa-image"></i> Create Card
+                            </button>
+                        </div>
                         <button class="report-button" onclick="reportConfession('${confession.id}')">
                             <i class="fas fa-flag"></i>
                         </button>
@@ -1907,13 +1943,21 @@
             
             shareOptions.classList.toggle('active');
             
+            // Position the share options properly
+            const button = event.currentTarget;
+            const rect = button.getBoundingClientRect();
+            shareOptions.style.top = `${button.offsetHeight + 5}px`;
+            shareOptions.style.right = '0';
+            
             // Close share options when clicking outside
-            document.addEventListener('click', function closeShareOptions(e) {
-                if (!shareOptions.contains(e.target)) {
-                    shareOptions.classList.remove('active');
-                    document.removeEventListener('click', closeShareOptions);
-                }
-            });
+            setTimeout(() => {
+                document.addEventListener('click', function closeShareOptions(e) {
+                    if (!shareOptions.contains(e.target) && e.target !== button) {
+                        shareOptions.classList.remove('active');
+                        document.removeEventListener('click', closeShareOptions);
+                    }
+                });
+            }, 100);
         }
         
         function shareToTwitter(confessionId) {
