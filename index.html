@@ -1,23 +1,4 @@
-function downloadShareCard() {
-    if (window.currentShareCardData && window.currentShareCardId) {
-        const link = document.createElement('a');
-        link.download = `confession-${window.currentShareCardId}.png`;
-        link.href = window.currentShareCardData;
-        link.click();
-        
-        // Close the modal after download
-        closeShareCardModal();
-    }
-}
-
-function closeShareCardModal() {
-    const modal = document.getElementById('share-card-modal');
-    modal.style.display = 'none';
-    
-    // Clean up stored data
-    window.currentShareCardData = null;
-    window.currentShareCardId = null;
-}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -2512,6 +2493,38 @@ function clearAllConfessions() {
         loadConfessions();
         setConfessionOfDay();
         updateStatistics();
+    }
+}
+function downloadShareCard() {
+    if (window.currentShareCardData && window.currentShareCardId) {
+        const link = document.createElement('a');
+        link.download = `confession-${window.currentShareCardId}.png`;
+        link.href = window.currentShareCardData;
+        link.click();
+        
+        // Close the modal after download
+        closeShareCardModal();
+    }
+}
+
+function closeShareCardModal() {
+    const modal = document.getElementById('share-card-modal');
+    modal.style.display = 'none';
+    
+    // Clean up stored data
+    window.currentShareCardData = null;
+    window.currentShareCardId = null;
+}
+
+function downloadShareCard() {
+    if (window.currentShareCardData && window.currentShareCardId) {
+        const link = document.createElement('a');
+        link.download = `confession-${window.currentShareCardId}.png`;
+        link.href = window.currentShareCardData;
+        link.click();
+        
+        // Close the modal after download
+        closeShareCardModal();
     }
 }
 </script>
