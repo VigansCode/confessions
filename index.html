@@ -29,6 +29,7 @@
     --karma-bronze: #cd7f32;
     --karma-silver: #c0c0c0;
     --karma-gold: #ffd700;
+    --crypto-color: #f7931a;
 }
 
 [data-theme="dark"] {
@@ -105,6 +106,26 @@ body {
     color: var(--primary-color);
 }
 
+/* Donation Button in Nav */
+.donate-nav-btn {
+    background: linear-gradient(135deg, var(--crypto-color), #e6951e);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.donate-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(247, 147, 26, 0.3);
+}
+
 /* Karma Display */
 .karma-display {
     display: flex;
@@ -119,6 +140,340 @@ body {
 
 .karma-display i {
     color: var(--karma-gold);
+}
+
+/* Funding Goals Section */
+.funding-goals {
+    margin-bottom: 30px;
+}
+
+.goal-card {
+    background: var(--card-color);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    margin-bottom: 15px;
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.goal-title {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.goal-status {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.goal-progress-bar {
+    height: 12px;
+    background: var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.goal-progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    transition: width 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 5px;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.goal-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.9rem;
+}
+
+.goal-raised {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.goal-target {
+    color: var(--text-light);
+}
+
+/* Tip Button */
+.tip-button {
+    background: linear-gradient(135deg, var(--crypto-color), #e6951e);
+    color: white;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    gap: 5px;
+}
+
+.tip-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(247, 147, 26, 0.3);
+}
+
+/* Donation Modal */
+.donation-modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    animation: fadeIn 0.3s ease;
+}
+
+.donation-modal-content {
+    background-color: var(--card-color);
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.donation-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.donation-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.donation-subtitle {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.donation-amounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.amount-btn {
+    background: var(--card-color);
+    border: 2px solid var(--border-color);
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.amount-btn:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.amount-btn.selected {
+    border-color: var(--primary-color);
+    background: rgba(108, 92, 231, 0.1);
+    color: var(--primary-color);
+}
+
+.custom-amount-container {
+    margin-bottom: 20px;
+}
+
+.custom-amount-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    text-align: center;
+    background: var(--card-color);
+    color: var(--text-color);
+}
+
+.custom-amount-input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.payment-options {
+    margin-bottom: 20px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-method:hover {
+    border-color: var(--primary-color);
+}
+
+.payment-method.selected {
+    border-color: var(--primary-color);
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.payment-method i {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: var(--crypto-color);
+}
+
+.payment-info {
+    flex: 1;
+}
+
+.payment-name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.payment-desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.donation-address {
+    display: none;
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.copy-address-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.charity-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.charity-checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.charity-checkbox input {
+    margin-right: 10px;
+}
+
+.charity-dropdown {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--card-color);
+    color: var(--text-color);
+    display: none;
+}
+
+.donate-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.donate-submit-btn:hover {
+    transform: translateY(-2px);
+}
+
+.donate-submit-btn:disabled {
+    background: var(--text-light);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Donor Recognition */
+.donor-badge {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--crypto-color), #e6951e);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.donor-badge i {
+    margin-right: 4px;
+    font-size: 0.8rem;
+}
+
+/* Thank You Modal */
+.thank-you-modal {
+    text-align: center;
+}
+
+.thank-you-icon {
+    font-size: 3rem;
+    color: var(--success-color);
+    margin-bottom: 15px;
 }
 
 /* Leaderboard Modal */
@@ -718,83 +1073,83 @@ button:disabled {
     padding-top: 10px;
     border-top: 1px solid var(--border-color);
     flex-wrap: wrap;
-    gap: 10px;
+   gap: 10px;
 }
 
 .confession .timestamp,
 .confession .views {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    margin: 0;
+   font-size: 0.8rem;
+   color: var(--text-light);
+   display: flex;
+   align-items: center;
+   margin: 0;
 }
 
 .timestamp i,
 .views i {
-    margin-right: 5px;
-    font-size: 0.8rem;
+   margin-right: 5px;
+   font-size: 0.8rem;
 }
 
 .meta-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   flex-wrap: wrap;
 }
 
 .confession .actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+   display: flex;
+   gap: 10px;
+   align-items: center;
 }
 
 .confession-of-day {
-    border: 2px solid #fbc531;
-    border-left-width: 6px;
-    position: relative;
+   border: 2px solid #fbc531;
+   border-left-width: 6px;
+   position: relative;
 }
 
 .confession-of-day::before {
-    content: "Confession of the Day";
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    background-color: #fbc531;
-    color: #2d3436;
-    padding: 2px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
+   content: "Confession of the Day";
+   position: absolute;
+   top: -10px;
+   left: 10px;
+   background-color: #fbc531;
+   color: #2d3436;
+   padding: 2px 10px;
+   border-radius: 4px;
+   font-size: 0.8rem;
+   font-weight: bold;
 }
 
 .react-button {
-    background: none;
-    border: none;
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 0 8px;
-    margin: 0;
-    box-shadow: none;
-    color: var(--text-light);
-    transition: transform 0.2s ease, color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    height: 32px;
-    min-width: 45px;
-    justify-content: center;
+   background: none;
+   border: none;
+   font-size: 1.1rem;
+   cursor: pointer;
+   padding: 0 8px;
+   margin: 0;
+   box-shadow: none;
+   color: var(--text-light);
+   transition: transform 0.2s ease, color 0.2s ease;
+   display: inline-flex;
+   align-items: center;
+   gap: 4px;
+   height: 32px;
+   min-width: 45px;
+   justify-content: center;
 }
 
 .react-button:hover {
-    transform: scale(1.2);
-    background: none;
-    box-shadow: none;
-    color: var(--primary-color);
+   transform: scale(1.2);
+   background: none;
+   box-shadow: none;
+   color: var(--primary-color);
 }
 
 .react-button.active {
-    color: var(--primary-color);
+   color: var(--primary-color);
 }
 
 /* Color-coded reactions */
@@ -806,328 +1161,336 @@ button:disabled {
 .react-button.sad i { color: #8a8d91; }
 
 .reaction-count {
-    font-size: 0.85rem;
-    margin-left: 2px;
-    font-weight: 600;
-    color: var(--text-light);
-    min-width: 16px;
-    text-align: left;
+   font-size: 0.85rem;
+   margin-left: 2px;
+   font-weight: 600;
+   color: var(--text-light);
+   min-width: 16px;
+   text-align: left;
 }
 
 .share-button,
 .report-button {
-    background: none;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 5px;
-    margin: 0;
-    box-shadow: none;
-    color: var(--text-light);
-    transition: transform 0.2s ease, color 0.2s ease;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    min-width: 32px;
+   background: none;
+   border: none;
+   font-size: 1rem;
+   cursor: pointer;
+   padding: 5px;
+   margin: 0;
+   box-shadow: none;
+   color: var(--text-light);
+   transition: transform 0.2s ease, color 0.2s ease;
+   position: relative;
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   height: 32px;
+   min-width: 32px;
 }
 
 .share-button:hover {
-    background: none;
-    box-shadow: none;
-    color: var(--primary-color);
+   background: none;
+   box-shadow: none;
+   color: var(--primary-color);
 }
 
 .report-button:hover {
-    background: none;
-    box-shadow: none;
-    color: var(--danger-color);
+   background: none;
+   box-shadow: none;
+   color: var(--danger-color);
 }
 
 .admin-action {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: background-color 0.3s ease;
-    align-items: center;
-    justify-content: center;
+   display: none;
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   background-color: #e74c3c;
+   color: white;
+   border: none;
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   cursor: pointer;
+   font-size: 0.8rem;
+   transition: background-color 0.3s ease;
+   align-items: center;
+   justify-content: center;
 }
 
 .admin-mode .admin-action {
-    display: flex;
+   display: flex;
 }
 
 .admin-action:hover {
-    background-color: #c0392b;
+   background-color: #c0392b;
 }
 
 .no-confessions {
-    text-align: center;
-    color: var(--text-light);
-    padding: 30px 20px;
-    font-style: italic;
-    background-color: rgba(255,255,255,0.7);
-    border-radius: 10px;
-    border: 1px dashed var(--border-color);
+   text-align: center;
+   color: var(--text-light);
+   padding: 30px 20px;
+   font-style: italic;
+   background-color: rgba(255,255,255,0.7);
+   border-radius: 10px;
+   border: 1px dashed var(--border-color);
 }
 
 [data-theme="dark"] .no-confessions {
-    background-color: rgba(0,0,0,0.2);
+   background-color: rgba(0,0,0,0.2);
 }
 
 .no-confessions i {
-    display: block;
-    font-size: 2rem;
-    margin-bottom: 10px;
-    color: var(--primary-light);
+   display: block;
+   font-size: 2rem;
+   margin-bottom: 10px;
+   color: var(--primary-light);
 }
 
 /* Pagination */
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 30px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   margin-top: 30px;
 }
 
 .page-btn {
-    padding: 8px 15px;
-    border: 1px solid var(--border-color);
-    background: var(--card-color);
-    color: var(--text-color);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+   padding: 8px 15px;
+   border: 1px solid var(--border-color);
+   background: var(--card-color);
+   color: var(--text-color);
+   border-radius: 8px;
+   cursor: pointer;
+   transition: all 0.3s ease;
 }
 
 .page-btn:hover {
-    background: var(--primary-light);
-    color: white;
-    border-color: var(--primary-light);
+   background: var(--primary-light);
+   color: white;
+   border-color: var(--primary-light);
 }
 
 .page-btn.active {
-    background: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+   background: var(--primary-color);
+   color: white;
+   border-color: var(--primary-color);
 }
 
 .page-btn:disabled {
-    background: var(--border-color);
-    cursor: not-allowed;
-    opacity: 0.5;
+   background: var(--border-color);
+   cursor: not-allowed;
+   opacity: 0.5;
 }
 
 /* Loading States */
 .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    color: var(--primary-color);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 40px;
+   color: var(--primary-color);
 }
 
 .loading i {
-    font-size: 2rem;
-    animation: spin 1s linear infinite;
+   font-size: 2rem;
+   animation: spin 1s linear infinite;
 }
 
 /* Success Message */
 .success-message {
-    background-color: var(--success-color);
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: none;
-    align-items: center;
-    animation: slideDown 0.3s ease-out;
+   background-color: var(--success-color);
+   color: white;
+   padding: 15px;
+   border-radius: 8px;
+   margin-bottom: 20px;
+   display: none;
+   align-items: center;
+   animation: slideDown 0.3s ease-out;
 }
 
 .success-message i {
-    margin-right: 10px;
+   margin-right: 10px;
 }
 
 /* Error Message */
 .error-message {
-    background-color: var(--danger-color);
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: none;
-    align-items: center;
-    animation: slideDown 0.3s ease-out;
+   background-color: var(--danger-color);
+   color: white;
+   padding: 15px;
+   border-radius: 8px;
+   margin-bottom: 20px;
+   display: none;
+   align-items: center;
+   animation: slideDown 0.3s ease-out;
 }
 
 .error-message i {
-    margin-right: 10px;
+   margin-right: 10px;
 }
 
 /* Footer */
 footer {
-    margin-top: 50px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-    color: var(--text-light);
+   margin-top: 50px;
+   padding-top: 20px;
+   border-top: 1px solid var(--border-color);
+   text-align: center;
+   color: var(--text-light);
 }
 
 footer a {
-    color: var(--primary-color);
-    text-decoration: none;
+   color: var(--primary-color);
+   text-decoration: none;
 }
 
 footer a:hover {
-    text-decoration: underline;
+   text-decoration: underline;
 }
 
 /* Admin Panel */
 #admin-access {
-    margin-top: 20px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 20px;
-    display: none;
+   margin-top: 20px;
+   border-top: 1px solid var(--border-color);
+   padding-top: 20px;
+   display: none;
 }
 
 summary {
-    cursor: pointer;
-    color: var(--text-light);
-    font-weight: 500;
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
+   cursor: pointer;
+   color: var(--text-light);
+   font-weight: 500;
+   transition: color 0.3s ease;
+   display: flex;
+   align-items: center;
 }
 
 summary:hover {
-    color: var(--primary-color);
+   color: var(--primary-color);
 }
 
 summary i {
-    margin-right: 8px;
+   margin-right: 8px;
 }
 
 details {
-    margin-top: 10px;
+   margin-top: 10px;
 }
 
 input[type="password"] {
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-right: 10px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    background-color: var(--card-color);
-    color: var(--text-color);
+   padding: 10px 15px;
+   border: 1px solid var(--border-color);
+   border-radius: 8px;
+   margin-right: 10px;
+   font-family: inherit;
+   font-size: 0.9rem;
+   box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+   background-color: var(--card-color);
+   color: var(--text-color);
 }
 
 input[type="password"]:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(108, 92, 231, 0.3);
+   border-color: var(--primary-color);
+   outline: none;
+   box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(108, 92, 231, 0.3);
 }
 
 #admin-login {
-    background-color: #34495e;
+   background-color: #34495e;
 }
 
 #admin-login:hover {
-    background-color: #2c3e50;
+   background-color: #2c3e50;
 }
 
 #clear-all {
-    background-color: #e74c3c;
-    margin-top: 10px;
+   background-color: #e74c3c;
+   margin-top: 10px;
 }
 
 #clear-all:hover {
-    background-color: #c0392b;
+   background-color: #c0392b;
 }
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+   from { opacity: 0; transform: translateY(10px); }
+   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+   0% { transform: scale(1); }
+   50% { transform: scale(1.05); }
+   100% { transform: scale(1); }
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+   0% { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+   from { transform: translateY(-20px); opacity: 0; }
+   to { transform: translateY(0); opacity: 1; }
 }
 
 /* Responsive Design */
 @media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-    
-    .button-group {
-        flex-direction: column;
-    }
-    
-    #theme-toggle {
-        top: 10px;
-        right: 10px;
-    }
-    
-    .category-tags {
-        justify-content: center;
-    }
-    
-    .filter-options {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .navbar {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .confession .meta {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .confession .actions {
-        width: 100%;
-        justify-content: space-between;
-        margin-top: 10px;
-    }
-    
-    .react-button {
-        min-width: auto;
-        padding: 0 5px;
-    }
+   body {
+       padding: 10px;
+   }
+   
+   .button-group {
+       flex-direction: column;
+   }
+   
+   #theme-toggle {
+       top: 10px;
+       right: 10px;
+   }
+   
+   .category-tags {
+       justify-content: center;
+   }
+   
+   .filter-options {
+       flex-direction: column;
+       align-items: stretch;
+   }
+   
+   .navbar {
+       flex-direction: column;
+       gap: 10px;
+   }
+   
+   .nav-links {
+       flex-wrap: wrap;
+       justify-content: center;
+   }
+   
+   .confession .meta {
+       flex-direction: column;
+       align-items: flex-start;
+   }
+   
+   .confession .actions {
+       width: 100%;
+       justify-content: space-between;
+       margin-top: 10px;
+   }
+   
+   .react-button {
+       min-width: auto;
+       padding: 0 5px;
+   }
+   
+   .donation-amounts {
+       grid-template-columns: repeat(2, 1fr);
+   }
+   
+   .donor-badge {
+       display: none;
+   }
 }
 </style>
 </head>
@@ -1138,34 +1501,83 @@ input[type="password"]:focus {
 
 <nav class="navbar">
 <div class="logo-container">
-    <i class="fas fa-feather-alt"></i>
-    <span class="logo-text">Confessions</span>
+   <i class="fas fa-feather-alt"></i>
+   <span class="logo-text">Confessions</span>
 </div>
 <div class="nav-links">
-    <a href="#" class="nav-link" id="home-link">Home</a>
-    <a href="#" class="nav-link" id="about-link">About</a>
-    <a href="#" class="nav-link" id="rules-link">Rules</a>
-    <div class="karma-display" id="karma-display" style="cursor: pointer;">
-        <i class="fas fa-star"></i>
-        <span id="user-karma">0</span> Karma
-    </div>
+   <a href="#" class="nav-link" id="home-link">Home</a>
+   <a href="#" class="nav-link" id="about-link">About</a>
+   <a href="#" class="nav-link" id="rules-link">Rules</a>
+   <button class="donate-nav-btn" id="donate-nav-btn">
+       <i class="fas fa-hand-holding-usd"></i> Support
+   </button>
+   <div class="karma-display" id="karma-display" style="cursor: pointer;">
+       <i class="fas fa-star"></i>
+       <span id="user-karma">0</span> Karma
+   </div>
 </div>
 </nav>
 
 <h1>Anonymous Confessions</h1>
 
+<!-- Funding Goals Section -->
+<div class="funding-goals" id="funding-goals">
+   <h2><i class="fas fa-chart-pie"></i> Community Goals</h2>
+   <div class="goal-card">
+       <div class="goal-header">
+           <span class="goal-title">Server Maintenance</span>
+           <span class="goal-status">Monthly</span>
+       </div>
+       <div class="goal-progress-bar">
+           <div class="goal-progress-fill" id="server-goal-progress" style="width: 0%;">0%</div>
+       </div>
+       <div class="goal-info">
+           <span class="goal-raised" id="server-goal-raised">$0 raised</span>
+           <span class="goal-target">of $500 goal</span>
+       </div>
+   </div>
+   
+   <div class="goal-card">
+       <div class="goal-header">
+           <span class="goal-title">Feature Development Fund</span>
+           <span class="goal-status">This Quarter</span>
+       </div>
+       <div class="goal-progress-bar">
+           <div class="goal-progress-fill" id="feature-goal-progress" style="width: 0%;">0%</div>
+       </div>
+       <div class="goal-info">
+           <span class="goal-raised" id="feature-goal-raised">$0 raised</span>
+           <span class="goal-target">of $2,000 goal</span>
+       </div>
+   </div>
+   
+   <div class="goal-card">
+       <div class="goal-header">
+           <span class="goal-title">Charity: Mental Health Support</span>
+           <span class="goal-status">This Year</span>
+       </div>
+       <div class="goal-progress-bar">
+           <div class="goal-progress-fill" id="charity-goal-progress" style="width: 0%;">0%</div>
+       </div>
+       <div class="goal-info">
+           <span class="goal-raised" id="charity-goal-raised">$0 raised</span>
+           <span class="goal-target">of $10,000 goal</span>
+       </div>
+   </div>
+</div>
+
 <div class="stats-container">
 <div class="stat-card">
-    <div class="stat-number" id="total-confessions">0</div>
-    <div class="stat-label">Total Confessions</div>
+   <div class="stat-number" id="total-confessions">0</div>
+   <div class="stat-label">Total Confessions</div>
 </div>
 <div class="stat-card">
-    <div class="stat-number" id="today-confessions">0</div>
-    <div class="stat-label">Today's Confessions</div>
+   <div class="stat-number" id="today-confessions">0</div>
+   <div class="stat-label">Today's Confessions</div>
 </div>
 <div class="stat-card clickable" id="leaderboard-card">
-    <div class="stat-number" id="active-users">0</div>
-    <div class="stat-label">Top Contributors</div>
+   <div class="stat-number" id="active-users">0</div>
+   <div class="stat-label">Top Contributors</div>
 </div>
 </div>
 
@@ -1175,58 +1587,58 @@ input[type="password"]:focus {
 <h2><i class="fas fa-comment-dots"></i> Share Your Confession</h2>
 
 <div class="rules-banner">
-    <h3><i class="fas fa-exclamation-triangle"></i> Community Guidelines</h3>
-    <ul>
-        <li>Be respectful - no hate speech or harassment</li>
-        <li>Keep it legal - no criminal confessions</li>
-        <li>Your confession is anonymous and safe</li>
-    </ul>
+   <h3><i class="fas fa-exclamation-triangle"></i> Community Guidelines</h3>
+   <ul>
+       <li>Be respectful - no hate speech or harassment</li>
+       <li>Keep it legal - no criminal confessions</li>
+       <li>Your confession is anonymous and safe</li>
+   </ul>
 </div>
 
 <div class="success-message" id="success-message">
-    <i class="fas fa-check-circle"></i>
-    Your confession has been submitted successfully!
+   <i class="fas fa-check-circle"></i>
+   Your confession has been submitted successfully!
 </div>
 
 <div class="error-message" id="error-message">
-    <i class="fas fa-exclamation-circle"></i>
-    <span id="error-text">An error occurred. Please try again.</span>
+   <i class="fas fa-exclamation-circle"></i>
+   <span id="error-text">An error occurred. Please try again.</span>
 </div>
 
 <form id="confession-form">
-    <div class="category-selector">
-        <label for="category">Category (optional):</label>
-        <div class="category-tags">
-            <span class="category-tag" data-category="all">All</span>
-            <span class="category-tag" data-category="funny">Funny</span>
-            <span class="category-tag" data-category="serious">Serious</span>
-            <span class="category-tag" data-category="relationships">Relationships</span>
-            <span class="category-tag" data-category="work">Work</span>
-            <span class="category-tag" data-category="family">Family</span>
-            <span class="category-tag" data-category="secret">Secret</span>
-        </div>
-    </div>
-    
-    <div class="textarea-container">
-        <textarea id="confession-text" placeholder="Type your confession here... (anonymous)" required maxlength="1000"></textarea>
-        <div class="character-count">0/1000 characters</div>
-    </div>
-    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Submit Confession</button>
+   <div class="category-selector">
+       <label for="category">Category (optional):</label>
+       <div class="category-tags">
+           <span class="category-tag" data-category="all">All</span>
+           <span class="category-tag" data-category="funny">Funny</span>
+           <span class="category-tag" data-category="serious">Serious</span>
+           <span class="category-tag" data-category="relationships">Relationships</span>
+           <span class="category-tag" data-category="work">Work</span>
+           <span class="category-tag" data-category="family">Family</span>
+           <span class="category-tag" data-category="secret">Secret</span>
+       </div>
+   </div>
+   
+   <div class="textarea-container">
+       <textarea id="confession-text" placeholder="Type your confession here... (anonymous)" required maxlength="1000"></textarea>
+       <div class="character-count">0/1000 characters</div>
+   </div>
+   <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Submit Confession</button>
 </form>
 <div class="button-group">
-    <button id="random-confession"><i class="fas fa-random"></i> Random Confession</button>
+   <button id="random-confession"><i class="fas fa-random"></i> Random Confession</button>
 </div>
 <div id="admin-access">
-    <details>
-        <summary><i class="fas fa-lock"></i> Admin Access</summary>
-        <div style="margin-top: 15px;">
-            <input type="password" id="admin-password" placeholder="Enter admin password">
-            <button id="admin-login"><i class="fas fa-sign-in-alt"></i> Login</button>
-            <div id="admin-panel" style="margin-top: 10px; display: none;">
-                <button id="clear-all"><i class="fas fa-trash-alt"></i> Clear All Confessions</button>
-            </div>
-        </div>
-    </details>
+   <details>
+       <summary><i class="fas fa-lock"></i> Admin Access</summary>
+       <div style="margin-top: 15px;">
+           <input type="password" id="admin-password" placeholder="Enter admin password">
+           <button id="admin-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+           <div id="admin-panel" style="margin-top: 10px; display: none;">
+               <button id="clear-all"><i class="fas fa-trash-alt"></i> Clear All Confessions</button>
+           </div>
+       </div>
+   </details>
 </div>
 </div>
 
@@ -1234,31 +1646,31 @@ input[type="password"]:focus {
 <h2><i class="fas fa-book-open"></i> Recent Confessions</h2>
 
 <div class="search-container">
-    <input type="text" class="search-input" id="search-input" placeholder="Search confessions...">
-    <i class="fas fa-search search-icon"></i>
+   <input type="text" class="search-input" id="search-input" placeholder="Search confessions...">
+   <i class="fas fa-search search-icon"></i>
 </div>
 
 <div class="filter-options">
-    <select class="filter-select" id="sort-select">
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-        <option value="popular">Most Popular</option>
-    </select>
-    <select class="filter-select" id="category-filter">
-        <option value="all">All Categories</option>
-        <option value="funny">Funny</option>
-        <option value="serious">Serious</option>
-        <option value="relationships">Relationships</option>
-        <option value="work">Work</option>
-        <option value="family">Family</option>
-        <option value="secret">Secret</option>
-    </select>
+   <select class="filter-select" id="sort-select">
+       <option value="newest">Newest First</option>
+       <option value="oldest">Oldest First</option>
+       <option value="popular">Most Popular</option>
+   </select>
+   <select class="filter-select" id="category-filter">
+       <option value="all">All Categories</option>
+       <option value="funny">Funny</option>
+       <option value="serious">Serious</option>
+       <option value="relationships">Relationships</option>
+       <option value="work">Work</option>
+       <option value="family">Family</option>
+       <option value="secret">Secret</option>
+   </select>
 </div>
 
 <div id="confessions-list" class="confessions-list">
-    <div class="loading">
-        <i class="fas fa-spinner"></i>
-    </div>
+   <div class="loading">
+       <i class="fas fa-spinner"></i>
+   </div>
 </div>
 
 <div class="pagination" id="pagination"></div>
@@ -1269,32 +1681,99 @@ input[type="password"]:focus {
 <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a></p>
 </footer>
 
+<!-- Donation Modal -->
+<div id="donation-modal" class="donation-modal">
+   <div class="donation-modal-content">
+       <span class="close" onclick="closeDonationModal()">&times;</span>
+       <div class="donation-header">
+           <h2 class="donation-title">Support Our Community</h2>
+           <p class="donation-subtitle">Your support helps maintain this safe space for anonymous confessions</p>
+       </div>
+       
+       <div class="donation-amounts">
+           <button class="amount-btn" data-amount="5">$5</button>
+           <button class="amount-btn" data-amount="10">$10</button>
+           <button class="amount-btn" data-amount="25">$25</button>
+           <button class="amount-btn" data-amount="50">$50</button>
+           <button class="amount-btn" data-amount="100">$100</button>
+           <button class="amount-btn" data-amount="custom">Custom</button>
+       </div>
+       
+       <div class="custom-amount-container" id="custom-amount-container" style="display: none;">
+           <input type="number" class="custom-amount-input" id="custom-amount-input" placeholder="Enter amount in USD" min="1">
+       </div>
+       
+       <div class="payment-options">
+           <div class="payment-method" data-method="bitcoin">
+               <i class="fab fa-bitcoin"></i>
+               <div class="payment-info">
+                   <div class="payment-name">Bitcoin</div>
+                   <div class="payment-desc">BTC payments</div>
+               </div>
+           </div>
+           <div class="payment-method" data-method="ethereum">
+               <i class="fab fa-ethereum"></i>
+               <div class="payment-info">
+                   <div class="payment-name">Ethereum</div>
+                   <div class="payment-desc">ETH payments</div>
+               </div>
+           </div>
+           <div class="payment-method" data-method="lightning">
+               <i class="fas fa-bolt"></i>
+               <div class="payment-info">
+                   <div class="payment-name">Lightning Network</div>
+                   <div class="payment-desc">Fast BTC payments</div>
+               </div>
+           </div>
+       </div>
+       
+       <div class="donation-address" id="donation-address"></div>
+       
+       <div class="charity-section">
+           <label class="charity-checkbox">
+               <input type="checkbox" id="charity-donation">
+               Donate 10% to charity
+           </label>
+           <select class="charity-dropdown" id="charity-select">
+               <option value="">Select charity</option>
+               <option value="mental-health">Mental Health Foundation</option>
+               <option value="privacy-rights">Electronic Frontier Foundation</option>
+               <option value="free-speech">Freedom of Press Foundation</option>
+           </select>
+       </div>
+       
+       <button class="donate-submit-btn" id="donate-submit-btn" disabled>
+           Proceed to Payment
+       </button>
+   </div>
+</div>
+
 <!-- Modals -->
 <div id="leaderboard-modal" class="modal">
 <div class="modal-content">
-    <span class="close">&times;</span>
-    <h2><i class="fas fa-trophy"></i> Top Contributors</h2>
-    <div id="leaderboard-content">
-        <div class="loading">
-            <i class="fas fa-spinner"></i>
-        </div>
-    </div>
+   <span class="close">&times;</span>
+   <h2><i class="fas fa-trophy"></i> Top Contributors</h2>
+   <div id="leaderboard-content">
+       <div class="loading">
+           <i class="fas fa-spinner"></i>
+       </div>
+   </div>
 </div>
 </div>
 
 <div id="share-card-modal" class="modal">
 <div class="modal-content">
-    <span class="close" onclick="closeShareCardModal()">&times;</span>
-    <h2><i class="fas fa-image"></i> Share Card Preview</h2>
-    <div id="share-card-preview"></div>
-    <div style="text-align: center; margin-top: 20px;">
-        <button onclick="downloadShareCard()" style="background-color: var(--success-color); margin-right: 10px;">
-            <i class="fas fa-download"></i> Download Card
-        </button>
-        <button onclick="closeShareCardModal()" style="background-color: var(--text-light);">
-            <i class="fas fa-times"></i> Cancel
-        </button>
-    </div>
+   <span class="close" onclick="closeShareCardModal()">&times;</span>
+   <h2><i class="fas fa-image"></i> Share Card Preview</h2>
+   <div id="share-card-preview"></div>
+   <div style="text-align: center; margin-top: 20px;">
+       <button onclick="downloadShareCard()" style="background-color: var(--success-color); margin-right: 10px;">
+           <i class="fas fa-download"></i> Download Card
+       </button>
+       <button onclick="closeShareCardModal()" style="background-color: var(--text-light);">
+           <i class="fas fa-times"></i> Cancel
+       </button>
+   </div>
 </div>
 </div>
 
@@ -1306,18 +1785,18 @@ input[type="password"]:focus {
 <!-- Share Card Canvas (hidden) -->
 <div id="share-card-canvas" style="position: absolute; left: -9999px; top: -9999px;">
 <div class="share-card" style="width: 600px; background: white;">
-    <div class="share-card-header">
-        <div class="share-card-logo">
-            <i class="fas fa-feather-alt"></i>
-            <span>Anonymous Confessions</span>
-        </div>
-        <div id="share-card-date"></div>
-    </div>
-    <div class="share-card-content" id="share-card-text"></div>
-    <div class="share-card-footer">
-        <div id="share-card-stats"></div>
-        <div id="share-card-qr" class="qr-code"></div>
-    </div>
+   <div class="share-card-header">
+       <div class="share-card-logo">
+           <i class="fas fa-feather-alt"></i>
+           <span>Anonymous Confessions</span>
+       </div>
+       <div id="share-card-date"></div>
+   </div>
+   <div class="share-card-content" id="share-card-text"></div>
+   <div class="share-card-footer">
+       <div id="share-card-stats"></div>
+       <div id="share-card-qr" class="qr-code"></div>
+   </div>
 </div>
 </div>
 
@@ -1328,47 +1807,82 @@ const MAX_CONFESSION_LENGTH = 1000;
 const AUTO_ARCHIVE_DAYS = 30;
 const FORBIDDEN_WORDS = ['hate', 'kill', 'racist', 'sexist'];
 
+// Donation Configuration
+const DONATION_ADDRESSES = {
+   bitcoin: '1YourBitcoinAddressHere',
+   ethereum: '0xYourEthereumAddressHere',
+   lightning: 'lightning:YourLightningAddressHere'
+};
+
+const FUNDING_GOALS = {
+   server: { target: 500, current: 0 },
+   feature: { target: 2000, current: 0 },
+   charity: { target: 10000, current: 0 }
+};
+
 // Karma & Achievement System Configuration
 const KARMA_POINTS = {
-    submitConfession: 10,
-    receiveReaction: 1,
-    receiveReply: 2,
-    receiveLove: 3,
-    dailyConfession: 5,
-    popularConfession: 20  // 50+ reactions
+   submitConfession: 10,
+   receiveReaction: 1,
+   receiveReply: 2,
+   receiveLove: 3,
+   dailyConfession: 5,
+   popularConfession: 20,  // 50+ reactions
+   donateSmall: 50,      // $1-10
+   donateMedium: 100,    // $11-50
+   donateLarge: 250,     // $51+
+   donateCharity: 500    // Any charity donation
 };
 
 const ACHIEVEMENTS = {
-    firstConfession: {
-        id: 'first_confession',
-        title: 'First Steps',
-        description: 'Submit your first confession',
-        karma: 50
-    },
-    popularConfession: {
-        id: 'popular_confession',
-        title: 'Crowd Favorite',
-        description: 'Get 50+ reactions on a confession',
-        karma: 100
-    },
-    dailyStreak: {
-        id: 'daily_streak',
-        title: 'Regular Contributor',
-        description: 'Submit confessions 7 days in a row',
-        karma: 200
-    },
-    conversationStarter: {
-        id: 'conversation_starter',
-        title: 'Conversation Starter',
-        description: 'Get 10+ replies on a confession',
-        karma: 150
-    },
-    karmaLegend: {
-        id: 'karma_legend',
-        title: 'Karma Legend',
-        description: 'Reach 1000 karma points',
-        karma: 500
-    }
+   firstConfession: {
+       id: 'first_confession',
+       title: 'First Steps',
+       description: 'Submit your first confession',
+       karma: 50
+   },
+   popularConfession: {
+       id: 'popular_confession',
+       title: 'Crowd Favorite',
+       description: 'Get 50+ reactions on a confession',
+       karma: 100
+   },
+   dailyStreak: {
+       id: 'daily_streak',
+       title: 'Regular Contributor',
+       description: 'Submit confessions 7 days in a row',
+       karma: 200
+   },
+   conversationStarter: {
+       id: 'conversation_starter',
+       title: 'Conversation Starter',
+       description: 'Get 10+ replies on a confession',
+       karma: 150
+   },
+   karmaLegend: {
+       id: 'karma_legend',
+       title: 'Karma Legend',
+       description: 'Reach 1000 karma points',
+       karma: 500
+   },
+   supporter: {
+       id: 'supporter',
+       title: 'Community Supporter',
+       description: 'Make your first donation',
+       karma: 100
+   },
+   philanthropist: {
+       id: 'philanthropist',
+       title: 'Philanthropist',
+       description: 'Donate to charity',
+       karma: 1000
+   },
+   cryptoWhale: {
+       id: 'crypto_whale',
+       title: 'Crypto Whale',
+       description: 'Donate over $100',
+       karma: 500
+   }
 };
 
 // State management
@@ -1381,575 +1895,887 @@ let isSubmitting = false;
 let userKarma = 0;
 let userAchievements = [];
 let userId = null;
+let selectedDonationAmount = null;
+let selectedPaymentMethod = null;
+let donations = [];
+let userDonations = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+   initializeApp();
 });
 
 function initializeApp() {
-    // Initialize user ID
-    userId = localStorage.getItem('userId');
-    if (!userId) {
-        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('userId', userId);
-    }
-    
-    // Load user data
-    loadUserData();
-    
-    // Theme management
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    updateThemeToggleIcon(savedTheme);
-    
-    // Event listeners
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-    document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
-    document.getElementById('random-confession').addEventListener('click', showRandomConfession);
-    document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
-    document.getElementById('clear-all').addEventListener('click', clearAllConfessions);
-    document.getElementById('search-input').addEventListener('input', handleSearch);
-    document.getElementById('sort-select').addEventListener('change', handleSortChange);
-    document.getElementById('category-filter').addEventListener('change', handleCategoryFilterChange);
-    document.getElementById('karma-display').addEventListener('click', showLeaderboard);
-    document.getElementById('leaderboard-card').addEventListener('click', showLeaderboard);
-    
-    // Close modal when clicking outside
-    document.getElementById('leaderboard-modal').addEventListener('click', function(e) {
-        if (e.target.className === 'modal') {
-            this.style.display = 'none';
-        }
-    });
-    
-    document.getElementById('share-card-modal').addEventListener('click', function(e) {
-        if (e.target.className === 'modal') {
-            closeShareCardModal();
-        }
-    });
-    
-    // Close modal buttons
-    document.querySelectorAll('.close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function() {
-            const modal = this.closest('.modal');
-            if (modal.id === 'share-card-modal') {
-                closeShareCardModal();
-            } else {
-                modal.style.display = 'none';
-            }
-        });
-    });
-    
-    // Category tags
-    document.querySelectorAll('.category-tag').forEach(tag => {
-        tag.addEventListener('click', function() {
-            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
-        });
-    });
-    
-    // Character count
-    const textArea = document.getElementById('confession-text');
-    const charCount = document.querySelector('.character-count');
-    
-    textArea.addEventListener('input', function() {
-        const count = this.value.length;
-        charCount.textContent = `${count}/${MAX_CONFESSION_LENGTH} characters`;
-        
-        if (count > MAX_CONFESSION_LENGTH * 0.9) {
-            charCount.classList.add('warning');
+   // Initialize user ID
+   userId = localStorage.getItem('userId');
+   if (!userId) {
+       userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+       localStorage.setItem('userId', userId);
+   }
+   
+   // Load user data
+   loadUserData();
+   loadDonationData();
+   
+   // Theme management
+   const savedTheme = localStorage.getItem('theme') || 'light';
+   document.documentElement.setAttribute('data-theme', savedTheme);
+   updateThemeToggleIcon(savedTheme);
+   
+   // Event listeners
+   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+   document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
+   document.getElementById('random-confession').addEventListener('click', showRandomConfession);
+   document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
+   document.getElementById('clear-all').addEventListener('click', clearAllConfessions);
+   document.getElementById('search-input').addEventListener('input', handleSearch);
+   document.getElementById('sort-select').addEventListener('change', handleSortChange);
+   document.getElementById('category-filter').addEventListener('change', handleCategoryFilterChange);
+   document.getElementById('karma-display').addEventListener('click', showLeaderboard);
+   document.getElementById('leaderboard-card').addEventListener('click', showLeaderboard);
+   document.getElementById('donate-nav-btn').addEventListener('click', openDonationModal);
+   document.getElementById('donate-submit-btn').addEventListener('click', processDonation);
+   document.getElementById('charity-donation').addEventListener('change', toggleCharityDropdown);
+   
+   // Donation event listeners
+   document.querySelectorAll('.amount-btn').forEach(btn => {
+       btn.addEventListener('click', function() {
+           selectDonationAmount(this);
+       });
+   });
+   
+   document.querySelectorAll('.payment-method').forEach(method => {
+       method.addEventListener('click', function() {
+           selectPaymentMethod(this);
+       });
+   });
+   
+   document.getElementById('custom-amount-input').addEventListener('input', function() {
+       selectedDonationAmount = this.value;
+       updateDonateButton();
+   });
+   
+   // Close modal when clicking outside
+   document.getElementById('leaderboard-modal').addEventListener('click', function(e) {
+       if (e.target.className === 'modal') {
+           this.style.display = 'none';
+       }
+   });
+   
+   document.getElementById('share-card-modal').addEventListener('click', function(e) {
+       if (e.target.className === 'modal') {
+           closeShareCardModal();
+       }
+   });
+   
+   document.getElementById('donation-modal').addEventListener('click', function(e) {
+       if (e.target.className === 'donation-modal') {
+           closeDonationModal();
+       }
+   });
+   
+   // Close modal buttons
+   document.querySelectorAll('.close').forEach(closeBtn => {
+       closeBtn.addEventListener('click', function() {
+           const modal = this.closest('.modal, .donation-modal');
+           if (modal.id === 'share-card-modal') {
+               closeShareCardModal();
+           } else if (modal.id === 'donation-modal') {
+            closeDonationModal();
         } else {
-            charCount.classList.remove('warning');
+            modal.style.display = 'none';
         }
     });
-    
-    // Navigation links
-    document.getElementById('home-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Category tags
+document.querySelectorAll('.category-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
     });
+});
+
+// Character count
+const textArea = document.getElementById('confession-text');
+const charCount = document.querySelector('.character-count');
+
+textArea.addEventListener('input', function() {
+    const count = this.value.length;
+    charCount.textContent = `${count}/${MAX_CONFESSION_LENGTH} characters`;
     
-    document.getElementById('about-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
-    });
-    
-    document.getElementById('rules-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
-    });
-    
-    // Check if admin access should be visible
-    const isAdmin = sessionStorage.getItem('isAdmin');
-    if (isAdmin) {
-        document.getElementById('admin-access').style.display = 'block';
+    if (count > MAX_CONFESSION_LENGTH * 0.9) {
+        charCount.classList.add('warning');
+    } else {
+        charCount.classList.remove('warning');
     }
-    
-    // Initial load
-    loadConfessions();
-    setConfessionOfDay();
-    updateStatistics();
-    autoArchiveOldConfessions();
-    checkSharedConfession();
-    
-    // Update stats every minute
-    setInterval(updateStatistics, 60000);
-    
-    // Check for daily streak
-    checkDailyStreak();
+});
+
+// Navigation links
+document.getElementById('home-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('about-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
+});
+
+document.getElementById('rules-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
+});
+
+// Check if admin access should be visible
+const isAdmin = sessionStorage.getItem('isAdmin');
+if (isAdmin) {
+    document.getElementById('admin-access').style.display = 'block';
 }
 
+// Initial load
+loadConfessions();
+setConfessionOfDay();
+updateStatistics();
+updateFundingGoals();
+autoArchiveOldConfessions();
+checkSharedConfession();
+
+// Update stats every minute
+setInterval(updateStatistics, 60000);
+setInterval(updateFundingGoals, 300000); // Update funding goals every 5 minutes
+
+// Check for daily streak
+checkDailyStreak();
+}
+
+// Donation System Functions
+function openDonationModal() {
+document.getElementById('donation-modal').style.display = 'block';
+resetDonationForm();
+}
+
+function closeDonationModal() {
+document.getElementById('donation-modal').style.display = 'none';
+resetDonationForm();
+}
+
+function resetDonationForm() {
+document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('selected'));
+document.getElementById('custom-amount-container').style.display = 'none';
+document.getElementById('custom-amount-input').value = '';
+document.getElementById('donation-address').style.display = 'none';
+document.getElementById('charity-donation').checked = false;
+document.getElementById('charity-select').style.display = 'none';
+document.getElementById('charity-select').value = '';
+document.getElementById('donate-submit-btn').disabled = true;
+selectedDonationAmount = null;
+selectedPaymentMethod = null;
+}
+
+function selectDonationAmount(btn) {
+document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+btn.classList.add('selected');
+
+const amount = btn.dataset.amount;
+if (amount === 'custom') {
+    document.getElementById('custom-amount-container').style.display = 'block';
+    selectedDonationAmount = document.getElementById('custom-amount-input').value;
+} else {
+    document.getElementById('custom-amount-container').style.display = 'none';
+    selectedDonationAmount = amount;
+}
+
+updateDonateButton();
+}
+
+function selectPaymentMethod(method) {
+document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+method.classList.add('selected');
+selectedPaymentMethod = method.dataset.method;
+
+// Show payment address
+const addressDiv = document.getElementById('donation-address');
+addressDiv.innerHTML = `
+    <div style="font-weight: 600; margin-bottom: 8px;">Send payment to:</div>
+    <div style="margin-bottom: 10px;">${DONATION_ADDRESSES[selectedPaymentMethod]}</div>
+    <button class="copy-address-btn" onclick="copyAddress('${DONATION_ADDRESSES[selectedPaymentMethod]}')">
+        <i class="fas fa-copy"></i> Copy Address
+    </button>
+`;
+addressDiv.style.display = 'block';
+
+updateDonateButton();
+}
+
+function copyAddress(address) {
+navigator.clipboard.writeText(address).then(() => {
+    showSuccessMessage('Address copied to clipboard!');
+}).catch(() => {
+    prompt('Copy this address:', address);
+});
+}
+
+function toggleCharityDropdown() {
+const charitySelect = document.getElementById('charity-select');
+if (document.getElementById('charity-donation').checked) {
+    charitySelect.style.display = 'block';
+} else {
+    charitySelect.style.display = 'none';
+    charitySelect.value = '';
+}
+}
+
+function updateDonateButton() {
+const submitBtn = document.getElementById('donate-submit-btn');
+if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
+    submitBtn.disabled = false;
+} else {
+    submitBtn.disabled = true;
+}
+}
+
+function processDonation() {
+const amount = parseFloat(selectedDonationAmount);
+if (!amount || amount <= 0) {
+    showErrorMessage('Please enter a valid donation amount');
+    return;
+}
+
+const isCharity = document.getElementById('charity-donation').checked;
+const charityType = document.getElementById('charity-select').value;
+
+const donation = {
+    id: 'donation_' + Date.now(),
+    userId: userId,
+    amount: amount,
+    method: selectedPaymentMethod,
+    isCharity: isCharity,
+    charityType: charityType,
+    timestamp: new Date().toISOString(),
+    verified: false // In real app, this would be verified through payment confirmation
+};
+
+// Save donation
+donations.push(donation);
+userDonations.push(donation);
+localStorage.setItem('donations', JSON.stringify(donations));
+localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
+
+// Update funding goals
+updateFundingGoalProgress(donation);
+
+// Award karma based on donation amount
+let karmaAwarded = 0;
+if (amount <= 10) {
+    karmaAwarded = KARMA_POINTS.donateSmall;
+} else if (amount <= 50) {
+    karmaAwarded = KARMA_POINTS.donateMedium;
+} else {
+    karmaAwarded = KARMA_POINTS.donateLarge;
+}
+
+if (isCharity) {
+    karmaAwarded += KARMA_POINTS.donateCharity;
+}
+
+addKarma(karmaAwarded, 'donation');
+
+// Check donation achievements
+checkDonationAchievements(donation);
+
+// Show thank you message
+showThankYouModal(amount, isCharity);
+
+closeDonationModal();
+}
+
+function showThankYouModal(amount, isCharity) {
+const modal = document.createElement('div');
+modal.className = 'donation-modal';
+modal.style.display = 'block';
+
+modal.innerHTML = `
+    <div class="donation-modal-content thank-you-modal">
+        <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
+        <div class="thank-you-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        <h2>Thank You for Your Support!</h2>
+        <p>Your donation of $${amount} helps keep our community running.</p>
+        ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
+        <p>You've earned karma points and are helping us reach our goals!</p>
+        <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
+            Close
+        </button>
+    </div>
+`;
+
+document.body.appendChild(modal);
+}
+
+function updateFundingGoalProgress(donation) {
+const amount = donation.amount;
+
+// Distribute donation to goals
+if (donation.isCharity) {
+    FUNDING_GOALS.charity.current += amount * 0.1;
+    FUNDING_GOALS.server.current += amount * 0.45;
+    FUNDING_GOALS.feature.current += amount * 0.45;
+} else {
+    FUNDING_GOALS.server.current += amount * 0.5;
+    FUNDING_GOALS.feature.current += amount * 0.5;
+}
+
+localStorage.setItem('fundingGoals', JSON.stringify(FUNDING_GOALS));
+updateFundingGoals();
+}
+
+function updateFundingGoals() {
+// Load saved goals
+const savedGoals = localStorage.getItem('fundingGoals');
+if (savedGoals) {
+    Object.assign(FUNDING_GOALS, JSON.parse(savedGoals));
+}
+
+// Update server goal
+const serverProgress = Math.min((FUNDING_GOALS.server.current / FUNDING_GOALS.server.target) * 100, 100);
+document.getElementById('server-goal-progress').style.width = serverProgress + '%';
+document.getElementById('server-goal-progress').textContent = Math.round(serverProgress) + '%';
+document.getElementById('server-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.server.current)} raised`;
+
+// Update feature goal
+const featureProgress = Math.min((FUNDING_GOALS.feature.current / FUNDING_GOALS.feature.target) * 100, 100);
+document.getElementById('feature-goal-progress').style.width = featureProgress + '%';
+document.getElementById('feature-goal-progress').textContent = Math.round(featureProgress) + '%';
+document.getElementById('feature-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.feature.current)} raised`;
+
+// Update charity goal
+const charityProgress = Math.min((FUNDING_GOALS.charity.current / FUNDING_GOALS.charity.target) * 100, 100);
+document.getElementById('charity-goal-progress').style.width = charityProgress + '%';
+document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
+document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
+}
+
+function checkDonationAchievements(donation) {
+// First donation achievement
+if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
+    userAchievements.push('supporter');
+    addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.supporter);
+}
+
+// Charity donation achievement
+if (donation.isCharity && !userAchievements.includes('philanthropist')) {
+    userAchievements.push('philanthropist');
+    addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.philanthropist);
+}
+
+// Large donation achievement
+if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
+    userAchievements.push('crypto_whale');
+    addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.cryptoWhale);
+}
+
+saveUserData();
+}
+
+function loadDonationData() {
+const savedDonations = localStorage.getItem('donations');
+if (savedDonations) {
+    donations = JSON.parse(savedDonations);
+}
+
+const savedUserDonations = localStorage.getItem('userDonations_' + userId);
+if (savedUserDonations) {
+    userDonations = JSON.parse(savedUserDonations);
+}
+}
+
+// Original functions continued...
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeToggleIcon(newTheme);
+const currentTheme = document.documentElement.getAttribute('data-theme');
+const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+document.documentElement.setAttribute('data-theme', newTheme);
+localStorage.setItem('theme', newTheme);
+updateThemeToggleIcon(newTheme);
 }
 
 function updateThemeToggleIcon(theme) {
-    const iconElement = document.querySelector('#theme-toggle i');
-    if (theme === 'dark') {
-        iconElement.className = 'fas fa-sun';
-    } else {
-        iconElement.className = 'fas fa-moon';
-    }
+const iconElement = document.querySelector('#theme-toggle i');
+if (theme === 'dark') {
+    iconElement.className = 'fas fa-sun';
+} else {
+    iconElement.className = 'fas fa-moon';
+}
 }
 
 function loadUserData() {
-    const userData = localStorage.getItem('userData_' + userId);
-    if (userData) {
-        const data = JSON.parse(userData);
-        userKarma = data.karma || 0;
-        userAchievements = data.achievements || [];
-    }
-    updateKarmaDisplay();
+const userData = localStorage.getItem('userData_' + userId);
+if (userData) {
+    const data = JSON.parse(userData);
+    userKarma = data.karma || 0;
+    userAchievements = data.achievements || [];
+}
+updateKarmaDisplay();
 }
 
 function saveUserData() {
-    const userData = {
-        karma: userKarma,
-        achievements: userAchievements,
-        lastSubmissionDate: new Date().toDateString()
-    };
-    localStorage.setItem('userData_' + userId, JSON.stringify(userData));
+const userData = {
+    karma: userKarma,
+    achievements: userAchievements,
+    lastSubmissionDate: new Date().toDateString()
+};
+localStorage.setItem('userData_' + userId, JSON.stringify(userData));
 }
 
 function updateKarmaDisplay() {
-    document.getElementById('user-karma').textContent = userKarma;
+document.getElementById('user-karma').textContent = userKarma;
 }
 
 function addKarma(points, reason) {
-    userKarma += points;
-    updateKarmaDisplay();
-    saveUserData();
-    checkAchievements();
+userKarma += points;
+updateKarmaDisplay();
+saveUserData();
+checkAchievements();
 }
 
 function showAchievement(achievement) {
-    const popup = document.getElementById('achievement-popup');
-    document.getElementById('achievement-title').textContent = achievement.title;
-    document.getElementById('achievement-description').textContent = achievement.description;
-    
-    popup.classList.add('show');
-    
-    setTimeout(() => {
-        popup.classList.remove('show');
-    }, 5000);
+const popup = document.getElementById('achievement-popup');
+document.getElementById('achievement-title').textContent = achievement.title;
+document.getElementById('achievement-description').textContent = achievement.description;
+
+popup.classList.add('show');
+
+setTimeout(() => {
+    popup.classList.remove('show');
+}, 5000);
 }
 
 function checkAchievements() {
-    // Check for first confession achievement
-    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const userConfessions = confessions.filter(c => c.userId === userId);
-    
-    if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
-        userAchievements.push('first_confession');
-        addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.firstConfession);
-    }
-    
-    // Check for karma legend achievement
-    if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
-        userAchievements.push('karma_legend');
-        addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.karmaLegend);
-    }
-    
-    saveUserData();
+// Check for first confession achievement
+const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+const userConfessions = confessions.filter(c => c.userId === userId);
+
+if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
+    userAchievements.push('first_confession');
+    addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.firstConfession);
+}
+
+// Check for karma legend achievement
+if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
+    userAchievements.push('karma_legend');
+    addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.karmaLegend);
+}
+
+saveUserData();
 }
 
 function checkDailyStreak() {
-    const userData = localStorage.getItem('userData_' + userId);
-    if (userData) {
-        const data = JSON.parse(userData);
-        const lastSubmission = data.lastSubmissionDate;
-        const today = new Date().toDateString();
+const userData = localStorage.getItem('userData_' + userId);
+if (userData) {
+    const data = JSON.parse(userData);
+    const lastSubmission = data.lastSubmissionDate;
+    const today = new Date().toDateString();
+    
+    if (lastSubmission && lastSubmission !== today) {
+        // Check if it's consecutive days
+        const lastDate = new Date(lastSubmission);
+        const diffTime = Math.abs(new Date() - lastDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        if (lastSubmission && lastSubmission !== today) {
-            // Check if it's consecutive days
-            const lastDate = new Date(lastSubmission);
-            const diffTime = Math.abs(new Date() - lastDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+            // Consecutive day
+            const currentStreak = (data.currentStreak || 0) + 1;
+            data.currentStreak = currentStreak;
             
-            if (diffDays === 1) {
-                // Consecutive day
-                const currentStreak = (data.currentStreak || 0) + 1;
-                data.currentStreak = currentStreak;
-                
-                if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
-                    userAchievements.push('daily_streak');
-                    addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
-                    showAchievement(ACHIEVEMENTS.dailyStreak);
-                }
-            } else {
-                // Streak broken
-                data.currentStreak = 0;
+            if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
+                userAchievements.push('daily_streak');
+                addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
+                showAchievement(ACHIEVEMENTS.dailyStreak);
             }
-            
-            localStorage.setItem('userData_' + userId, JSON.stringify(data));
+        } else {
+            // Streak broken
+            data.currentStreak = 0;
         }
+        
+        localStorage.setItem('userData_' + userId, JSON.stringify(data));
     }
+}
 }
 
 function handleConfessionSubmit(e) {
-    e.preventDefault();
+e.preventDefault();
+
+if (isSubmitting) return;
+
+const confessionText = document.getElementById('confession-text').value.trim();
+const submitBtn = document.getElementById('submit-btn');
+
+if (confessionText) {
+    // Basic content moderation
+    if (containsForbiddenWords(confessionText)) {
+        showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
+        return;
+    }
     
-    if (isSubmitting) return;
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
     
-    const confessionText = document.getElementById('confession-text').value.trim();
-    const submitBtn = document.getElementById('submit-btn');
-    
-    if (confessionText) {
-        // Basic content moderation
-        if (containsForbiddenWords(confessionText)) {
-            showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
-            return;
+    // Simulate API call
+    setTimeout(() => {
+        if (addConfession(confessionText, selectedCategory)) {
+            document.getElementById('confession-text').value = '';
+            document.querySelector('.character-count').textContent = '0/1000 characters';
+            showSuccessMessage();
+            
+            // Reset category selection
+            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+            document.querySelector('.category-tag[data-category="all"]').classList.add('active');
+            selectedCategory = null;
+            
+            // Add karma for submission
+            addKarma(KARMA_POINTS.submitConfession, 'submission');
         }
         
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-        
-        // Simulate API call
-        setTimeout(() => {
-            if (addConfession(confessionText, selectedCategory)) {
-                document.getElementById('confession-text').value = '';
-                document.querySelector('.character-count').textContent = '0/1000 characters';
-                showSuccessMessage();
-                
-                // Reset category selection
-                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-                document.querySelector('.category-tag[data-category="all"]').classList.add('active');
-                selectedCategory = null;
-                
-                // Add karma for submission
-                addKarma(KARMA_POINTS.submitConfession, 'submission');
-            }
-            
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
-        }, 1000);
-    }
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
+    }, 1000);
+}
 }
 
 function containsForbiddenWords(text) {
-    const lowerText = text.toLowerCase();
-    return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
+const lowerText = text.toLowerCase();
+return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
 }
 
-function showSuccessMessage() {
-    const successMessage = document.getElementById('success-message');
-    successMessage.style.display = 'flex';
-    
-    setTimeout(() => {
-        successMessage.style.display = 'none';
-    }, 3000);
+function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
+const successMessage = document.getElementById('success-message');
+if (message !== 'Your confession has been submitted successfully!') {
+    successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+}
+successMessage.style.display = 'flex';
+
+setTimeout(() => {
+    successMessage.style.display = 'none';
+}, 3000);
 }
 
 function showErrorMessage(message) {
-    const errorMessage = document.getElementById('error-message');
-    const errorText = document.getElementById('error-text');
-    errorText.textContent = message;
-    errorMessage.style.display = 'flex';
-    
-    setTimeout(() => {
-        errorMessage.style.display = 'none';
-    }, 3000);
+const errorMessage = document.getElementById('error-message');
+const errorText = document.getElementById('error-text');
+errorText.textContent = message;
+errorMessage.style.display = 'flex';
+
+setTimeout(() => {
+    errorMessage.style.display = 'none';
+}, 3000);
 }
 
 function addConfession(text, category = null) {
-    try {
-        const confession = {
-            id: 'conf_' + Date.now(),
-            userId: userId,
-            text: text,
-            category: category,
-            timestamp: new Date().toISOString(),
-            views: 0,
-            reactions: {
-                like: 0,
-                dislike: 0,
-                love: 0,
-                haha: 0,
-                wow: 0,
-                sad: 0
-            },
-            replies: [],
-            reports: 0,
-            reported: false
-        };
-        
-        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-        confessions.unshift(confession);
-        
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        
-        loadConfessions();
-        updateStatistics();
-        checkDailyStreak();
-        checkAchievements();
-        
-        // Check if we need to set a new confession of the day
-        const lastUpdate = localStorage.getItem('last_cotd_update');
-        if (!lastUpdate) {
-            setConfessionOfDay();
-        }
-        
-        return true;
-    } catch (error) {
-        console.error("Error adding confession:", error);
-        showErrorMessage("There was an error saving your confession. Please try again.");
-        return false;
-    }
-}
-
-function loadConfessions() {
-    try {
-        const confessionsContainer = document.getElementById('confessions-list');
-        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-        
-        // Apply filters
-        confessions = applyFilters(confessions);
-        
-        // Calculate pagination
-        const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
-        const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
-        const end = start + CONFESSIONS_PER_PAGE;
-        const pageConfessions = confessions.slice(start, end);
-        
-        if (pageConfessions.length === 0) {
-            confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
-            document.getElementById('pagination').innerHTML = '';
-            return;
-        }
-        
-        confessionsContainer.innerHTML = '';
-        
-        pageConfessions.forEach(confession => {
-            const confessionElement = createConfessionElement(confession);
-            confessionsContainer.appendChild(confessionElement);
-            incrementViewCount(confession.id);
-        });
-        
-        // Create pagination
-        createPagination(totalPages);
-    } catch (error) {
-        console.error("Error in loadConfessions:", error);
-        document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
-    }
-}
-
-function applyFilters(confessions) {
-    let filtered = [...confessions];
-    
-    // Category filter
-    if (currentCategory !== 'all') {
-        filtered = filtered.filter(c => c.category === currentCategory);
-    }
-    
-    // Search filter
-    if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
-    }
-    
-    // Sort
-    switch (currentSort) {
-        case 'oldest':
-            filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-            break;
-        case 'popular':
-            filtered.sort((a, b) => {
-                const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
-                const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
-                return bReactions - aReactions;
-            });
-            break;
-        default: // newest
-            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    }
-    
-    return filtered;
-}
-
-function createConfessionElement(confession) {
-    const confessionElement = document.createElement('div');
-    confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
-    confessionElement.setAttribute('data-id', confession.id);
-    
-    const categoryBadge = confession.category ? 
-        `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
-    
-    const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
-    
-    confessionElement.innerHTML = `
-        ${categoryBadge}
-        <p>${confession.text}</p>
-        <div class="meta">
-            <div class="meta-info">
-                <div class="timestamp">
-                    <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
-                </div>
-                <div class="views">
-                    <i class="far fa-eye"></i> ${confession.views || 0} views
-                </div>
-            </div>
-            <div class="actions">
-                ${createReactionButtons(confession)}
-                <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-                <div class="share-options" id="share-options-${confession.id}">
-                    <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
-                        <i class="fab fa-twitter"></i> Twitter
-                    </button>
-                    <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
-                        <i class="fas fa-link"></i> Copy Link
-                    </button>
-                    <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
-                        <i class="fas fa-image"></i> Create Card
-                    </button>
-                </div>
-                <button class="report-button" onclick="reportConfession('${confession.id}')">
-                    <i class="fas fa-flag"></i>
-                </button>
-            </div>
-        </div>
-        ${createRepliesSection(confession)}
-        <button class="admin-action" onclick="deleteConfession('${confession.id}')">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // Check if this confession is popular enough for achievement
-    if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
-        userAchievements.push('popular_confession');
-        addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.popularConfession);
-    }
-    
-    return confessionElement;
-}
-
-function createReactionButtons(confession) {
-    const reactions = [
-        { name: 'like', icon: 'fas fa-thumbs-up' },
-        { name: 'dislike', icon: 'fas fa-thumbs-down' },
-        { name: 'love', icon: 'fas fa-heart' },
-        { name: 'haha', icon: 'fas fa-laugh' },
-        { name: 'wow', icon: 'fas fa-surprise' },
-        { name: 'sad', icon: 'fas fa-sad-tear' }
-    ];
-    
-    return reactions.map(reaction => {
-        const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
-        return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
-            <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
-        </button>`;
-    }).join('');
-}
-
-function createRepliesSection(confession) {
-    const replies = confession.replies || [];
-    const replyCount = replies.length;
-    
-    return `
-        <div class="replies-section">
-            <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
-                <i class="fas fa-comments"></i>
-                Replies <span class="reply-count">(${replyCount})</span>
-            </button>
-            <div class="replies-container" id="replies-${confession.id}">
-                ${replies.map(reply => `
-                    <div class="reply">
-                        <p>${reply.text}</p>
-                        <div class="reply-meta">
-                            <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
-                        </div>
-                    </div>
-                `).join('')}
-                <div class="reply-form">
-                    <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
-                    <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function toggleReplies(confessionId) {
-    const repliesContainer = document.getElementById(`replies-${confessionId}`);
-    repliesContainer.classList.toggle('active');
-}
-
-function submitReply(confessionId) {
-    const replyInput = document.getElementById(`reply-input-${confessionId}`);
-    const replyText = replyInput.value.trim();
-    
-    if (!replyText) return;
-    
-    const reply = {
-        id: 'reply_' + Date.now(),
-        text: replyText,
+try {
+    const confession = {
+        id: 'conf_' + Date.now(),
+        userId: userId,
+        text: text,
+        category: category,
         timestamp: new Date().toISOString(),
-        userId: userId
+        views: 0,
+        reactions: {
+            like: 0,
+            dislike: 0,
+            love: 0,
+            haha: 0,
+            wow: 0,
+            sad: 0
+        },
+        replies: [],
+        reports: 0,
+        reported: false,
+        tips: 0,
+        donors: []
     };
     
     let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+    confessions.unshift(confession);
     
-    if (confessionIndex !== -1) {
-        if (!confessions[confessionIndex].replies) {
-            confessions[confessionIndex].replies = [];
-        }
-        
-        confessions[confessionIndex].replies.push(reply);
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        
-        // Add karma to the confession owner if they receive a reply
-        const confessionOwner = confessions[confessionIndex].userId;
-        if (confessionOwner && confessionOwner !== userId) {
-            addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
-        }
-        
-        // Check for conversation starter achievement
-        if (confessions[confessionIndex].replies.length >= 10 && 
-            confessions[confessionIndex].userId === userId && 
-            !userAchievements.includes('conversation_starter')) {
-            userAchievements.push('conversation_starter');
-            addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
-            showAchievement(ACHIEVEMENTS.conversationStarter);
-        }
-        
-        loadConfessions();
-        replyInput.value = '';
+    localStorage.setItem('confessions', JSON.stringify(confessions));
+    
+    loadConfessions();
+    updateStatistics();
+    checkDailyStreak();
+    checkAchievements();
+    
+    // Check if we need to set a new confession of the day
+    const lastUpdate = localStorage.getItem('last_cotd_update');
+    if (!lastUpdate) {
+        setConfessionOfDay();
     }
+    
+    return true;
+} catch (error) {
+    console.error("Error adding confession:", error);
+    showErrorMessage("There was an error saving your confession. Please try again.");
+    return false;
+}
 }
 
+function loadConfessions() {
+try {
+    const confessionsContainer = document.getElementById('confessions-list');
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    
+    // Apply filters
+    confessions = applyFilters(confessions);
+    
+    // Calculate pagination
+    const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
+    const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
+    const end = start + CONFESSIONS_PER_PAGE;
+    const pageConfessions = confessions.slice(start, end);
+    
+    if (pageConfessions.length === 0) {
+        confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+    }
+    
+    confessionsContainer.innerHTML = '';
+    
+    pageConfessions.forEach(confession => {
+        const confessionElement = createConfessionElement(confession);
+        confessionsContainer.appendChild(confessionElement);
+        incrementViewCount(confession.id);
+    });
+    
+    // Create pagination
+    createPagination(totalPages);
+} catch (error) {
+    console.error("Error in loadConfessions:", error);
+    document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
+}
+}
+
+function applyFilters(confessions) {
+let filtered = [...confessions];
+
+// Category filter
+if (currentCategory !== 'all') {
+    filtered = filtered.filter(c => c.category === currentCategory);
+}
+
+// Search filter
+if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
+}
+
+// Sort
+switch (currentSort) {
+    case 'oldest':
+        filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        break;
+    case 'popular':
+        filtered.sort((a, b) => {
+            const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
+            const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
+            return bReactions - aReactions;
+        });
+        break;
+    default: // newest
+        filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+}
+
+return filtered;
+}
+
+function createConfessionElement(confession) {
+const confessionElement = document.createElement('div');
+confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
+confessionElement.setAttribute('data-id', confession.id);
+
+const categoryBadge = confession.category ? 
+    `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
+
+const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+
+// Check if user is a donor
+const isDonor = userDonations.length > 0;
+const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
+
+// Check if confession has received tips
+const tipAmount = confession.tips || 0;
+const tipBadge = tipAmount > 0 ? `<span class="tip-badge" style="background: var(--success-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">$${tipAmount} tipped</span>` : '';
+
+confessionElement.innerHTML = `
+    ${categoryBadge}
+    <p>${confession.text}</p>
+    <div class="meta">
+        <div class="meta-info">
+            <div class="timestamp">
+                <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
+                ${donorBadge}
+                ${tipBadge}
+            </div>
+            <div class="views">
+                <i class="far fa-eye"></i> ${confession.views || 0} views
+            </div>
+        </div>
+        <div class="actions">
+            ${createReactionButtons(confession)}
+            <button class="tip-button" onclick="tipConfession('${confession.id}')">
+                <i class="fas fa-hand-holding-usd"></i> Tip
+            </button>
+            <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <div class="share-options" id="share-options-${confession.id}">
+                <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
+                    <i class="fab fa-twitter"></i> Twitter
+                </button>
+                <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
+                    <i class="fas fa-link"></i> Copy Link
+                </button>
+                <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
+                    <i class="fas fa-image"></i> Create Card
+                </button>
+            </div>
+            <button class="report-button" onclick="reportConfession('${confession.id}')">
+                <i class="fas fa-flag"></i>
+            </button>
+        </div>
+    </div>
+    ${createRepliesSection(confession)}
+    <button class="admin-action" onclick="deleteConfession('${confession.id}')">
+        <i class="fas fa-times"></i>
+    </button>
+`;
+
+// Check if this confession is popular enough for achievement
+if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
+    userAchievements.push('popular_confession');
+    addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
+    showAchievement(ACHIEVEMENTS.popularConfession);
+}
+
+return confessionElement;
+}
+
+function tipConfession(confessionId) {
+// Open donation modal with tip mode
+currentTipConfessionId = confessionId;
+openDonationModal();
+
+// Customize modal for tipping
+document.querySelector('.donation-title').textContent = 'Tip This Confession';
+document.querySelector('.donation-subtitle').textContent = 'Show appreciation for this confession';
+}
+
+function createReactionButtons(confession) {
+const reactions = [
+    { name: 'like', icon: 'fas fa-thumbs-up' },
+    { name: 'dislike', icon: 'fas fa-thumbs-down' },
+    { name: 'love', icon: 'fas fa-heart' },
+    { name: 'haha', icon: 'fas fa-laugh' },
+    { name: 'wow', icon: 'fas fa-surprise' },
+    { name: 'sad', icon: 'fas fa-sad-tear' }
+];
+
+return reactions.map(reaction => {
+    const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
+    return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
+        <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
+    </button>`;
+}).join('');
+}
+
+function createRepliesSection(confession) {
+const replies = confession.replies || [];
+const replyCount = replies.length;
+
+return `
+    <div class="replies-section">
+        <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
+            <i class="fas fa-comments"></i>
+            Replies <span class="reply-count">(${replyCount})</span>
+        </button>
+        <div class="replies-container" id="replies-${confession.id}">
+            ${replies.map(reply => `
+                <div class="reply">
+                    <p>${reply.text}</p>
+                    <div class="reply-meta">
+                        <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
+                    </div>
+                </div>
+            `).join('')}
+            <div class="reply-form">
+                <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
+                <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
+            </div>
+        </div>
+    </div>
+`;
+}
+
+function toggleReplies(confessionId) {
+const repliesContainer = document.getElementById(`replies-${confessionId}`);
+repliesContainer.classList.toggle('active');
+}
+
+function submitReply(confessionId) {
+const replyInput = document.getElementById(`reply-input-${confessionId}`);
+const replyText = replyInput.value.trim();
+
+if (!replyText) return;
+
+const reply = {
+    id: 'reply_' + Date.now(),
+    text: replyText,
+    timestamp: new Date().toISOString(),
+    userId: userId
+};
+
+let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+
+if (confessionIndex !== -1) {
+    if (!confessions[confessionIndex].replies) {
+        confessions[confessionIndex].replies = [];
+    }
+    
+    confessions[confessionIndex].replies.push(reply);
+    localStorage.setItem('confessions', JSON.stringify(confessions));
+    
+    // Add karma to the confession owner if they receive a reply
+    const confessionOwner = confessions[confessionIndex].userId;
+    if (confessionOwner && confessionOwner !== userId) {
+        addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
+    }
+    
+    // Check for conversation starter achievement
+    if (confessions[confessionIndex].replies.length >= 10 && 
+        confessions[confessionIndex].userId === userId && 
+        !userAchievements.includes('conversation_starter')) {
+        userAchievements.push('conversation_starter');
+        addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.conversationStarter);
+    }
+    
+    loadConfessions();
+    replyInput.value = '';
+}
+}
+
+function addKarmaToUser
 function addKarmaToUser(targetUserId, points) {
     const userData = localStorage.getItem('userData_' + targetUserId);
     if (userData) {
@@ -1957,9 +2783,9 @@ function addKarmaToUser(targetUserId, points) {
         data.karma = (data.karma || 0) + points;
         localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
     }
-}
-
-function openShareOptions(event, confessionId) {
+ }
+ 
+ function openShareOptions(event, confessionId) {
     event.stopPropagation();
     const shareOptions = document.getElementById(`share-options-${confessionId}`);
     
@@ -1987,9 +2813,9 @@ function openShareOptions(event, confessionId) {
             }
         });
     }, 100);
-}
-
-function shareToTwitter(confessionId) {
+ }
+ 
+ function shareToTwitter(confessionId) {
     const confession = getConfessionById(confessionId);
     if (confession) {
         const text = confession.text.substring(0, 200) + '...';
@@ -1997,18 +2823,18 @@ function shareToTwitter(confessionId) {
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
         window.open(twitterUrl, '_blank');
     }
-}
-
-function copyShareLink(confessionId) {
+ }
+ 
+ function copyShareLink(confessionId) {
     const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
     navigator.clipboard.writeText(url).then(() => {
-        alert('Link copied to clipboard!');
+        showSuccessMessage('Link copied to clipboard!');
     }).catch(() => {
         prompt('Copy this link:', url);
     });
-}
-
-function createShareCard(confessionId) {
+ }
+ 
+ function createShareCard(confessionId) {
     const confession = getConfessionById(confessionId);
     if (!confession) return;
     
@@ -2058,29 +2884,34 @@ function createShareCard(confessionId) {
             modal.style.display = 'block';
         });
     }, 100);
-}
-
-function getConfessionById(confessionId) {
+ }
+ 
+ function getConfessionById(confessionId) {
     const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
     return confessions.find(c => c.id === confessionId);
-}
-
-function showLeaderboard() {
+ }
+ 
+ function showLeaderboard() {
     const modal = document.getElementById('leaderboard-modal');
     const content = document.getElementById('leaderboard-content');
     
     modal.style.display = 'block';
     
-    // Get all users' karma
+    // Get all users' karma and donation info
     const users = [];
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('userData_')) {
             const userData = JSON.parse(localStorage.getItem(key));
+            const userId = key.replace('userData_', '');
+            const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
+            const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
+            
             users.push({
-                id: key.replace('userData_', ''),
+                id: userId,
                 karma: userData.karma || 0,
-                achievements: userData.achievements || []
+                achievements: userData.achievements || [],
+                totalDonated: totalDonated
             });
         }
     }
@@ -2091,22 +2922,24 @@ function showLeaderboard() {
     // Display top 10
     content.innerHTML = users.slice(0, 10).map((user, index) => {
         const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+        const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
+        
         return `
             <div class="leaderboard-item">
                 <span class="rank ${rankClass}">#${index + 1}</span>
                 <div class="user-info">
-                    <span class="user-name">Anonymous User ${user.id.substr(-4)}</span>
+                    <span class="user-name">Anonymous User ${user.id.substr(-4)}${donorBadge}</span>
                     <div class="user-achievements">
-                        ${user.achievements.length} achievements
+                        ${user.achievements.length} achievements | $${user.totalDonated} donated
                     </div>
                 </div>
                 <span class="karma-badge">${user.karma} karma</span>
             </div>
         `;
     }).join('');
-}
-
-function reactToConfession(confessionId, reactionType) {
+ }
+ 
+ function reactToConfession(confessionId, reactionType) {
     try {
         let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
         const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -2138,9 +2971,9 @@ function reactToConfession(confessionId, reactionType) {
     } catch (error) {
         console.error("Error in reactToConfession:", error);
     }
-}
-
-function createPagination(totalPages) {
+ }
+ 
+ function createPagination(totalPages) {
     const paginationContainer = document.getElementById('pagination');
     paginationContainer.innerHTML = '';
     
@@ -2177,15 +3010,15 @@ function createPagination(totalPages) {
     nextBtn.disabled = currentPage === totalPages;
     nextBtn.onclick = () => changePage(currentPage + 1);
     paginationContainer.appendChild(nextBtn);
-}
-
-function changePage(page) {
+ }
+ 
+ function changePage(page) {
     currentPage = page;
     loadConfessions();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function formatDate(date) {
+ }
+ 
+ function formatDate(date) {
     try {
         const now = new Date();
         const diffMs = now - date;
@@ -2207,9 +3040,9 @@ function formatDate(date) {
         console.error("Error formatting date:", error);
         return "unknown time";
     }
-}
-
-function reportConfession(confessionId) {
+ }
+ 
+ function reportConfession(confessionId) {
     try {
         let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
         const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -2233,9 +3066,9 @@ function reportConfession(confessionId) {
     } catch (error) {
         console.error("Error in reportConfession:", error);
     }
-}
-
-function deleteConfession(confessionId) {
+ }
+ 
+ function deleteConfession(confessionId) {
     if (confirm('Are you sure you want to delete this confession?')) {
         let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
         confessions = confessions.filter(c => c.id !== confessionId);
@@ -2250,9 +3083,9 @@ function deleteConfession(confessionId) {
         loadConfessions();
         updateStatistics();
     }
-}
-
-function showRandomConfession() {
+ }
+ 
+ function showRandomConfession() {
     const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
     
     if (confessions.length === 0) {
@@ -2285,9 +3118,9 @@ function showRandomConfession() {
             }, 2000);
         }
     }, 300);
-}
-
-function setConfessionOfDay() {
+ }
+ 
+ function setConfessionOfDay() {
     const now = new Date();
     const lastUpdate = localStorage.getItem('last_cotd_update');
     const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : null;
@@ -2307,9 +3140,9 @@ function setConfessionOfDay() {
     }
     
     displayConfessionOfDay();
-}
-
-function displayConfessionOfDay() {
+ }
+ 
+ function displayConfessionOfDay() {
     const cotdContainer = document.getElementById('confession-of-day-container');
     const cotdId = localStorage.getItem('confession_of_day');
     
@@ -2346,6 +3179,9 @@ function displayConfessionOfDay() {
                     </div>
                     <div class="actions">
                         ${createReactionButtons(cotd)}
+                        <button class="tip-button" onclick="tipConfession('${cotd.id}')">
+                            <i class="fas fa-hand-holding-usd"></i> Tip
+                        </button>
                         <button class="share-button" onclick="shareConfession('${cotd.id}', '${encodeURIComponent(cotd.text)}')">
                             <i class="fas fa-share-alt"></i>
                         </button>
@@ -2353,9 +3189,9 @@ function displayConfessionOfDay() {
                 </div>
             </div>
         </div>`;
-}
-
-function updateStatistics() {
+ }
+ 
+ function updateStatistics() {
     const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
     const today = new Date();
     const todayConfessions = confessions.filter(c => {
@@ -2375,9 +3211,9 @@ function updateStatistics() {
         }
     }
     document.getElementById('active-users').textContent = activeUsers;
-}
-
-function autoArchiveOldConfessions() {
+ }
+ 
+ function autoArchiveOldConfessions() {
     const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
     let archivedConfessions = JSON.parse(localStorage.getItem('archived_confessions')) || [];
     
@@ -2404,9 +3240,9 @@ function autoArchiveOldConfessions() {
             setConfessionOfDay();
         }
     }
-}
-
-function checkSharedConfession() {
+ }
+ 
+ function checkSharedConfession() {
     const urlParams = new URLSearchParams(window.location.search);
     const sharedConfessionId = urlParams.get('confession');
     
@@ -2430,9 +3266,9 @@ function checkSharedConfession() {
             }, 500);
         }
     }
-}
-
-function incrementViewCount(confessionId) {
+ }
+ 
+ function incrementViewCount(confessionId) {
     try {
         let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
         const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -2450,27 +3286,27 @@ function incrementViewCount(confessionId) {
         console.error("Error incrementing view count:", error);
     }
     return 0;
-}
-
-function handleSearch(e) {
+ }
+ 
+ function handleSearch(e) {
     searchQuery = e.target.value;
     currentPage = 1;
     loadConfessions();
-}
-
-function handleSortChange(e) {
+ }
+ 
+ function handleSortChange(e) {
     currentSort = e.target.value;
     currentPage = 1;
     loadConfessions();
-}
-
-function handleCategoryFilterChange(e) {
+ }
+ 
+ function handleCategoryFilterChange(e) {
     currentCategory = e.target.value;
     currentPage = 1;
     loadConfessions();
-}
-
-function handleAdminLogin() {
+ }
+ 
+ function handleAdminLogin() {
     const password = document.getElementById('admin-password').value;
     const adminPanel = document.getElementById('admin-panel');
     
@@ -2482,9 +3318,9 @@ function handleAdminLogin() {
     } else {
         alert('Incorrect password');
     }
-}
-
-function clearAllConfessions() {
+ }
+ 
+ function clearAllConfessions() {
     if (confirm('Are you sure you want to clear all confessions? This action cannot be undone.')) {
         localStorage.removeItem('confessions');
         localStorage.removeItem('archived_confessions');
@@ -2494,8 +3330,9 @@ function clearAllConfessions() {
         setConfessionOfDay();
         updateStatistics();
     }
-}
-function downloadShareCard() {
+ }
+ 
+ function downloadShareCard() {
     if (window.currentShareCardData && window.currentShareCardId) {
         const link = document.createElement('a');
         link.download = `confession-${window.currentShareCardId}.png`;
@@ -2505,28 +3342,16 @@ function downloadShareCard() {
         // Close the modal after download
         closeShareCardModal();
     }
-}
-
-function closeShareCardModal() {
+ }
+ 
+ function closeShareCardModal() {
     const modal = document.getElementById('share-card-modal');
     modal.style.display = 'none';
     
     // Clean up stored data
     window.currentShareCardData = null;
     window.currentShareCardId = null;
-}
-
-function downloadShareCard() {
-    if (window.currentShareCardData && window.currentShareCardId) {
-        const link = document.createElement('a');
-        link.download = `confession-${window.currentShareCardId}.png`;
-        link.href = window.currentShareCardData;
-        link.click();
-        
-        // Close the modal after download
-        closeShareCardModal();
-    }
-}
-</script>
-</body>
-</html>
+ }
+ </script>
+ </body>
+ </html>
