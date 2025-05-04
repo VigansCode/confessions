@@ -210,6 +210,58 @@ body {
     color: var(--text-light);
 }
 
+/* Wallet Section Styles */
+.wallet-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(108, 92, 231, 0.05);
+    border-radius: 8px;
+}
+
+.wallet-section label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.wallet-info-tooltip {
+    cursor: help;
+    color: var(--text-light);
+}
+
+.wallet-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: var(--card-color);
+    color: var(--text-color);
+    font-family: inherit;
+}
+
+.wallet-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background: var(--card-color);
+    color: var(--text-color);
+    font-family: monospace;
+}
+
+.wallet-disclaimer {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 5px;
+}
+
 /* Tip Button */
 .tip-button {
     background: linear-gradient(135deg, var(--crypto-color), #e6951e);
@@ -1028,53 +1080,54 @@ button:disabled {
     position: absolute;
     right: 15px;
     top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-light);
+   transform: translateY(-50%);
+   color: var(--text-light);
 }
 
 /* Confession Cards */
 .confessions-list {
-    display: grid;
-    grid-gap: 20px;
+   display: grid;
+   grid-gap: 20px;
 }
 
 .confession {
-    background-color: var(--card-color);
-    padding: 20px;
-    border-radius: 10px;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    border-left: 4px solid var(--primary-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: fadeIn 0.5s ease-out;
+   background-color: var(--card-color);
+   padding: 20px;
+   border-radius: 10px;
+   position: relative;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+   border-left: 4px solid var(--primary-color);
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+   animation: fadeIn 0.5s ease-out;
 }
 
 .confession:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+   transform: translateY(-3px);
+   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 .confession.reported {
-    opacity: 0.6;
-    border-left-color: var(--danger-color);
+   opacity: 0.6;
+   border-left-color: var(--danger-color);
 }
 
 .confession p {
-    margin: 0;
-    line-height: 1.6;
-    font-size: 1.05rem;
+   margin: 0;
+   line-height: 1.6;
+   font-size: 1.05rem;
 }
 
 .confession .meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color);
-    flex-wrap: wrap;
-    gap: 10px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-top: 15px;
+   padding-top: 10px;
+   border-top: 1px solid var(--border-color);
+   flex-wrap: wrap;
+   gap: 10px;
 }
+
 .confession .timestamp,
 .confession .views {
    font-size: 0.8rem;
@@ -1622,6 +1675,25 @@ input[type="password"]:focus {
        <textarea id="confession-text" placeholder="Type your confession here... (anonymous)" required maxlength="1000"></textarea>
        <div class="character-count">0/1000 characters</div>
    </div>
+   
+   <!-- New wallet address section -->
+   <div class="wallet-section">
+       <label for="wallet-address">
+           <i class="fas fa-wallet"></i> Receive Tips (optional)
+           <span class="wallet-info-tooltip" title="Add your crypto wallet address to receive tips directly from readers">
+               <i class="fas fa-info-circle"></i>
+           </span>
+       </label>
+       <select id="wallet-type" class="wallet-select">
+           <option value="">Select wallet type</option>
+           <option value="bitcoin">Bitcoin (BTC)</option>
+           <option value="ethereum">Ethereum (ETH)</option>
+           <option value="lightning">Lightning Network</option>
+       </select>
+       <input type="text" id="wallet-address" class="wallet-input" placeholder="Enter your wallet address" style="display: none;">
+       <small class="wallet-disclaimer">Your wallet address will be visible to allow direct tipping</small>
+   </div>
+   
    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Submit Confession</button>
 </form>
 <div class="button-group">
@@ -1924,8 +1996,7 @@ function initializeApp() {
    
    // Event listeners
    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-   document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
-   document.getElementById('random-confession').addEventListener('click', showRandomConfession);
+   document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);document.getElementById('random-confession').addEventListener('click', showRandomConfession);
    document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
    document.getElementById('clear-all').addEventListener('click', clearAllConfessions);
    document.getElementById('search-input').addEventListener('input', handleSearch);
@@ -1936,6 +2007,18 @@ function initializeApp() {
    document.getElementById('donate-nav-btn').addEventListener('click', openDonationModal);
    document.getElementById('donate-submit-btn').addEventListener('click', processDonation);
    document.getElementById('charity-donation').addEventListener('change', toggleCharityDropdown);
+   
+   // Add event listener for wallet type selection
+   document.getElementById('wallet-type').addEventListener('change', function() {
+       const walletInput = document.getElementById('wallet-address');
+       if (this.value) {
+           walletInput.style.display = 'block';
+           walletInput.placeholder = `Enter your ${this.options[this.selectedIndex].text} address`;
+       } else {
+           walletInput.style.display = 'none';
+           walletInput.value = '';
+       }
+   });
    
    // Donation event listeners
    document.querySelectorAll('.amount-btn').forEach(btn => {
@@ -1982,1445 +2065,1496 @@ function initializeApp() {
                closeShareCardModal();
            } else if (modal.id === 'donation-modal') {
                closeDonationModal();
-            } else {
-                modal.style.display = 'none';
-            }
-        });
-    });
-    
-    // Category tags
-    document.querySelectorAll('.category-tag').forEach(tag => {
-        tag.addEventListener('click', function() {
-            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
-        });
-    });
-    
-    // Character count
-    const textArea = document.getElementById('confession-text');
-    const charCount = document.querySelector('.character-count');
-    
-    textArea.addEventListener('input', function() {
-        const count = this.value.length;
-        charCount.textContent = `${count}/${MAX_CONFESSION_LENGTH} characters`;
-        
-        if (count > MAX_CONFESSION_LENGTH * 0.9) {
-            charCount.classList.add('warning');
-        } else {
-            charCount.classList.remove('warning');
-        }
-    });
-    
-    // Navigation links
-    document.getElementById('home-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    
-    document.getElementById('about-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
-    });
-    
-    document.getElementById('rules-link').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
-    });
-    
-    // Check if admin access should be visible
-    const isAdmin = sessionStorage.getItem('isAdmin');
-    if (isAdmin) {
-        document.getElementById('admin-access').style.display = 'block';
-    }
-    
-    // Initial load
-    loadConfessions();
-    setConfessionOfDay();
-    updateStatistics();
-    updateFundingGoals();
-    autoArchiveOldConfessions();
-    checkSharedConfession();
-    
-    // Update stats every minute
-    setInterval(updateStatistics, 60000);
-    setInterval(updateFundingGoals, 300000); // Update funding goals every 5 minutes
-    
-    // Check for daily streak
-    checkDailyStreak();
- }
- 
- // Donation System Functions
- function openDonationModal() {
-    document.getElementById('donation-modal').style.display = 'block';
-    
-    // Reset tip state if not tipping
-    if (!currentTipConfessionId) {
-        const titleElement = document.querySelector('.donation-title');
-        const subtitleElement = document.querySelector('.donation-subtitle');
-        
-        if (titleElement) {
-            titleElement.textContent = 'Support Our Community';
-        }
-        if (subtitleElement) {
-            subtitleElement.textContent = 'Your support helps maintain this safe space for anonymous confessions';
-        }
-    }
-    
-    resetDonationForm();
- }
- 
- function closeDonationModal() {
-    document.getElementById('donation-modal').style.display = 'none';
-    currentTipConfessionId = null;
-    resetDonationForm();
- }
- 
- function resetDonationForm() {
-    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
-    document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('selected'));
-    document.getElementById('custom-amount-container').style.display = 'none';
-    document.getElementById('custom-amount-input').value = '';
-    document.getElementById('donation-address').style.display = 'none';
-    document.getElementById('charity-donation').checked = false;
-    document.getElementById('charity-select').style.display = 'none';
-    document.getElementById('charity-select').value = '';
-    document.getElementById('donate-submit-btn').disabled = true;
-    selectedDonationAmount = null;
-    selectedPaymentMethod = null;
- }
- 
- function selectDonationAmount(btn) {
-    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    
-    const amount = btn.dataset.amount;
-    if (amount === 'custom') {
-        document.getElementById('custom-amount-container').style.display = 'block';
-        selectedDonationAmount = document.getElementById('custom-amount-input').value;
-    } else {
-        document.getElementById('custom-amount-container').style.display = 'none';
-        selectedDonationAmount = amount;
-    }
-    
-    updateDonateButton();
- }
- 
- function selectPaymentMethod(method) {
-    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
-    method.classList.add('selected');
-    selectedPaymentMethod = method.dataset.method;
-    
-    // Show payment address
-    const addressDiv = document.getElementById('donation-address');
-    addressDiv.innerHTML = `
-        <div style="font-weight: 600; margin-bottom: 8px;">Send payment to:</div>
-        <div style="margin-bottom: 10px;">${DONATION_ADDRESSES[selectedPaymentMethod]}</div>
-        <button class="copy-address-btn" onclick="copyAddress('${DONATION_ADDRESSES[selectedPaymentMethod]}')">
-            <i class="fas fa-copy"></i> Copy Address
-        </button>
-    `;
-    addressDiv.style.display = 'block';
-    
-    updateDonateButton();
- }
- 
- function copyAddress(address) {
-    if (!address) {
-        showErrorMessage('No address available');
-        return;
-    }
-    
-    navigator.clipboard.writeText(address).then(() => {
-        showSuccessMessage('Address copied to clipboard!');
-    }).catch(() => {
-        // Fallback for browsers that don't support clipboard API
-        const textArea = document.createElement('textarea');
-        textArea.value = address;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showSuccessMessage('Address copied to clipboard!');
-        } catch (err) {
-            prompt('Copy this address:', address);
-        }
-        document.body.removeChild(textArea);
-    });
- }
- 
- function toggleCharityDropdown() {
-    const charitySelect = document.getElementById('charity-select');
-    if (document.getElementById('charity-donation').checked) {
-        charitySelect.style.display = 'block';
-    } else {
-        charitySelect.style.display = 'none';
-        charitySelect.value = '';
-    }
- }
- 
- function updateDonateButton() {
-    const submitBtn = document.getElementById('donate-submit-btn');
-    if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
-        submitBtn.disabled = false;
-    } else {
-        submitBtn.disabled = true;
-    }
- }
- 
- function processDonation() {
-    const amount = parseFloat(selectedDonationAmount);
-    if (!amount || amount <= 0) {
-        showErrorMessage('Please enter a valid donation amount');
-        return;
-    }
-    
-    const isCharity = document.getElementById('charity-donation').checked;
-    const charityType = document.getElementById('charity-select').value;
-    
-    const donation = {
-        id: 'donation_' + Date.now(),
-        userId: userId,
-        amount: amount,
-        method: selectedPaymentMethod,
-        isCharity: isCharity,
-        charityType: charityType,
-        timestamp: new Date().toISOString(),
-        verified: false // In real app, this would be verified through payment confirmation
-    };
-    
-    // Check if this is a tip for a specific confession
-    if (currentTipConfessionId) {
-        donation.type = 'tip';
-        donation.confessionId = currentTipConfessionId;
-        
-        // Update the confession with the tip
-        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-        const confessionIndex = confessions.findIndex(c => c.id === currentTipConfessionId);
-        
-        if (confessionIndex !== -1) {
-            confessions[confessionIndex].tips = (confessions[confessionIndex].tips || 0) + amount;
-            if (!confessions[confessionIndex].donors) {
-                confessions[confessionIndex].donors = [];
-            }
-            confessions[confessionIndex].donors.push(userId);
-            localStorage.setItem('confessions', JSON.stringify(confessions));
-            
-            // Add karma to the confession owner
-            const confessionOwner = confessions[confessionIndex].userId;
-            if (confessionOwner && confessionOwner !== userId) {
-                addKarmaToUser(confessionOwner, KARMA_POINTS.donateMedium);
-            }
-        }
-    } else {
-        donation.type = 'general';
-    }
-    
-    // Save donation
-    donations.push(donation);
-    userDonations.push(donation);
-    localStorage.setItem('donations', JSON.stringify(donations));
-    localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
-    
-    // Update funding goals
-    updateFundingGoalProgress(donation);
-    
-    // Award karma based on donation amount
-    let karmaAwarded = 0;
-    if (amount <= 10) {
-        karmaAwarded = KARMA_POINTS.donateSmall;
-    } else if (amount <= 50) {
-        karmaAwarded = KARMA_POINTS.donateMedium;
-    } else {
-        karmaAwarded = KARMA_POINTS.donateLarge;
-    }
-    
-    if (isCharity) {
-        karmaAwarded += KARMA_POINTS.donateCharity;
-    }
-    
-    addKarma(karmaAwarded, 'donation');
-    
-    // Check donation achievements
-    checkDonationAchievements(donation);
-    
-    // Show thank you message
-    showThankYouModal(amount, isCharity);
-    
-    // Reset tip confession ID
-    currentTipConfessionId = null;
-    
-    closeDonationModal();
-    loadConfessions();
- }
- 
- function showThankYouModal(amount, isCharity) {
-    const modal = document.createElement('div');
-    modal.className = 'donation-modal';
-    modal.style.display = 'block';
-    
-    modal.innerHTML = `
-        <div class="donation-modal-content thank-you-modal">
-            <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
-            <div class="thank-you-icon">
-                <i class="fas fa-heart"></i>
-            </div>
-            <h2>Thank You for Your Support!</h2>
-            <p>Your donation of $${amount} helps keep our community running.</p>
-            ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
-            <p>You've earned karma points and are helping us reach our goals!</p>
-            <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
-                Close
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
- }
- 
- function updateFundingGoalProgress(donation) {
-    const amount = donation.amount;
-    
-    // Distribute donation to goals
-    if (donation.isCharity) {
-        FUNDING_GOALS.charity.current += amount * 0.1;
-        FUNDING_GOALS.server.current += amount * 0.45;
-        FUNDING_GOALS.feature.current += amount * 0.45;
-    } else {
-        FUNDING_GOALS.server.current += amount * 0.5;
-        FUNDING_GOALS.feature.current += amount * 0.5;
-    }
-    
-    localStorage.setItem('fundingGoals', JSON.stringify(FUNDING_GOALS));
-    updateFundingGoals();
- }
- 
- function updateFundingGoals() {
-    // Load saved goals
-    const savedGoals = localStorage.getItem('fundingGoals');
-    if (savedGoals) {
-        Object.assign(FUNDING_GOALS, JSON.parse(savedGoals));
-    }
-    
-    // Update server goal
-    const serverProgress = Math.min((FUNDING_GOALS.server.current / FUNDING_GOALS.server.target) * 100, 100);
-    document.getElementById('server-goal-progress').style.width = serverProgress + '%';
-    document.getElementById('server-goal-progress').textContent = Math.round(serverProgress) + '%';
-    document.getElementById('server-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.server.current)} raised`;
-    
-    // Update feature goal
-    const featureProgress = Math.min((FUNDING_GOALS.feature.current / FUNDING_GOALS.feature.target) * 100, 100);
-    document.getElementById('feature-goal-progress').style.width = featureProgress + '%';
-    document.getElementById('feature-goal-progress').textContent = Math.round(featureProgress) + '%';
-    document.getElementById('feature-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.feature.current)} raised`;
-    
-    // Update charity goal
-    const charityProgress = Math.min((FUNDING_GOALS.charity.current / FUNDING_GOALS.charity.target) * 100, 100);
-    document.getElementById('charity-goal-progress').style.width = charityProgress + '%';
-    document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
-    document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
- }
- 
- function checkDonationAchievements(donation) {
-    // First donation achievement
-    if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
-        userAchievements.push('supporter');
-        addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.supporter);
-    }
-    
-    // Charity donation achievement
-    if (donation.isCharity && !userAchievements.includes('philanthropist')) {
-        userAchievements.push('philanthropist');
-        addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.philanthropist);
-    }
-    
-    // Large donation achievement
-    if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
-        userAchievements.push('crypto_whale');
-        addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.cryptoWhale);
-    }
-    
-    saveUserData();
- }
- 
- function loadDonationData() {
-    const savedDonations = localStorage.getItem('donations');
-    if (savedDonations) {
-        donations = JSON.parse(savedDonations);
-    }
-    
-    const savedUserDonations = localStorage.getItem('userDonations_' + userId);
-    if (savedUserDonations) {
-        userDonations = JSON.parse(savedUserDonations);
-    }
- }
- 
- function tipConfession(confessionId) {
-    // Set the current tip confession ID
-    currentTipConfessionId = confessionId;
-    
-    // Open donation modal
-    openDonationModal();
-    
-    // Customize modal for tipping
-    const titleElement = document.querySelector('.donation-title');
-    const subtitleElement = document.querySelector('.donation-subtitle');
-    
-    if (titleElement) {
-        titleElement.textContent = 'Tip This Confession';
-    }
-    if (subtitleElement) {
-        subtitleElement.textContent = 'Show appreciation for this confession';
-    }
- }
- 
- // Original functions continued...
- function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeToggleIcon(newTheme);
- }
- 
- function updateThemeToggleIcon(theme) {
-    const iconElement = document.querySelector('#theme-toggle i');
-    if (theme === 'dark') {
-        iconElement.className = 'fas fa-sun';
-    } else {
-        iconElement.className = 'fas fa-moon';
-    }
- }
- 
- function loadUserData() {
-    const userData = localStorage.getItem('userData_' + userId);
-    if (userData) {
-        const data = JSON.parse(userData);
-        userKarma = data.karma || 0;
-        userAchievements = data.achievements || [];
-    }
-    updateKarmaDisplay();
- }
- 
- function saveUserData() {
-    const userData = {
-        karma: userKarma,
-        achievements: userAchievements,
-        lastSubmissionDate: new Date().toDateString()
-    };
-    localStorage.setItem('userData_' + userId, JSON.stringify(userData));
- }
- 
- function updateKarmaDisplay() {
-    document.getElementById('user-karma').textContent = userKarma;
- }
- 
- function addKarma(points, reason) {
-    userKarma += points;
-    updateKarmaDisplay();
-    saveUserData();
-    checkAchievements();
- }
- 
- function showAchievement(achievement) {
-    const popup = document.getElementById('achievement-popup');
-    document.getElementById('achievement-title').textContent = achievement.title;
-    document.getElementById('achievement-description').textContent = achievement.description;
-    
-    popup.classList.add('show');
-    
-    setTimeout(() => {
-        popup.classList.remove('show');
-    }, 5000);
- }
- 
- function checkAchievements() {
-    // Check for first confession achievement
-    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const userConfessions = confessions.filter(c => c.userId === userId);
-    
-    if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
-        userAchievements.push('first_confession');
-        addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.firstConfession);
-    }
-    
-    // Check for karma legend achievement
-    if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
-        userAchievements.push('karma_legend');
-        addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.karmaLegend);
-    }
-    
-    saveUserData();
- }
- 
- function checkDailyStreak() {
-    const userData = localStorage.getItem('userData_' + userId);
-    if (userData) {
-        const data = JSON.parse(userData);
-        const lastSubmission = data.lastSubmissionDate;
-        const today = new Date().toDateString();
-        
-        if (lastSubmission && lastSubmission !== today) {
-            // Check if it's consecutive days
-            const lastDate = new Date(lastSubmission);
-            const diffTime = Math.abs(new Date() - lastDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 1) {
-                // Consecutive day
-                const currentStreak = (data.currentStreak || 0) + 1;
-                data.currentStreak = currentStreak;
-                
-                if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
-                    userAchievements.push('daily_streak');
-                    addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
-                    showAchievement(ACHIEVEMENTS.dailyStreak);
-                }
-            } else {
-                // Streak broken
-                data.currentStreak = 0;
-            }
-            
-            localStorage.setItem('userData_' + userId, JSON.stringify(data));
-        }
-    }
- }
- 
- function handleConfessionSubmit(e) {
-    e.preventDefault();
-    
-    if (isSubmitting) return;
-    
-    const confessionText = document.getElementById('confession-text').value.trim();
-    const submitBtn = document.getElementById('submit-btn');
-    
-    if (confessionText) {
-        // Basic content moderation
-        if (containsForbiddenWords(confessionText)) {
-            showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
-            return;
-        }
-        
-        isSubmitting = true;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-        
-        // Simulate API call
-        setTimeout(() => {
-            if (addConfession(confessionText, selectedCategory)) {
-                document.getElementById('confession-text').value = '';
-                document.querySelector('.character-count').textContent = '0/1000 characters';
-                showSuccessMessage();
-                
-                // Reset category selection
-                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-                document.querySelector('.category-tag[data-category="all"]').classList.add('active');
-                selectedCategory = null;
-                
-                // Add karma for submission
-                addKarma(KARMA_POINTS.submitConfession, 'submission');
-            }
-            
-            isSubmitting = false;
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
-        }, 1000);
-    }
- }
- 
- function containsForbiddenWords(text) {
-    const lowerText = text.toLowerCase();
-    return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
- }
- 
- function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
-    const successMessage = document.getElementById('success-message');
-    if (message !== 'Your confession has been submitted successfully!') {
-        successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-    }
-    successMessage.style.display = 'flex';
-    
-    setTimeout(() => {
-        successMessage.style.display = 'none';
-    }, 3000);
- }
- 
- function showErrorMessage(message) {
-    const errorMessage = document.getElementById('error-message');
-    const errorText = document.getElementById('error-text');
-    errorText.textContent = message;
-    errorMessage.style.display = 'flex';
-    
-    setTimeout(() => {
-        errorMessage.style.display = 'none';
-    }, 3000);
- }
- 
- function addConfession(text, category = null) {
-    try {
-        const confession = {
-            id: 'conf_' + Date.now(),
-            userId: userId,
-            text: text,
-            category: category,
-            timestamp: new Date().toISOString(),
-            views: 0,
-            reactions: {
-                like: 0,
-                dislike: 0,
-                love: 0,
-                haha: 0,
-                wow: 0,
-                sad: 0
-            },
-            replies: [],
-            reports: 0,
-            reported: false,
-            tips: 0,
-            donors: []
-        };
-        
-        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-        confessions.unshift(confession);
-        
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        
-        loadConfessions();
-        updateStatistics();
-        checkDailyStreak();
-        checkAchievements();
-        
-        // Check if we need to set a new confession of the day
-        const lastUpdate = localStorage.getItem('last_cotd_update');
-        if (!lastUpdate) {
-            setConfessionOfDay();
-        }
-        
-        return true;
-    } catch (error) {
-        console.error("Error adding confession:", error);
-        showErrorMessage("There was an error saving your confession. Please try again.");
-        return false;
-    }
- }
- 
- function loadConfessions() {
-    try {
-        const confessionsContainer = document.getElementById('confessions-list');
-        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-        
-        // Apply filters
-        confessions = applyFilters(confessions);
-        
-        // Calculate pagination
-        const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
-        const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
-        const end = start + CONFESSIONS_PER_PAGE;
-        const pageConfessions = confessions.slice(start, end);
-        
-        if (pageConfessions.length === 0) {
-            confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
-            document.getElementById('pagination').innerHTML = '';
-            return;
-        }
-        
-        confessionsContainer.innerHTML = '';
-        
-        pageConfessions.forEach(confession => {
-            const confessionElement = createConfessionElement(confession);
-            confessionsContainer.appendChild(confessionElement);
-            incrementViewCount(confession.id);
-        });
-        
-        // Create pagination
-        createPagination(totalPages);
-    } catch (error) {
-        console.error("Error in loadConfessions:", error);
-        document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
-    }
- }
- 
- function applyFilters(confessions) {
-    let filtered = [...confessions];
-    
-    // Category filter
-    if (currentCategory !== 'all') {
-        filtered = filtered.filter(c => c.category === currentCategory);
-    }
-    
-    // Search filter
-    if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
-    }
-    
-    // Sort
-    switch (currentSort) {
-        case 'oldest':
-            filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-            break;
-        case 'popular':
-            filtered.sort((a, b) => {
-                const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
-                const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
-                return bReactions - aReactions;
-            });
-            break;
-        default: // newest
-            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    }
-    
-    return filtered;
- }
- 
- function createConfessionElement(confession) {
-    const confessionElement = document.createElement('div');
-    confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
-    confessionElement.setAttribute('data-id', confession.id);
-    
-    const categoryBadge = confession.category ? 
-        `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
-    
-    const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
-    
-    // Check if user is a donor
-    const isDonor = userDonations.length > 0;
-    const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
-    
-    // Check if confession has received tips
-    const tipAmount = confession.tips || 0;
-    const tipBadge = tipAmount > 0 ? `<span class="tip-badge" style="background: var(--success-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">$${tipAmount} tipped</span>` : '';
-    
-    confessionElement.innerHTML = `
-        ${categoryBadge}
-        <p>${confession.text}</p>
-        <div class="meta">
-            <div class="meta-info">
-                <div class="timestamp">
-                    <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
-                    ${donorBadge}
-                    ${tipBadge}
-                </div>
-                <div class="views">
-                    <i class="far fa-eye"></i> ${confession.views || 0} views
-                </div>
-            </div>
-            <div class="actions">
-                ${createReactionButtons(confession)}
-                <button class="tip-button" onclick="tipConfession('${confession.id}')">
-                    <i class="fas fa-hand-holding-usd"></i> Tip
-                </button>
-                <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-                <div class="share-options" id="share-options-${confession.id}">
-                    <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
-                        <i class="fab fa-twitter"></i> Twitter
-                    </button>
-                    <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
-                        <i class="fas fa-link"></i> Copy Link
-                    </button>
-                    <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
-                        <i class="fas fa-image"></i> Create Card
-                    </button>
-                </div>
-                <button class="report-button" onclick="reportConfession('${confession.id}')">
-                    <i class="fas fa-flag"></i>
-                </button>
-            </div>
-        </div>
-        ${createRepliesSection(confession)}
-        <button class="admin-action" onclick="deleteConfession('${confession.id}')">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // Check if this confession is popular enough for achievement
-    if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
-        userAchievements.push('popular_confession');
-        addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.popularConfession);
-    }
-    
-    return confessionElement;
- }
- 
- function createReactionButtons(confession) {
-    const reactions = [
-        { name: 'like', icon: 'fas fa-thumbs-up' },
-        { name: 'dislike', icon: 'fas fa-thumbs-down' },
-        { name: 'love', icon: 'fas fa-heart' },
-        { name: 'haha', icon: 'fas fa-laugh' },
-        { name: 'wow', icon: 'fas fa-surprise' },
-        { name: 'sad', icon: 'fas fa-sad-tear' }
-    ];
-    
-    return reactions.map(reaction => {
-        const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
-        return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
-            <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
-        </button>`;
-    }).join('');
- }
- 
- function createRepliesSection(confession) {
-    const replies = confession.replies || [];
-    const replyCount = replies.length;
-    
-    return `
-        <div class="replies-section">
-            <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
-                <i class="fas fa-comments"></i>
-                Replies <span class="reply-count">(${replyCount})</span>
-            </button>
-            <div class="replies-container" id="replies-${confession.id}">
-                ${replies.map(reply => `
-                    <div class="reply">
-                        <p>${reply.text}</p>
-                        <div class="reply-meta">
-                        <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
-                    </div>
-                </div>
-            `).join('')}
-            <div class="reply-form">
-                <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
-                <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
-            </div>
-        </div>
-    </div>
-`;
+           } else {
+               modal.style.display = 'none';
+           }
+       });
+   });
+   
+   // Category tags
+   document.querySelectorAll('.category-tag').forEach(tag => {
+       tag.addEventListener('click', function() {
+           document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+           this.classList.add('active');
+           selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
+       });
+   });
+   
+   // Character count
+   const textArea = document.getElementById('confession-text');
+   const charCount = document.querySelector('.character-count');
+   
+   textArea.addEventListener('input', function() {
+       const count = this.value.length;
+       charCount.textContent = `${count}/${MAX_CONFESSION_LENGTH} characters`;
+       
+       if (count > MAX_CONFESSION_LENGTH * 0.9) {
+           charCount.classList.add('warning');
+       } else {
+           charCount.classList.remove('warning');
+       }
+   });
+   
+   // Navigation links
+   document.getElementById('home-link').addEventListener('click', (e) => {
+       e.preventDefault();
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+   });
+   
+   document.getElementById('about-link').addEventListener('click', (e) => {
+       e.preventDefault();
+       alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
+   });
+   
+   document.getElementById('rules-link').addEventListener('click', (e) => {
+       e.preventDefault();
+       document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
+   });
+   
+   // Check if admin access should be visible
+   const isAdmin = sessionStorage.getItem('isAdmin');
+   if (isAdmin) {
+       document.getElementById('admin-access').style.display = 'block';
+   }
+   
+   // Initial load
+   loadConfessions();
+   setConfessionOfDay();
+   updateStatistics();
+   updateFundingGoals();
+   autoArchiveOldConfessions();
+   checkSharedConfession();
+   
+   // Update stats every minute
+   setInterval(updateStatistics, 60000);
+   setInterval(updateFundingGoals, 300000); // Update funding goals every 5 minutes
+   
+   // Check for daily streak
+   checkDailyStreak();
+}
+
+// Donation System Functions
+function openDonationModal() {
+   document.getElementById('donation-modal').style.display = 'block';
+   
+   // Reset tip state if not tipping
+   if (!currentTipConfessionId) {
+       const titleElement = document.querySelector('.donation-title');
+       const subtitleElement = document.querySelector('.donation-subtitle');
+       
+       if (titleElement) {
+           titleElement.textContent = 'Support Our Community';
+       }
+       if (subtitleElement) {
+           subtitleElement.textContent = 'Your support helps maintain this safe space for anonymous confessions';
+       }
+   }
+   
+   resetDonationForm();
+}
+
+function closeDonationModal() {
+   document.getElementById('donation-modal').style.display = 'none';
+   currentTipConfessionId = null;
+   resetDonationForm();
+}
+
+function resetDonationForm() {
+   document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+   document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('selected'));
+   document.getElementById('custom-amount-container').style.display = 'none';
+   document.getElementById('custom-amount-input').value = '';
+   document.getElementById('donation-address').style.display = 'none';
+   document.getElementById('charity-donation').checked = false;
+   document.getElementById('charity-select').style.display = 'none';
+   document.getElementById('charity-select').value = '';
+   document.getElementById('donate-submit-btn').disabled = true;
+   selectedDonationAmount = null;
+   selectedPaymentMethod = null;
+}
+
+function selectDonationAmount(btn) {
+   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+   btn.classList.add('selected');
+   
+   const amount = btn.dataset.amount;
+   if (amount === 'custom') {
+       document.getElementById('custom-amount-container').style.display = 'block';
+       selectedDonationAmount = document.getElementById('custom-amount-input').value;
+   } else {
+       document.getElementById('custom-amount-container').style.display = 'none';
+       selectedDonationAmount = amount;
+   }
+   
+   updateDonateButton();
+}
+
+function selectPaymentMethod(method) {
+   document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+   method.classList.add('selected');
+   selectedPaymentMethod = method.dataset.method;
+   
+   // Show payment address
+   const addressDiv = document.getElementById('donation-address');
+   addressDiv.innerHTML = `
+       <div style="font-weight: 600; margin-bottom: 8px;">Send payment to:</div>
+       <div style="margin-bottom: 10px;">${DONATION_ADDRESSES[selectedPaymentMethod]}</div>
+       <button class="copy-address-btn" onclick="copyAddress('${DONATION_ADDRESSES[selectedPaymentMethod]}')">
+           <i class="fas fa-copy"></i> Copy Address
+       </button>
+   `;
+   addressDiv.style.display = 'block';
+   
+   updateDonateButton();
+}
+
+function copyAddress(address) {
+   if (!address) {
+       showErrorMessage('No address available');
+       return;
+   }
+   
+   navigator.clipboard.writeText(address).then(() => {
+       showSuccessMessage('Address copied to clipboard!');
+   }).catch(() => {
+       // Fallback for browsers that don't support clipboard API
+       const textArea = document.createElement('textarea');
+       textArea.value = address;
+       document.body.appendChild(textArea);
+       textArea.select();
+       try {
+           document.execCommand('copy');
+           showSuccessMessage('Address copied to clipboard!');
+       } catch (err) {
+           prompt('Copy this address:', address);
+       }
+       document.body.removeChild(textArea);
+   });
+}
+
+function toggleCharityDropdown() {
+   const charitySelect = document.getElementById('charity-select');
+   if (document.getElementById('charity-donation').checked) {
+       charitySelect.style.display = 'block';
+   } else {
+       charitySelect.style.display = 'none';
+       charitySelect.value = '';
+   }
+}
+
+function updateDonateButton() {
+   const submitBtn = document.getElementById('donate-submit-btn');
+   if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
+       submitBtn.disabled = false;
+   } else {
+       submitBtn.disabled = true;
+   }
+}
+
+function processDonation() {
+   const amount = parseFloat(selectedDonationAmount);
+   if (!amount || amount <= 0) {
+       showErrorMessage('Please enter a valid donation amount');
+       return;
+   }
+   
+   const isCharity = document.getElementById('charity-donation').checked;
+   const charityType = document.getElementById('charity-select').value;
+   
+   const donation = {
+       id: 'donation_' + Date.now(),
+       userId: userId,
+       amount: amount,
+       method: selectedPaymentMethod,
+       isCharity: isCharity,
+       charityType: charityType,
+       timestamp: new Date().toISOString(),
+       verified: false // In real app, this would be verified through payment confirmation
+   };
+   
+   // Check if this is a tip for a specific confession
+   if (currentTipConfessionId) {
+       donation.type = 'tip';
+       donation.confessionId = currentTipConfessionId;
+       
+       // Update the confession with the tip
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       const confessionIndex = confessions.findIndex(c => c.id === currentTipConfessionId);
+       
+       if (confessionIndex !== -1) {
+           confessions[confessionIndex].tips = (confessions[confessionIndex].tips || 0) + amount;
+           if (!confessions[confessionIndex].donors) {
+               confessions[confessionIndex].donors = [];
+           }
+           confessions[confessionIndex].donors.push(userId);
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+           
+           // Add karma to the confession owner
+           const confessionOwner = confessions[confessionIndex].userId;
+           if (confessionOwner && confessionOwner !== userId) {
+               addKarmaToUser(confessionOwner, KARMA_POINTS.donateMedium);
+           }
+       }
+   } else {
+       donation.type = 'general';
+   }
+   
+   // Save donation
+   donations.push(donation);
+   userDonations.push(donation);
+   localStorage.setItem('donations', JSON.stringify(donations));
+   localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
+   
+   // Update funding goals
+   updateFundingGoalProgress(donation);
+   
+   // Award karma based on donation amount
+   let karmaAwarded = 0;
+   if (amount <= 10) {
+       karmaAwarded = KARMA_POINTS.donateSmall;
+   } else if (amount <= 50) {
+       karmaAwarded = KARMA_POINTS.donateMedium;
+   } else {
+       karmaAwarded = KARMA_POINTS.donateLarge;
+   }
+   
+   if (isCharity) {
+       karmaAwarded += KARMA_POINTS.donateCharity;
+   }
+   
+   addKarma(karmaAwarded, 'donation');
+   
+   // Check donation achievements
+   checkDonationAchievements(donation);
+   
+   // Show thank you message
+   showThankYouModal(amount, isCharity);
+   
+   // Reset tip confession ID
+   currentTipConfessionId = null;
+   
+   closeDonationModal();
+   loadConfessions();
+}
+
+function showThankYouModal(amount, isCharity) {
+   const modal = document.createElement('div');
+   modal.className = 'donation-modal';
+   modal.style.display = 'block';
+   
+   modal.innerHTML = `
+       <div class="donation-modal-content thank-you-modal">
+           <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
+           <div class="thank-you-icon">
+               <i class="fas fa-heart"></i>
+           </div>
+           <h2>Thank You for Your Support!</h2>
+           <p>Your donation of $${amount} helps keep our community running.</p>
+           ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
+           <p>You've earned karma points and are helping us reach our goals!</p>
+           <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
+               Close
+           </button>
+       </div>
+   `;
+   
+   document.body.appendChild(modal);
+}
+
+function updateFundingGoalProgress(donation) {
+   const amount = donation.amount;
+   
+   // Distribute donation to goals
+   if (donation.isCharity) {
+       FUNDING_GOALS.charity.current += amount * 0.1;
+       FUNDING_GOALS.server.current += amount * 0.45;
+       FUNDING_GOALS.feature.current += amount * 0.45;
+   } else {
+       FUNDING_GOALS.server.current += amount * 0.5;
+       FUNDING_GOALS.feature.current += amount * 0.5;
+   }
+   
+   localStorage.setItem('fundingGoals', JSON.stringify(FUNDING_GOALS));
+   updateFundingGoals();
+}
+
+function updateFundingGoals() {
+   // Load saved goals
+   const savedGoals = localStorage.getItem('fundingGoals');
+   if (savedGoals) {
+       Object.assign(FUNDING_GOALS, JSON.parse(savedGoals));
+   }
+   
+   // Update server goal
+   const serverProgress = Math.min((FUNDING_GOALS.server.current / FUNDING_GOALS.server.target) * 100, 100);
+   document.getElementById('server-goal-progress').style.width = serverProgress + '%';
+   document.getElementById('server-goal-progress').textContent = Math.round(serverProgress) + '%';
+   document.getElementById('server-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.server.current)} raised`;
+   
+   // Update feature goal
+   const featureProgress = Math.min((FUNDING_GOALS.feature.current / FUNDING_GOALS.feature.target) * 100, 100);
+   document.getElementById('feature-goal-progress').style.width = featureProgress + '%';
+   document.getElementById('feature-goal-progress').textContent = Math.round(featureProgress) + '%';
+   document.getElementById('feature-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.feature.current)} raised`;
+   
+   // Update charity goal
+   const charityProgress = Math.min((FUNDING_GOALS.charity.current / FUNDING_GOALS.charity.target) * 100, 100);
+   document.getElementById('charity-goal-progress').style.width = charityProgress + '%';
+   document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
+   document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
+}
+
+function checkDonationAchievements(donation) {
+   // First donation achievement
+   if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
+       userAchievements.push('supporter');
+       addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.supporter);
+   }
+   
+   // Charity donation achievement
+   if (donation.isCharity && !userAchievements.includes('philanthropist')) {
+       userAchievements.push('philanthropist');
+       addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.philanthropist);
+   }
+   
+   // Large donation achievement
+   if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
+       userAchievements.push('crypto_whale');
+       addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.cryptoWhale);
+   }
+   
+   saveUserData();
+}
+
+function loadDonationData() {
+   const savedDonations = localStorage.getItem('donations');
+   if (savedDonations) {
+       donations = JSON.parse(savedDonations);
+   }
+   
+   const savedUserDonations = localStorage.getItem('userDonations_' + userId);
+   if (savedUserDonations) {
+       userDonations = JSON.parse(savedUserDonations);
+   }
+}
+
+function tipConfession(confessionId) {
+   const confession = getConfessionById(confessionId);
+   if (!confession) return;
+   
+   currentTipConfessionId = confessionId;
+   openDonationModal();
+   
+   // Customize modal for tipping
+   const titleElement = document.querySelector('.donation-title');
+   const subtitleElement = document.querySelector('.donation-subtitle');
+   
+   if (titleElement) {
+       titleElement.textContent = 'Tip This Confession';
+   }
+   
+   if (subtitleElement) {
+       if (confession.walletAddress && confession.walletType) {
+           subtitleElement.innerHTML = `
+               Direct tip to author's ${confession.walletType.toUpperCase()} wallet<br>
+               <small style="font-family: monospace; word-break: break-all;">${confession.walletAddress}</small>
+           `;
+       } else {
+           subtitleElement.textContent = 'Show appreciation for this confession (goes to platform)';
+       }
+   }
+   
+   // If confession has a wallet address, show it in the donation modal
+   if (confession.walletAddress && confession.walletType) {
+       const addressDiv = document.getElementById('donation-address');
+       addressDiv.innerHTML = `
+           <div style="font-weight: 600; margin-bottom: 8px;">Send directly to author's wallet:</div>
+           <div style="margin-bottom: 10px; word-break: break-all;">${confession.walletAddress}</div>
+           <button class="copy-address-btn" onclick="copyAddress('${confession.walletAddress}')">
+               <i class="fas fa-copy"></i> Copy Author's Address
+           </button>
+       `;
+       addressDiv.style.display = 'block';
+       
+       // Pre-select the matching payment method
+       const paymentMethods = document.querySelectorAll('.payment-method');
+       paymentMethods.forEach(method => {
+           if (method.dataset.method === confession.walletType) {
+               selectPaymentMethod(method);
+           }
+       });
+   }
+}
+
+// Original functions continued...
+function toggleTheme() {
+   const currentTheme = document.documentElement.getAttribute('data-theme');
+   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+   
+   document.documentElement.setAttribute('data-theme', newTheme);
+   localStorage.setItem('theme', newTheme);
+   updateThemeToggleIcon(newTheme);
+}
+
+function updateThemeToggleIcon(theme) {
+   const iconElement = document.querySelector('#theme-toggle i');
+   if (theme === 'dark') {
+       iconElement.className = 'fas fa-sun';
+   } else {
+       iconElement.className = 'fas fa-moon';
+   }
+}
+
+function loadUserData() {
+   const userData = localStorage.getItem('userData_' + userId);
+   if (userData) {
+       const data = JSON.parse(userData);
+       userKarma = data.karma || 0;
+       userAchievements = data.achievements || [];
+   }
+   updateKarmaDisplay();
+}
+
+function saveUserData() {
+   const userData = {
+       karma: userKarma,
+       achievements: userAchievements,
+       lastSubmissionDate: new Date().toDateString()
+   };
+   localStorage.setItem('userData_' + userId, JSON.stringify(userData));
+}
+
+function updateKarmaDisplay() {
+   document.getElementById('user-karma').textContent = userKarma;
+}
+
+function addKarma(points, reason) {
+   userKarma += points;
+   updateKarmaDisplay();
+   saveUserData();
+   checkAchievements();
+}
+
+function showAchievement(achievement) {
+   const popup = document.getElementById('achievement-popup');
+   document.getElementById('achievement-title').textContent = achievement.title;
+   document.getElementById('achievement-description').textContent = achievement.description;
+   
+   popup.classList.add('show');
+   
+   setTimeout(() => {
+       popup.classList.remove('show');
+   }, 5000);
+}
+
+function checkAchievements() {
+   // Check for first confession achievement
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   const userConfessions = confessions.filter(c => c.userId === userId);
+   
+   if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
+       userAchievements.push('first_confession');
+       addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.firstConfession);
+   }
+   
+   // Check for karma legend achievement
+   if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
+       userAchievements.push('karma_legend');
+       addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.karmaLegend);
+   }
+   
+   saveUserData();
+}
+
+function checkDailyStreak() {
+   const userData = localStorage.getItem('userData_' + userId);
+   if (userData) {
+       const data = JSON.parse(userData);
+       const lastSubmission = data.lastSubmissionDate;
+       const today = new Date().toDateString();
+       
+       if (lastSubmission && lastSubmission !== today) {
+           // Check if it's consecutive days
+           const lastDate = new Date(lastSubmission);
+           const diffTime = Math.abs(new Date() - lastDate);
+           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+           
+           if (diffDays === 1) {
+               // Consecutive day
+               const currentStreak = (data.currentStreak || 0) + 1;
+               data.currentStreak = currentStreak;
+               
+               if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
+                   userAchievements.push('daily_streak');
+                   addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
+                   showAchievement(ACHIEVEMENTS.dailyStreak);
+               }
+           } else {
+               // Streak broken
+               data.currentStreak = 0;
+           }
+           
+           localStorage.setItem('userData_' + userId, JSON.stringify(data));
+       }
+   }
+}
+
+function handleConfessionSubmit(e) {
+   e.preventDefault();
+   
+   if (isSubmitting) return;
+   
+   const confessionText = document.getElementById('confession-text').value.trim();
+   const submitBtn = document.getElementById('submit-btn');
+   
+   if (confessionText) {
+       // Basic content moderation
+       if (containsForbiddenWords(confessionText)) {
+           showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
+           return;
+       }
+       
+       isSubmitting = true;
+       submitBtn.disabled = true;
+       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+       
+       // Simulate API call
+       setTimeout(() => {
+           if (addConfession(confessionText, selectedCategory)) {
+               document.getElementById('confession-text').value = '';
+               document.querySelector('.character-count').textContent = '0/1000 characters';
+               showSuccessMessage();
+               
+               // Reset category selection
+               document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+               document.querySelector('.category-tag[data-category="all"]').classList.add('active');
+               selectedCategory = null;
+               
+               // Add karma for submission
+               addKarma(KARMA_POINTS.submitConfession, 'submission');
+           }
+           
+           isSubmitting = false;
+           submitBtn.disabled = false;
+           submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
+       }, 1000);
+   }
+}
+
+function containsForbiddenWords(text) {
+   const lowerText = text.toLowerCase();
+   return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
+}
+
+function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
+   const successMessage = document.getElementById('success-message');
+   if (message !== 'Your confession has been submitted successfully!') {
+       successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+   }
+   successMessage.style.display = 'flex';
+   
+   setTimeout(() => {
+       successMessage.style.display = 'none';
+   }, 3000);
+}
+
+function showErrorMessage(message) {
+   const errorMessage = document.getElementById('error-message');
+   const errorText = document.getElementById('error-text');
+   errorText.textContent = message;
+   errorMessage.style.display = 'flex';
+   
+   setTimeout(() => {
+       errorMessage.style.display = 'none';
+   }, 3000);
+}
+
+function addConfession(text, category = null) {
+   try {
+       const walletType = document.getElementById('wallet-type').value;
+       const walletAddress = document.getElementById('wallet-address').value.trim();
+       
+       const confession = {
+           id: 'conf_' + Date.now(),
+           userId: userId,
+           text: text,
+           category: category,
+           timestamp: new Date().toISOString(),
+           views: 0,
+           reactions: {
+               like: 0,
+               dislike: 0,
+               love: 0,
+               haha: 0,
+               wow: 0,
+               sad: 0
+           },
+           replies: [],
+           reports: 0,
+           reported: false,
+           tips: 0,
+           donors: [],
+           walletType: walletType || null,
+           walletAddress: walletAddress || null
+       };
+       
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       confessions.unshift(confession);
+       
+       localStorage.setItem('confessions', JSON.stringify(confessions));
+       
+       // Clear wallet fields after submission
+       document.getElementById('wallet-type').value = '';
+       document.getElementById('wallet-address').value = '';
+       document.getElementById('wallet-address').style.display = 'none';
+       
+       loadConfessions();
+       updateStatistics();
+       checkDailyStreak();
+       checkAchievements();
+       
+       // Check if we need to set a new confession of the day
+       const lastUpdate = localStorage.getItem('last_cotd_update');
+       if (!lastUpdate) {
+           setConfessionOfDay();
+       }
+       
+       return true;
+   } catch (error) {
+       console.error("Error adding confession:", error);
+       showErrorMessage("There was an error saving your confession. Please try again.");
+       return false;
+   }
+}
+
+function loadConfessions() {
+   try {
+       const confessionsContainer = document.getElementById('confessions-list');
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       
+       // Apply filters
+       confessions = applyFilters(confessions);
+       
+       // Calculate pagination
+       const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
+       const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
+       const end = start + CONFESSIONS_PER_PAGE;
+       const pageConfessions = confessions.slice(start, end);
+       
+       if (pageConfessions.length === 0) {
+           confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
+           document.getElementById('pagination').innerHTML = '';
+           return;
+       }
+       
+       confessionsContainer.innerHTML = '';
+       
+       pageConfessions.forEach(confession => {
+           const confessionElement = createConfessionElement(confession);
+           confessionsContainer.appendChild(confessionElement);
+           incrementViewCount(confession.id);
+       });
+       
+       // Create pagination
+       createPagination(totalPages);
+   } catch (error) {
+       console.error("Error in loadConfessions:", error);
+       document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
+   }
+}
+
+function applyFilters(confessions) {
+   let filtered = [...confessions];
+   
+   // Category filter
+   if (currentCategory !== 'all') {
+       filtered = filtered.filter(c => c.category === currentCategory);
+   }
+   
+   // Search filter
+   if (searchQuery) {
+       const query = searchQuery.toLowerCase();
+       filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
+   }
+   
+   // Sort
+   switch (currentSort) {
+       case 'oldest':
+           filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+           break;
+       case 'popular':
+           filtered.sort((a, b) => {
+               const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
+               const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
+               return bReactions - aReactions;
+           });
+           break;
+       default: // newest
+           filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+   }
+   
+   return filtered;
+}
+
+function createConfessionElement(confession) {
+   const confessionElement = document.createElement('div');
+   confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
+   confessionElement.setAttribute('data-id', confession.id);
+   
+   const categoryBadge = confession.category ? 
+       `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
+   
+   const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+   
+   // Check if user is a donor
+   const isDonor = userDonations.length > 0;
+   const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
+   
+   // Check if confession has received tips
+   const tipAmount = confession.tips || 0;
+   const tipBadge = tipAmount > 0 ? `<span class="tip-badge" style="background: var(--success-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">$${tipAmount} tipped</span>` : '';
+   
+   // Show wallet badge if author accepts tips
+   const walletBadge = confession.walletAddress ? 
+       `<span class="wallet-badge" style="background: var(--crypto-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">
+           <i class="fas fa-wallet"></i> ${confession.walletType} Tips
+       </span>` : '';
+   
+   // Update tip button based on wallet status
+   const tipButtonText = confession.walletAddress ? 
+       '<i class="fas fa-hand-holding-usd"></i> Tip Author' : 
+       '<i class="fas fa-hand-holding-usd"></i> Tip';
+   
+   confessionElement.innerHTML = `
+       ${categoryBadge}
+       <p>${confession.text}</p>
+       <div class="meta">
+           <div class="meta-info">
+               <div class="timestamp">
+                   <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
+                   ${donorBadge}
+                   ${tipBadge}
+                   ${walletBadge}
+               </div>
+               <div class="views">
+                   <i class="far fa-eye"></i> ${confession.views || 0} views
+               </div>
+           </div>
+           <div class="actions">
+               ${createReactionButtons(confession)}
+               <button class="tip-button" onclick="tipConfession('${confession.id}')">
+                   ${tipButtonText}
+               </button>
+               <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
+                   <i class="fas fa-share-alt"></i>
+               </button>
+               <div class="share-options" id="share-options-${confession.id}">
+                   <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
+                       <i class="fab fa-twitter"></i> Twitter
+                   </button>
+                   <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
+                       <i class="fas fa-link"></i> Copy Link
+                   </button>
+                   <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
+                       <i class="fas fa-image"></i> Create Card
+                   </button>
+               </div>
+               <button class="report-button" onclick="reportConfession('${confession.id}')">
+                   <i class="fas fa-flag"></i>
+               </button>
+           </div>
+       </div>
+       ${createRepliesSection(confession)}
+       <button class="admin-action" onclick="deleteConfession('${confession.id}')">
+           <i class="fas fa-times"></i>
+       </button>
+   `;
+   
+   // Check if this confession is popular enough for achievement
+   if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
+       userAchievements.push('popular_confession');
+       addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
+       showAchievement(ACHIEVEMENTS.popularConfession);
+   }
+   
+   return confessionElement;
+}
+
+function createReactionButtons(confession) {
+   const reactions = [
+       { name: 'like', icon: 'fas fa-thumbs-up' },
+       { name: 'dislike', icon: 'fas fa-thumbs-down' },
+       { name: 'love', icon: 'fas fa-heart' },
+       { name: 'haha', icon: 'fas fa-laugh' },
+       { name: 'wow', icon: 'fas fa-surprise' },
+       { name: 'sad', icon: 'fas fa-sad-tear' }
+   ];
+   
+   return reactions.map(reaction => {
+       const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
+       return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
+           <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
+       </button>`;
+   }).join('');
+}
+
+function createRepliesSection(confession) {
+   const replies = confession.replies || [];
+   const replyCount = replies.length;
+   
+   return `
+       <div class="replies-section">
+           <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
+               <i class="fas fa-comments"></i>
+               Replies <span class="reply-count">(${replyCount})</span>
+           </button>
+           <div class="replies-container" id="replies-${confession.id}">
+               ${replies.map(reply => `
+                   <div class="reply">
+                       <p>${reply.text}</p>
+                       <div class="reply-meta">
+                           <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
+                       </div>
+                   </div>
+               `).join('')}
+               <div class="reply-form">
+                   <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
+                   <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
+               </div>
+           </div>
+       </div>
+   `;
 }
 
 function toggleReplies(confessionId) {
-const repliesContainer = document.getElementById(`replies-${confessionId}`);
-repliesContainer.classList.toggle('active');
+   const repliesContainer = document.getElementById(`replies-${confessionId}`);
+   repliesContainer.classList.toggle('active');
 }
 
 function submitReply(confessionId) {
-const replyInput = document.getElementById(`reply-input-${confessionId}`);
-const replyText = replyInput.value.trim();
-
-if (!replyText) return;
-
-const reply = {
-    id: 'reply_' + Date.now(),
-    text: replyText,
-    timestamp: new Date().toISOString(),
-    userId: userId
-};
-
-let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-
-if (confessionIndex !== -1) {
-    if (!confessions[confessionIndex].replies) {
-        confessions[confessionIndex].replies = [];
-    }
-    
-    confessions[confessionIndex].replies.push(reply);
-    localStorage.setItem('confessions', JSON.stringify(confessions));
-    
-    // Add karma to the confession owner if they receive a reply
-    const confessionOwner = confessions[confessionIndex].userId;
-    if (confessionOwner && confessionOwner !== userId) {
-        addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
-    }
-    
-    // Check for conversation starter achievement
-    if (confessions[confessionIndex].replies.length >= 10 && 
-        confessions[confessionIndex].userId === userId && 
-        !userAchievements.includes('conversation_starter')) {
-        userAchievements.push('conversation_starter');
-        addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
-        showAchievement(ACHIEVEMENTS.conversationStarter);
-    }
-    
-    loadConfessions();
-    replyInput.value = '';
-}
+   const replyInput = document.getElementById(`reply-input-${confessionId}`);
+   const replyText = replyInput.value.trim();
+   
+   if (!replyText) return;
+   
+   const reply = {
+       id: 'reply_' + Date.now(),
+       text: replyText,
+       timestamp: new Date().toISOString(),
+       userId: userId
+   };
+   
+   let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+   
+   if (confessionIndex !== -1) {
+       if (!confessions[confessionIndex].replies) {
+           confessions[confessionIndex].replies = [];
+       }
+       
+       confessions[confessionIndex].replies.push(reply);
+       localStorage.setItem('confessions', JSON.stringify(confessions));
+       
+       // Add karma to the confession owner if they receive a reply
+       const confessionOwner = confessions[confessionIndex].userId;
+       if (confessionOwner && confessionOwner !== userId) {
+           addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
+       }
+       
+       // Check for conversation starter achievement
+       if (confessions[confessionIndex].replies.length >= 10 && 
+           confessions[confessionIndex].userId === userId && 
+           !userAchievements.includes('conversation_starter')) {
+           userAchievements.push('conversation_starter');
+           addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
+           showAchievement(ACHIEVEMENTS.conversationStarter);
+       }
+       
+       loadConfessions();
+       replyInput.value = '';
+   }
 }
 
 function addKarmaToUser(targetUserId, points) {
-const userData = localStorage.getItem('userData_' + targetUserId);
-if (userData) {
-    const data = JSON.parse(userData);
-    data.karma = (data.karma || 0) + points;
-    localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
-}
+   const userData = localStorage.getItem('userData_' + targetUserId);
+   if (userData) {
+       const data = JSON.parse(userData);
+       data.karma = (data.karma || 0) + points;
+       localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
+   }
 }
 
 function openShareOptions(event, confessionId) {
-event.stopPropagation();
-const shareOptions = document.getElementById(`share-options-${confessionId}`);
-
-// Close all other share options
-document.querySelectorAll('.share-options').forEach(el => {
-    if (el !== shareOptions) {
-        el.classList.remove('active');
-    }
-});
-
-shareOptions.classList.toggle('active');
-
-// Position the share options properly
-const button = event.currentTarget;
-const rect = button.getBoundingClientRect();
-shareOptions.style.top = `${button.offsetHeight + 5}px`;
-shareOptions.style.right = '0';
-
-// Close share options when clicking outside
-setTimeout(() => {
-    document.addEventListener('click', function closeShareOptions(e) {
-        if (!shareOptions.contains(e.target) && e.target !== button) {
-            shareOptions.classList.remove('active');
-            document.removeEventListener('click', closeShareOptions);
-        }
-    });
-}, 100);
+   event.stopPropagation();
+   const shareOptions = document.getElementById(`share-options-${confessionId}`);
+   
+   // Close all other share options
+   document.querySelectorAll('.share-options').forEach(el => {
+       if (el !== shareOptions) {
+           el.classList.remove('active');
+       }
+   });
+   
+   shareOptions.classList.toggle('active');
+   
+   // Position the share options properly
+   const button = event.currentTarget;
+   const rect = button.getBoundingClientRect();
+   shareOptions.style.top = `${button.offsetHeight + 5}px`;
+   shareOptions.style.right = '0';
+   
+   // Close share options when clicking outside
+   setTimeout(() => {
+       document.addEventListener('click', function closeShareOptions(e) {
+           if (!shareOptions.contains(e.target) && e.target !== button) {
+               shareOptions.classList.remove('active');
+               document.removeEventListener('click', closeShareOptions);
+           }
+       });
+   }, 100);
 }
 
 function shareToTwitter(confessionId) {
-const confession = getConfessionById(confessionId);
-if (confession) {
-    const text = confession.text.substring(0, 200) + '...';
-    const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
-    window.open(twitterUrl, '_blank');
-}
+   const confession = getConfessionById(confessionId);
+   if (confession) {
+       const text = confession.text.substring(0, 200) + '...';
+       const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
+       window.open(twitterUrl, '_blank');
+   }
 }
 
 function copyShareLink(confessionId) {
-const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-navigator.clipboard.writeText(url).then(() => {
-    showSuccessMessage('Link copied to clipboard!');
-}).catch(() => {
-    prompt('Copy this link:', url);
-});
+   const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+   navigator.clipboard.writeText(url).then(() => {
+       showSuccessMessage('Link copied to clipboard!');
+   }).catch(() => {
+       prompt('Copy this link:', url);
+   });
 }
 
 function createShareCard(confessionId) {
-const confession = getConfessionById(confessionId);
-if (!confession) return;
-
-// Update share card content
-document.getElementById('share-card-text').textContent = confession.text;
-document.getElementById('share-card-date').textContent = formatDate(new Date(confession.timestamp));
-
-const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
-document.getElementById('share-card-stats').innerHTML = `
-    <span><i class="fas fa-heart"></i> ${totalReactions}</span>
-    <span><i class="fas fa-eye"></i> ${confession.views || 0}</span>
-`;
-
-// Generate QR code
-const qrContainer = document.getElementById('share-card-qr');
-qrContainer.innerHTML = '';
-const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-new QRCode(qrContainer, {
-    text: url,
-    width: 80,
-    height: 80
-});
-
-// Create image preview
-setTimeout(() => {
-    const shareCard = document.querySelector('#share-card-canvas .share-card');
-    html2canvas(shareCard).then(canvas => {
-        // Show preview in modal
-        const modal = document.getElementById('share-card-modal');
-        const previewContainer = document.getElementById('share-card-preview');
-        previewContainer.innerHTML = '';
-        
-        // Create image element from canvas
-        const image = new Image();
-        image.src = canvas.toDataURL('image/png');
-        image.style.maxWidth = '100%';
-        image.style.borderRadius = '8px';
-        image.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-        
-        previewContainer.appendChild(image);
-        
-        // Store the image data for potential download
-        window.currentShareCardData = canvas.toDataURL('image/png');
-        window.currentShareCardId = confessionId;
-        
-        // Show the modal
-        modal.style.display = 'block';
-    });
-}, 100);
+   const confession = getConfessionById(confessionId);
+   if (!confession) return;
+   
+   // Update share card content
+   document.getElementById('share-card-text').textContent = confession.text;
+   document.getElementById('share-card-date').textContent = formatDate(new Date(confession.timestamp));
+   
+   const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+   document.getElementById('share-card-stats').innerHTML = `
+       <span><i class="fas fa-heart"></i> ${totalReactions}</span>
+       <span><i class="fas fa-eye"></i> ${confession.views || 0}</span>
+   `;
+   
+   // Generate QR code
+   const qrContainer = document.getElementById('share-card-qr');
+   qrContainer.innerHTML = '';
+   const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+   new QRCode(qrContainer, {
+       text: url,
+       width: 80,
+       height: 80
+   });
+   
+   // Create image preview
+   setTimeout(() => {
+       const shareCard = document.querySelector('#share-card-canvas .share-card');
+       html2canvas(shareCard).then(canvas => {
+           // Show preview in modal
+           const modal = document.getElementById('share-card-modal');
+           const previewContainer = document.getElementById('share-card-preview');
+           previewContainer.innerHTML = '';
+           
+           // Create image element from canvas
+           const image = new Image();
+           image.src = canvas.toDataURL('image/png');
+           image.style.maxWidth = '100%';
+           image.style.borderRadius = '8px';
+           image.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+           
+           previewContainer.appendChild(image);
+           
+           // Store the image data for potential download
+           window.currentShareCardData = canvas.toDataURL('image/png');
+           window.currentShareCardId = confessionId;
+           
+           // Show the modal
+           modal.style.display = 'block';
+       });
+   }, 100);
 }
 
 function getConfessionById(confessionId) {
-const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-return confessions.find(c => c.id === confessionId);
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   return confessions.find(c => c.id === confessionId);
 }
 
 function showLeaderboard() {
-const modal = document.getElementById('leaderboard-modal');
-const content = document.getElementById('leaderboard-content');
-
-modal.style.display = 'block';
-
-// Get all users' karma and donation info
-const users = [];
-for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.startsWith('userData_')) {
-        const userData = JSON.parse(localStorage.getItem(key));
-        const userId = key.replace('userData_', '');
-        const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
-        const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
-        
-        users.push({
-            id: userId,
-            karma: userData.karma || 0,
-            achievements: userData.achievements || [],
-            totalDonated: totalDonated
-        });
-    }
-}
-
-// Sort by karma
-users.sort((a, b) => b.karma - a.karma);
-
-// Display top 10
-content.innerHTML = users.slice(0, 10).map((user, index) => {
-    const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-    const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
-    
-    return `
-        <div class="leaderboard-item">
-            <span class="rank ${rankClass}">#${index + 1}</span>
-            <div class="user-info">
-                <span class="user-name">Anonymous User ${user.id.substr(-4)}${donorBadge}</span>
-                <div class="user-achievements">
-                    ${user.achievements.length} achievements | $${user.totalDonated} donated
-                </div>
-            </div>
-            <span class="karma-badge">${user.karma} karma</span>
-        </div>
-    `;
-}).join('');
+   const modal = document.getElementById('leaderboard-modal');
+   const content = document.getElementById('leaderboard-content');
+   
+   modal.style.display = 'block';
+   
+   // Get all users' karma and donation info
+   const users = [];
+   for (let i = 0; i < localStorage.length; i++) {
+       const key = localStorage.key(i);
+       if (key.startsWith('userData_')) {
+           const userData = JSON.parse(localStorage.getItem(key));
+           const userId = key.replace('userData_', '');
+           const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
+           const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
+           
+           users.push({
+               id: userId,
+               karma: userData.karma || 0,
+               achievements: userData.achievements || [],
+               totalDonated: totalDonated
+           });
+       }
+   }
+   
+   // Sort by karma
+   users.sort((a, b) => b.karma - a.karma);
+   
+   // Display top 10
+   content.innerHTML = users.slice(0, 10).map((user, index) => {
+       const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+       const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
+       
+       return `
+           <div class="leaderboard-item">
+               <span class="rank ${rankClass}">#${index + 1}</span>
+               <div class="user-info">
+                   <span class="user-name">Anonymous User ${user.id.substr(-4)}${donorBadge}</span>
+                   <div class="user-achievements">
+                       ${user.achievements.length} achievements | $${user.totalDonated} donated
+                   </div>
+               </div>
+               <span class="karma-badge">${user.karma} karma</span>
+           </div>
+       `;
+   }).join('');
 }
 
 function reactToConfession(confessionId, reactionType) {
-try {
-    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-    
-    if (confessionIndex !== -1) {
-        if (!confessions[confessionIndex].reactions) {
-            confessions[confessionIndex].reactions = {
-                like: 0,
-                dislike: 0,
-                love: 0,
-                haha: 0,
-                wow: 0,
-                sad: 0
-            };
-        }
-        
-        confessions[confessionIndex].reactions[reactionType]++;
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        
-        // Add karma to the confession owner
-        const confessionOwner = confessions[confessionIndex].userId;
-        if (confessionOwner && confessionOwner !== userId) {
-            const karmaPoints = reactionType === 'love' ? KARMA_POINTS.receiveLove : KARMA_POINTS.receiveReaction;
-            addKarmaToUser(confessionOwner, karmaPoints);
-        }
-        
-        loadConfessions();
-    }
-} catch (error) {
-    console.error("Error in reactToConfession:", error);
-}
+   try {
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+       
+       if (confessionIndex !== -1) {
+           if (!confessions[confessionIndex].reactions) {
+               confessions[confessionIndex].reactions = {
+                   like: 0,
+                   dislike: 0,
+                   love: 0,
+                   haha: 0,
+                   wow: 0,
+                   sad: 0
+               };
+           }
+           
+           confessions[confessionIndex].reactions[reactionType]++;
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+           
+           // Add karma to the confession owner
+           const confessionOwner = confessions[confessionIndex].userId;
+           if (confessionOwner && confessionOwner !== userId) {
+               const karmaPoints = reactionType === 'love' ? KARMA_POINTS.receiveLove : KARMA_POINTS.receiveReaction;
+               addKarmaToUser(confessionOwner, karmaPoints);
+           }
+           
+           loadConfessions();
+       }
+   } catch (error) {
+       console.error("Error in reactToConfession:", error);
+   }
 }
 
 function createPagination(totalPages) {
-const paginationContainer = document.getElementById('pagination');
-paginationContainer.innerHTML = '';
-
-if (totalPages <= 1) return;
-
-// Previous button
-const prevBtn = document.createElement('button');
-prevBtn.className = 'page-btn';
-prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-prevBtn.disabled = currentPage === 1;
-prevBtn.onclick = () => changePage(currentPage - 1);
-paginationContainer.appendChild(prevBtn);
-
-// Page numbers
-for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-        const pageBtn = document.createElement('button');
-        pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-        pageBtn.textContent = i;
-        pageBtn.onclick = () => changePage(i);
-        paginationContainer.appendChild(pageBtn);
-    } else if (i === currentPage - 3 || i === currentPage + 3) {
-        const ellipsis = document.createElement('span');
-        ellipsis.textContent = '...';
-        ellipsis.style.margin = '0 5px';
-        paginationContainer.appendChild(ellipsis);
-    }
-}
-
-// Next button
-const nextBtn = document.createElement('button');
-nextBtn.className = 'page-btn';
-nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-nextBtn.disabled = currentPage === totalPages;
-nextBtn.onclick = () => changePage(currentPage + 1);
-paginationContainer.appendChild(nextBtn);
+   const paginationContainer = document.getElementById('pagination');
+   paginationContainer.innerHTML = '';
+   
+   if (totalPages <= 1) return;
+   
+   // Previous button
+   const prevBtn = document.createElement('button');
+   prevBtn.className = 'page-btn';
+   prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+   prevBtn.disabled = currentPage === 1;
+   prevBtn.onclick = () => changePage(currentPage - 1);
+   paginationContainer.appendChild(prevBtn);
+   
+   // Page numbers
+   for (let i = 1; i <= totalPages; i++) {
+       if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+           const pageBtn = document.createElement('button');
+           pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+           pageBtn.textContent = i;
+           pageBtn.onclick = () => changePage(i);
+           paginationContainer.appendChild(pageBtn);
+       } else if (i === currentPage - 3 || i === currentPage + 3) {
+           const ellipsis = document.createElement('span');
+           ellipsis.textContent = '...';
+           ellipsis.style.margin = '0 5px';
+           paginationContainer.appendChild(ellipsis);
+       }
+   }
+   
+   // Next button
+   const nextBtn = document.createElement('button');
+   nextBtn.className = 'page-btn';
+   nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+   nextBtn.disabled = currentPage === totalPages;
+   nextBtn.onclick = () => changePage(currentPage + 1);
+   paginationContainer.appendChild(nextBtn);
 }
 
 function changePage(page) {
-currentPage = page;
-loadConfessions();
-window.scrollTo({ top: 0, behavior: 'smooth' });
+   currentPage = page;
+   loadConfessions();
+   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function formatDate(date) {
-try {
-    const now = new Date();
-    const diffMs = now - date;
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHour = Math.floor(diffMin / 60);
-    const diffDay = Math.floor(diffHour / 24);
-    
-    if (diffSec < 60) {
-        return 'just now';
-    } else if (diffMin < 60) {
-        return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
-    } else if (diffHour < 24) {
-        return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
-    } else {
-        return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
-    }
-} catch (error) {
-    console.error("Error formatting date:", error);
-    return "unknown time";
-}
+   try {
+       const now = new Date();
+       const diffMs = now - date;
+       const diffSec = Math.floor(diffMs / 1000);
+       const diffMin = Math.floor(diffSec / 60);
+       const diffHour = Math.floor(diffMin / 60);
+       const diffDay = Math.floor(diffHour / 24);
+       
+       if (diffSec < 60) {
+           return 'just now';
+       } else if (diffMin < 60) {
+           return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+       } else if (diffHour < 24) {
+           return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
+       } else {
+           return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+       }
+   } catch (error) {
+       console.error("Error formatting date:", error);
+       return "unknown time";
+   }
 }
 
 function reportConfession(confessionId) {
-try {
-    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-    
-    if (confessionIndex !== -1) {
-        if (!confessions[confessionIndex].reports) {
-            confessions[confessionIndex].reports = 0;
-        }
-        
-        confessions[confessionIndex].reports++;
-        
-        // Auto-hide after 5 reports
-        if (confessions[confessionIndex].reports >= 5) {
-            confessions[confessionIndex].reported = true;
-        }
-        
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        loadConfessions();
-        alert('Thank you for reporting. We will review this confession.');
-    }
-} catch (error) {
-    console.error("Error in reportConfession:", error);
-}
+   try {
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+       
+       if (confessionIndex !== -1) {
+           if (!confessions[confessionIndex].reports) {
+               confessions[confessionIndex].reports = 0;
+           }
+           
+           confessions[confessionIndex].reports++;
+           
+           // Auto-hide after 5 reports
+           if (confessions[confessionIndex].reports >= 5) {
+               confessions[confessionIndex].reported = true;
+           }
+           
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+           loadConfessions();
+           alert('Thank you for reporting. We will review this confession.');
+       }
+   } catch (error) {
+       console.error("Error in reportConfession:", error);
+   }
 }
 
 function deleteConfession(confessionId) {
-if (confirm('Are you sure you want to delete this confession?')) {
-    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    confessions = confessions.filter(c => c.id !== confessionId);
-    localStorage.setItem('confessions', JSON.stringify(confessions));
-    
-    // Check if this was the confession of the day
-    const cotd = localStorage.getItem('confession_of_day');
-    if (cotd === confessionId) {
-        setConfessionOfDay();
-    }
-    
-    loadConfessions();
-    updateStatistics();
-}
+   if (confirm('Are you sure you want to delete this confession?')) {
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       confessions = confessions.filter(c => c.id !== confessionId);
+       localStorage.setItem('confessions', JSON.stringify(confessions));
+       
+       // Check if this was the confession of the day
+       const cotd = localStorage.getItem('confession_of_day');
+       if (cotd === confessionId) {
+           setConfessionOfDay();
+       }
+       
+       loadConfessions();
+       updateStatistics();
+   }
 }
 
 function showRandomConfession() {
-const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-
-if (confessions.length === 0) {
-    alert('No confessions available to show.');
-    return;
-}
-
-const randomIndex = Math.floor(Math.random() * confessions.length);
-const randomConfession = confessions[randomIndex];
-
-incrementViewCount(randomConfession.id);
-
-// Find the page containing this confession
-const sortedConfessions = applyFilters(confessions);
-const confessionIndex = sortedConfessions.findIndex(c => c.id === randomConfession.id);
-const page = Math.floor(confessionIndex / CONFESSIONS_PER_PAGE) + 1;
-
-if (page !== currentPage) {
-    changePage(page);
-}
-
-setTimeout(() => {
-    const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
-    if (confessionElement) {
-        confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        confessionElement.style.backgroundColor = 'var(--primary-light)';
-        setTimeout(() => {
-            confessionElement.style.backgroundColor = '';
-            confessionElement.style.transition = 'background-color 1s ease';
-        }, 2000);
-    }
-}, 300);
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   
+   if (confessions.length === 0) {
+       alert('No confessions available to show.');
+       return;
+   }
+   
+   const randomIndex = Math.floor(Math.random() * confessions.length);
+   const randomConfession = confessions[randomIndex];
+   
+   incrementViewCount(randomConfession.id);
+   
+   // Find the page containing this confession
+   const sortedConfessions = applyFilters(confessions);
+   const confessionIndex = sortedConfessions.findIndex(c => c.id === randomConfession.id);
+   const page = Math.floor(confessionIndex / CONFESSIONS_PER_PAGE) + 1;
+   
+   if (page !== currentPage) {
+       changePage(page);
+   }
+   
+   setTimeout(() => {
+       const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
+       if (confessionElement) {
+           confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+           confessionElement.style.backgroundColor = 'var(--primary-light)';
+           setTimeout(() => {
+               confessionElement.style.backgroundColor = '';
+               confessionElement.style.transition = 'background-color 1s ease';
+           }, 2000);
+       }
+   }, 300);
 }
 
 function setConfessionOfDay() {
-const now = new Date();
-const lastUpdate = localStorage.getItem('last_cotd_update');
-const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : null;
-
-if (!lastUpdate || lastUpdateDate.toDateString() !== now.toDateString()) {
-    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    
-    if (confessions.length > 0) {
-        const randomIndex = Math.floor(Math.random() * confessions.length);
-        const cotdId = confessions[randomIndex].id;
-        
-        localStorage.setItem('confession_of_day', cotdId);
-        localStorage.setItem('last_cotd_update', now.toISOString());
-    } else {
-        localStorage.removeItem('confession_of_day');
-    }
-}
-
-displayConfessionOfDay();
+   const now = new Date();
+   const lastUpdate = localStorage.getItem('last_cotd_update');
+   const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : null;
+   
+   if (!lastUpdate || lastUpdateDate.toDateString() !== now.toDateString()) {
+       const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       
+       if (confessions.length > 0) {
+           const randomIndex = Math.floor(Math.random() * confessions.length);
+           const cotdId = confessions[randomIndex].id;
+           
+           localStorage.setItem('confession_of_day', cotdId);
+           localStorage.setItem('last_cotd_update', now.toISOString());
+       } else {
+           localStorage.removeItem('confession_of_day');
+       }
+   }
+   
+   displayConfessionOfDay();
 }
 
 function displayConfessionOfDay() {
-const cotdContainer = document.getElementById('confession-of-day-container');
-const cotdId = localStorage.getItem('confession_of_day');
-
-if (!cotdId) {
-    cotdContainer.innerHTML = '';
-    return;
-}
-
-const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-const cotd = confessions.find(c => c.id === cotdId);
-
-if (!cotd) {
-    localStorage.removeItem('confession_of_day');
-    setConfessionOfDay();
-    return;
-}
-
-incrementViewCount(cotd.id);
-
-cotdContainer.innerHTML = `
-    <div class="container">
-        <h2><i class="fas fa-star"></i> Confession of the Day</h2>
-        <div class="confession confession-of-day" data-id="${cotd.id}">
-            ${cotd.category ? `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${cotd.category}</span>` : ''}
-            <p>${cotd.text}</p>
-            <div class="meta">
-                <div class="meta-info">
-                    <div class="timestamp">
-                        <i class="far fa-clock"></i> ${formatDate(new Date(cotd.timestamp))}
-                    </div>
-                    <div class="views">
-                        <i class="far fa-eye"></i> ${cotd.views || 0} views
-                    </div>
-                </div>
-                <div class="actions">
-                    ${createReactionButtons(cotd)}
-                    <button class="tip-button" onclick="tipConfession('${cotd.id}')">
-                        <i class="fas fa-hand-holding-usd"></i> Tip
-                    </button>
-                    <button class="share-button" onclick="shareConfession('${cotd.id}', '${encodeURIComponent(cotd.text)}')">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>`;
+   const cotdContainer = document.getElementById('confession-of-day-container');
+   const cotdId = localStorage.getItem('confession_of_day');
+   
+   if (!cotdId) {
+       cotdContainer.innerHTML = '';
+       return;
+   }
+   
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   const cotd = confessions.find(c => c.id === cotdId);
+   
+   if (!cotd) {
+       localStorage.removeItem('confession_of_day');
+       setConfessionOfDay();
+       return;
+   }
+   
+   incrementViewCount(cotd.id);
+   
+   cotdContainer.innerHTML = `
+       <div class="container">
+           <h2><i class="fas fa-star"></i> Confession of the Day</h2>
+           <div class="confession confession-of-day" data-id="${cotd.id}">
+               ${cotd.category ? `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${cotd.category}</span>` : ''}
+               <p>${cotd.text}</p>
+               <div class="meta">
+                   <div class="meta-info">
+                       <div class="timestamp">
+                           <i class="far fa-clock"></i> ${formatDate(new Date(cotd.timestamp))}
+                       </div>
+                       <div class="views">
+                           <i class="far fa-eye"></i> ${cotd.views || 0} views
+                       </div>
+                   </div>
+                   <div class="actions">
+                       ${createReactionButtons(cotd)}
+                       <button class="tip-button" onclick="tipConfession('${cotd.id}')">
+                           <i class="fas fa-hand-holding-usd"></i> Tip
+                       </button>
+                       <button class="share-button" onclick="shareConfession('${cotd.id}', '${encodeURIComponent(cotd.text)}')">
+                           <i class="fas fa-share-alt"></i>
+                       </button>
+                   </div>
+               </div>
+           </div>
+       </div>`;
 }
 
 function updateStatistics() {
-const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-const today = new Date();
-const todayConfessions = confessions.filter(c => {
-    const confDate = new Date(c.timestamp);
-    return confDate.toDateString() === today.toDateString();
-});
-
-document.getElementById('total-confessions').textContent = confessions.length;
-document.getElementById('today-confessions').textContent = todayConfessions.length;
-
-// Count active users based on leaderboard
-let activeUsers = 0;
-for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    if (key.startsWith('userData_')) {
-        activeUsers++;
-    }
-}
-document.getElementById('active-users').textContent = activeUsers;
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   const today = new Date();
+   const todayConfessions = confessions.filter(c => {
+       const confDate = new Date(c.timestamp);
+       return confDate.toDateString() === today.toDateString();
+   });
+   
+   document.getElementById('total-confessions').textContent = confessions.length;
+   document.getElementById('today-confessions').textContent = todayConfessions.length;
+   
+   // Count active users based on leaderboard
+   let activeUsers = 0;
+   for (let i = 0; i < localStorage.length; i++) {
+       const key = localStorage.key(i);
+       if (key.startsWith('userData_')) {
+           activeUsers++;
+       }
+   }
+   document.getElementById('active-users').textContent = activeUsers;
 }
 
 function autoArchiveOldConfessions() {
-const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-let archivedConfessions = JSON.parse(localStorage.getItem('archived_confessions')) || [];
-
-const now = new Date();
-const cutoffDate = new Date(now.getTime() - (AUTO_ARCHIVE_DAYS * 24 * 60 * 60 * 1000));
-
-const newConfessions = confessions.filter(confession => {
-    const confessionDate = new Date(confession.timestamp);
-    if (confessionDate < cutoffDate) {
-        archivedConfessions.push(confession);
-        return false;
-    }
-    return true;
-});
-
-if (newConfessions.length !== confessions.length) {
-    localStorage.setItem('confessions', JSON.stringify(newConfessions));
-    localStorage.setItem('archived_confessions', JSON.stringify(archivedConfessions));
-    loadConfessions();
-    
-    // Check if confession of the day was archived
-    const cotdId = localStorage.getItem('confession_of_day');
-    if (cotdId && !newConfessions.some(c => c.id === cotdId)) {
-        setConfessionOfDay();
-    }
-}
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   let archivedConfessions = JSON.parse(localStorage.getItem('archived_confessions')) || [];
+   
+   const now = new Date();
+   const cutoffDate = new Date(now.getTime() - (AUTO_ARCHIVE_DAYS * 24 * 60 * 60 * 1000));
+   
+   const newConfessions = confessions.filter(confession => {
+       const confessionDate = new Date(confession.timestamp);
+       if (confessionDate < cutoffDate) {
+           archivedConfessions.push(confession);
+           return false;
+       }
+       return true;
+   });
+   
+   if (newConfessions.length !== confessions.length) {
+       localStorage.setItem('confessions', JSON.stringify(newConfessions));
+       localStorage.setItem('archived_confessions', JSON.stringify(archivedConfessions));
+       loadConfessions();
+       
+       // Check if confession of the day was archived
+       const cotdId = localStorage.getItem('confession_of_day');
+       if (cotdId && !newConfessions.some(c => c.id === cotdId)) {
+           setConfessionOfDay();
+       }
+   }
 }
 
 function checkSharedConfession() {
-const urlParams = new URLSearchParams(window.location.search);
-const sharedConfessionId = urlParams.get('confession');
-
-if (sharedConfessionId) {
-    incrementViewCount(sharedConfessionId);
-    
-    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const sharedConfession = confessions.find(c => c.id === sharedConfessionId);
-    
-    if (sharedConfession) {
-        setTimeout(() => {
-            const confessionElement = document.querySelector(`[data-id="${sharedConfessionId}"]`);
-            if (confessionElement) {
-                confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                confessionElement.style.backgroundColor = 'var(--primary-light)';
-                setTimeout(() => {
-                    confessionElement.style.backgroundColor = '';
-                    confessionElement.style.transition = 'background-color 1s ease';
-                }, 3000);
-            }
-        }, 500);
-    }
-}
+   const urlParams = new URLSearchParams(window.location.search);
+   const sharedConfessionId = urlParams.get('confession');
+   
+   if (sharedConfessionId) {
+       incrementViewCount(sharedConfessionId);
+       
+       const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       const sharedConfession = confessions.find(c => c.id === sharedConfessionId);
+       
+       if (sharedConfession) {
+           setTimeout(() => {
+               const confessionElement = document.querySelector(`[data-id="${sharedConfessionId}"]`);
+               if (confessionElement) {
+                   confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                   confessionElement.style.backgroundColor = 'var(--primary-light)';
+                   setTimeout(() => {
+                       confessionElement.style.backgroundColor = '';
+                       confessionElement.style.transition = 'background-color 1s ease';
+                   }, 3000);
+               }
+           }, 500);
+       }
+   }
 }
 
 function incrementViewCount(confessionId) {
-try {
-    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-    
-    if (confessionIndex !== -1) {
-        if (typeof confessions[confessionIndex].views !== 'number') {
-            confessions[confessionIndex].views = 0;
-        }
-        
-        confessions[confessionIndex].views++;
-        localStorage.setItem('confessions', JSON.stringify(confessions));
-        return confessions[confessionIndex].views;
-    }
-} catch (error) {
-    console.error("Error incrementing view count:", error);
-}
-return 0;
+   try {
+       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+       
+       if (confessionIndex !== -1) {
+           if (typeof confessions[confessionIndex].views !== 'number') {
+               confessions[confessionIndex].views = 0;
+           }
+           
+           confessions[confessionIndex].views++;
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+           return confessions[confessionIndex].views;
+       }
+   } catch (error) {
+       console.error("Error incrementing view count:", error);
+   }
+   return 0;
 }
 
 function handleSearch(e) {
-searchQuery = e.target.value;
-currentPage = 1;
-loadConfessions();
+   searchQuery = e.target.value;
+   currentPage = 1;
+   loadConfessions();
 }
 
 function handleSortChange(e) {
-currentSort = e.target.value;
-currentPage = 1;
-loadConfessions();
+   currentSort = e.target.value;
+   currentPage = 1;
+   loadConfessions();
 }
 
 function handleCategoryFilterChange(e) {
-currentCategory = e.target.value;
-currentPage = 1;
-loadConfessions();
+   currentCategory = e.target.value;
+   currentPage = 1;
+   loadConfessions();
 }
 
 function handleAdminLogin() {
-const password = document.getElementById('admin-password').value;
-const adminPanel = document.getElementById('admin-panel');
-
-if (password === 'admin123') { // In production, use secure authentication
-    adminPanel.style.display = 'block';
-    document.getElementById('admin-password').value = '';
-    document.body.classList.add('admin-mode');
-    sessionStorage.setItem('isAdmin', 'true');
-} else {
-    alert('Incorrect password');
-}
+   const password = document.getElementById('admin-password').value;
+   const adminPanel = document.getElementById('admin-panel');
+   
+   if (password === 'admin123') { // In production, use secure authentication
+       adminPanel.style.display = 'block';
+       document.getElementById('admin-password').value = '';
+       document.body.classList.add('admin-mode');
+       sessionStorage.setItem('isAdmin', 'true');
+   } else {
+       alert('Incorrect password');
+   }
 }
 
 function clearAllConfessions() {
-if (confirm('Are you sure you want to clear all confessions? This action cannot be undone.')) {
-    localStorage.removeItem('confessions');
-    localStorage.removeItem('archived_confessions');
-    localStorage.removeItem('confession_of_day');
-    localStorage.removeItem('last_cotd_update');
-    loadConfessions();
-    setConfessionOfDay();
-    updateStatistics();
-}
+   if (confirm('Are you sure you want to clear all confessions? This action cannot be undone.')) {
+       localStorage.removeItem('confessions');
+       localStorage.removeItem('archived_confessions');
+       localStorage.removeItem('confession_of_day');
+       localStorage.removeItem('last_cotd_update');
+       loadConfessions();
+       setConfessionOfDay();
+       updateStatistics();
+   }
 }
 
 function downloadShareCard() {
-if (window.currentShareCardData && window.currentShareCardId) {
-    const link = document.createElement('a');
-    link.download = `confession-${window.currentShareCardId}.png`;
-    link.href = window.currentShareCardData;
-    link.click();
-    
-    // Close the modal after download
-    closeShareCardModal();
-}
+   if (window.currentShareCardData && window.currentShareCardId) {
+       const link = document.createElement('a');
+       link.download = `confession-${window.currentShareCardId}.png`;
+       link.href = window.currentShareCardData;
+       link.click();
+       
+       // Close the modal after download
+       closeShareCardModal();
+   }
 }
 
 function closeShareCardModal() {
-const modal = document.getElementById('share-card-modal');
-modal.style.display = 'none';
-
-// Clean up stored data
-window.currentShareCardData = null;
-window.currentShareCardId = null;
+   const modal = document.getElementById('share-card-modal');
+   modal.style.display = 'none';
+   
+   // Clean up stored data
+   window.currentShareCardData = null;
+   window.currentShareCardId = null;
 }
 </script>
 </body>
