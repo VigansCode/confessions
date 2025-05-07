@@ -12,6 +12,47 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyADTUf0vuhZXm2rnNLoXC9fjxAtMtiTSnA",
+    authDomain: "confessions-121bc.firebaseapp.com",
+    projectId: "confessions-121bc",
+    storageBucket: "confessions-121bc.firebasestorage.app",
+    messagingSenderId: "339849633893",
+    appId: "1:339849633893:web:a5a739b760e9a3ec77e68c",
+    measurementId: "G-8755436E5W"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  // Make Firebase services available globally
+  window.firebaseServices = {
+    db,
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    updateDoc,
+    deleteDoc,
+    query,
+    orderBy,
+    limit,
+    where,
+    serverTimestamp
+  };
+</script>
+
 <style>
 :root {
     --primary-color: #6c5ce7;
@@ -840,7 +881,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* Additional existing styles... */
 h1 {
     text-align: center;
     color: var(--primary-color);
@@ -993,7 +1033,6 @@ button:disabled {
 #random-confession:hover {
     background-color: var(--primary-color);
 }
-
 #theme-toggle {
     background-color: #2c3e50;
     position: fixed;
@@ -1486,6 +1525,92 @@ input[type="password"]:focus {
    to { transform: translateY(0); opacity: 1; }
 }
 
+/* Firebase Connection Status */
+.connection-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.status-online {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-offline {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.status-connecting {
+    background-color: var(--warning-color);
+    color: #333;
+}
+
+/* Firebase Admin Settings */
+.firebase-settings {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(108, 92, 231, 0.05);
+    border-radius: 8px;
+    display: none;
+}
+
+.firebase-settings h3 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.firebase-settings h3 i {
+    color: var(--primary-color);
+}
+
+.firebase-settings .setting-group {
+    margin-bottom: 15px;
+}
+
+.firebase-settings label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.firebase-settings input,
+.firebase-settings select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.global-badge {
+    background-color: var(--success-color);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.global-badge i {
+    font-size: 0.8rem;
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
    body {
@@ -1551,6 +1676,11 @@ input[type="password"]:focus {
 <i class="fas fa-moon"></i>
 </button>
 
+<div id="connection-status" class="connection-status status-connecting">
+    <i class="fas fa-circle-notch fa-spin"></i>
+    <span>Connecting...</span>
+</div>
+
 <nav class="navbar">
 <div class="logo-container">
    <i class="fas fa-feather-alt"></i>
@@ -1560,6 +1690,7 @@ input[type="password"]:focus {
    <a href="#" class="nav-link" id="home-link">Home</a>
    <a href="#" class="nav-link" id="about-link">About</a>
    <a href="#" class="nav-link" id="rules-link">Rules</a>
+   <a href="#" class="nav-link" id="global-link">Global</a>
    <button class="donate-nav-btn" id="donate-nav-btn">
        <i class="fas fa-hand-holding-usd"></i> Support
    </button>
@@ -1661,7 +1792,7 @@ input[type="password"]:focus {
    <div class="category-selector">
        <label for="category">Category (optional):</label>
        <div class="category-tags">
-           <span class="category-tag" data-category="all">All</span>
+           <span class="category-tag active" data-category="all">All</span>
            <span class="category-tag" data-category="funny">Funny</span>
            <span class="category-tag" data-category="serious">Serious</span>
            <span class="category-tag" data-category="relationships">Relationships</span>
@@ -1676,7 +1807,7 @@ input[type="password"]:focus {
        <div class="character-count">0/1000 characters</div>
    </div>
    
-   <!-- New wallet address section -->
+   <!-- Wallet address section -->
    <div class="wallet-section">
        <label for="wallet-address">
            <i class="fas fa-wallet"></i> Receive Tips (optional)
@@ -1694,6 +1825,11 @@ input[type="password"]:focus {
        <small class="wallet-disclaimer">Your wallet address will be visible to allow direct tipping</small>
    </div>
    
+   <div style="display: flex; align-items: center; margin-bottom: 20px;">
+       <input type="checkbox" id="share-globally" style="margin-right: 10px;">
+       <label for="share-globally">Share globally (using Firebase)</label>
+   </div>
+   
    <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Submit Confession</button>
 </form>
 <div class="button-group">
@@ -1707,12 +1843,26 @@ input[type="password"]:focus {
            <button id="admin-login"><i class="fas fa-sign-in-alt"></i> Login</button>
            <div id="admin-panel" style="margin-top: 10px; display: none;">
                <button id="clear-all"><i class="fas fa-trash-alt"></i> Clear All Confessions</button>
+               <button id="sync-firebase"><i class="fas fa-cloud-upload-alt"></i> Sync to Firebase</button>
+               <div class="firebase-settings" id="firebase-settings">
+                   <h3><i class="fas fa-sliders-h"></i> Firebase Settings</h3>
+                   <div class="setting-group">
+                       <label for="firebase-collection">Collection Name:</label>
+                       <input type="text" id="firebase-collection" value="confessions">
+                   </div>
+                   <div class="setting-group">
+                       <label for="firebase-limit">Fetch Limit:</label>
+                       <input type="number" id="firebase-limit" value="100">
+                   </div>
+                   <div class="setting-group">
+                       <button id="save-firebase-settings"><i class="fas fa-save"></i> Save Settings</button>
+                   </div>
+               </div>
            </div>
        </div>
    </details>
 </div>
 </div>
-
 <div class="container">
 <h2><i class="fas fa-book-open"></i> Recent Confessions</h2>
 
@@ -1878,6 +2028,15 @@ const MAX_CONFESSION_LENGTH = 1000;
 const AUTO_ARCHIVE_DAYS = 30;
 const FORBIDDEN_WORDS = ['hate', 'kill', 'racist', 'sexist'];
 
+// Firebase Configuration
+const FIREBASE_SETTINGS = {
+    collection: 'confessions',
+    userCollection: 'users',
+    donationCollection: 'donations',
+    fundingCollection: 'funding',
+    limit: 100
+};
+
 // Donation Configuration
 const DONATION_ADDRESSES = {
    bitcoin: '1YourBitcoinAddressHere',
@@ -1902,7 +2061,8 @@ const KARMA_POINTS = {
    donateSmall: 50,      // $1-10
    donateMedium: 100,    // $11-50
    donateLarge: 250,     // $51+
-   donateCharity: 500    // Any charity donation
+   donateCharity: 500,   // Any charity donation
+   globalContribution: 50 // Sharing globally
 };
 
 const ACHIEVEMENTS = {
@@ -1953,6 +2113,12 @@ const ACHIEVEMENTS = {
        title: 'Crypto Whale',
        description: 'Donate over $100',
        karma: 500
+   },
+   globalContributor: {
+       id: 'global_contributor',
+       title: 'Global Contributor',
+       description: 'Share your first confession globally',
+       karma: 100
    }
 };
 
@@ -1971,11 +2137,89 @@ let selectedPaymentMethod = null;
 let donations = [];
 let userDonations = [];
 let currentTipConfessionId = null;
+let isGlobalMode = false;
+let firebaseInitialized = false;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
    initializeApp();
 });
+
+// Initialize Firebase when the script loads
+let initFirebaseInterval;
+function checkFirebaseLoaded() {
+    if (window.firebaseServices) {
+        clearInterval(initFirebaseInterval);
+        initializeFirebase();
+    }
+}
+initFirebaseInterval = setInterval(checkFirebaseLoaded, 100);
+
+// Initialize Firebase
+function initializeFirebase() {
+    try {
+        // Load settings from localStorage if available
+        const savedSettings = localStorage.getItem('firebaseSettings');
+        if (savedSettings) {
+            Object.assign(FIREBASE_SETTINGS, JSON.parse(savedSettings));
+        }
+        
+        updateConnectionStatus('connecting');
+        
+        // Check if the user's browser is online
+        if (navigator.onLine) {
+            firebaseInitialized = true;
+            updateConnectionStatus('online');
+            
+            // Load Firebase data if global mode is active
+            if (isGlobalMode) {
+                loadGlobalConfessions();
+            }
+        } else {
+            updateConnectionStatus('offline');
+        }
+        
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            updateConnectionStatus('online');
+            if (isGlobalMode) {
+                loadGlobalConfessions();
+            }
+        });
+        
+        window.addEventListener('offline', () => {
+            updateConnectionStatus('offline');
+            if (isGlobalMode) {
+                // Switch back to local mode if offline
+                toggleGlobalMode(false);
+                showErrorMessage('You are offline. Switched to local mode.');
+            }
+        });
+    } catch (error) {
+        console.error("Firebase initialization error:", error);
+        updateConnectionStatus('offline');
+    }
+}
+
+// Update the connection status indicator
+function updateConnectionStatus(status) {
+    const statusElement = document.getElementById('connection-status');
+    statusElement.className = 'connection-status';
+    
+    if (status === 'online') {
+        statusElement.classList.add('status-online');
+        statusElement.innerHTML = '<i class="fas fa-wifi"></i><span>Online (Global)</span>';
+        setTimeout(() => {
+            statusElement.style.opacity = '0.7';
+        }, 3000);
+    } else if (status === 'offline') {
+        statusElement.classList.add('status-offline');
+        statusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Offline (Local Only)</span>';
+    } else {
+        statusElement.classList.add('status-connecting');
+        statusElement.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Connecting...</span>';
+    }
+}
 
 function initializeApp() {
    // Initialize user ID
@@ -1994,11 +2238,18 @@ function initializeApp() {
    document.documentElement.setAttribute('data-theme', savedTheme);
    updateThemeToggleIcon(savedTheme);
    
+   // Check if global mode was previously enabled
+   isGlobalMode = localStorage.getItem('globalMode') === 'true';
+   
    // Event listeners
    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-   document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);document.getElementById('random-confession').addEventListener('click', showRandomConfession);
+   document.getElementById('global-link').addEventListener('click', toggleGlobalMode);
+   document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
+   document.getElementById('random-confession').addEventListener('click', showRandomConfession);
    document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
    document.getElementById('clear-all').addEventListener('click', clearAllConfessions);
+   document.getElementById('sync-firebase').addEventListener('click', syncToFirebase);
+   document.getElementById('save-firebase-settings').addEventListener('click', saveFirebaseSettings);
    document.getElementById('search-input').addEventListener('input', handleSearch);
    document.getElementById('sort-select').addEventListener('change', handleSortChange);
    document.getElementById('category-filter').addEventListener('change', handleCategoryFilterChange);
@@ -2061,12 +2312,14 @@ function initializeApp() {
    document.querySelectorAll('.close').forEach(closeBtn => {
        closeBtn.addEventListener('click', function() {
            const modal = this.closest('.modal, .donation-modal');
-           if (modal.id === 'share-card-modal') {
-               closeShareCardModal();
-           } else if (modal.id === 'donation-modal') {
-               closeDonationModal();
-           } else {
-               modal.style.display = 'none';
+           if (modal) {
+               if (modal.id === 'share-card-modal') {
+                   closeShareCardModal();
+               } else if (modal.id === 'donation-modal') {
+                   closeDonationModal();
+               } else {
+                   modal.style.display = 'none';
+               }
            }
        });
    });
@@ -2115,6 +2368,8 @@ function initializeApp() {
    const isAdmin = sessionStorage.getItem('isAdmin');
    if (isAdmin) {
        document.getElementById('admin-access').style.display = 'block';
+       document.getElementById('admin-panel').style.display = 'block';
+       document.body.classList.add('admin-mode');
    }
    
    // Initial load
@@ -2131,6 +2386,223 @@ function initializeApp() {
    
    // Check for daily streak
    checkDailyStreak();
+}
+
+// Toggle between local and global mode
+function toggleGlobalMode(force) {
+    // If force parameter is provided, use it; otherwise toggle current state
+    isGlobalMode = typeof force !== 'undefined' ? force : !isGlobalMode;
+    
+    // Store preference for future visits
+    localStorage.setItem('globalMode', isGlobalMode);
+    
+    // Update UI to indicate current mode
+    const globalLink = document.getElementById('global-link');
+    if (isGlobalMode) {
+        globalLink.innerHTML = 'Local';
+        
+        // Check if Firebase is available before loading global confessions
+        if (!firebaseInitialized || !navigator.onLine) {
+            isGlobalMode = false;
+            localStorage.setItem('globalMode', false);
+            showErrorMessage('Firebase is not available. Please check your connection.');
+            return;
+        }
+        
+        loadGlobalConfessions();
+    } else {
+        globalLink.innerHTML = 'Global';
+        loadConfessions(); // Load local confessions
+    }
+    
+    currentPage = 1; // Reset to first page when switching modes
+    showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
+}
+
+// Load confessions from Firebase
+async function loadGlobalConfessions() {
+    try {
+        const confessionsContainer = document.getElementById('confessions-list');
+        confessionsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
+        
+        if (!window.firebaseServices) {
+            showErrorMessage('Firebase services are not available');
+            return;
+        }
+        
+        const { db, collection, getDocs, query, orderBy, limit, where } = window.firebaseServices;
+        
+        // Create a reference to the confessions collection
+        const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+        
+        // Build the query based on filters
+        let firestoreQuery;
+        
+        // Apply category filter
+        if (currentCategory !== 'all') {
+            firestoreQuery = query(
+                confessionsRef,
+                where('category', '==', currentCategory),
+                orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+                limit(FIREBASE_SETTINGS.limit)
+            );
+        } else {
+            // Apply sort filter
+            if (currentSort === 'popular') {
+                firestoreQuery = query(
+                    confessionsRef,
+                    orderBy('popularity', 'desc'),
+                    limit(FIREBASE_SETTINGS.limit)
+                );
+            } else {
+                firestoreQuery = query(
+                    confessionsRef,
+                    orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+                    limit(FIREBASE_SETTINGS.limit)
+                );
+            }
+        }
+        
+        // Execute the query
+        const querySnapshot = await getDocs(firestoreQuery);
+        
+        // Process the results
+        let confessions = [];
+        querySnapshot.forEach((doc) => {
+            const confession = {
+                id: doc.id,
+                ...doc.data()
+            };
+            confessions.push(confession);
+        });
+        
+        // Apply search filter if needed
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            confessions = confessions.filter(c => c.text.toLowerCase().includes(query));
+        }
+        
+        // Display the confessions
+        displayConfessions(confessions);
+    } catch (error) {
+        console.error("Error loading global confessions:", error);
+        showErrorMessage('Error loading global confessions. Check your connection.');
+        confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-exclamation-circle"></i>Error loading global confessions.</div>';
+    }
+}
+
+// Sync local confessions to Firebase
+async function syncToFirebase() {
+    if (!window.firebaseServices) {
+        showErrorMessage('Firebase services are not available');
+        return;
+    }
+    
+    const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+    
+    // Get local confessions
+    const localConfessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    
+    // Confirm with the user
+    if (!confirm(`Are you sure you want to sync ${localConfessions.length} local confessions to Firebase? This might take a while.`)) {
+        return;
+    }
+    
+    let successCount = 0;
+    let errorCount = 0;
+    
+    try {
+        // Create a reference to the confessions collection
+        const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+        
+        // Add each confession to Firebase
+        for (const confession of localConfessions) {
+            try {
+                // Prepare the data for Firebase
+                const firestoreData = {
+                    text: confession.text,
+                    category: confession.category || null,
+                    userId: confession.userId,
+                    timestamp: new Date(confession.timestamp).toISOString(),
+                    views: confession.views || 0,
+                    reactions: confession.reactions || {},
+                    replies: confession.replies || [],
+                    reported: confession.reported || false,
+                    reports: confession.reports || 0,
+                    tips: confession.tips || 0,
+                    walletType: confession.walletType || null,
+                    walletAddress: confession.walletAddress || null,
+                    serverTimestamp: serverTimestamp(), // Add a server timestamp for sorting
+                    popularity: calculatePopularity(confession),
+                    isGlobal: true
+                };
+                
+                // Add the document to Firestore
+                await addDoc(confessionsRef, firestoreData);
+                successCount++;
+            } catch (error) {
+                console.error("Error adding confession to Firebase:", error);
+                errorCount++;
+            }
+        }
+        
+        showSuccessMessage(`Successfully synced ${successCount} confessions to Firebase. Errors: ${errorCount}`);
+        
+        // If in global mode, refresh the confessions
+        if (isGlobalMode) {
+            loadGlobalConfessions();
+        }
+    } catch (error) {
+        console.error("Error syncing to Firebase:", error);
+        showErrorMessage('Error syncing to Firebase. Check your connection.');
+    }
+}
+
+// Calculate popularity score for a confession
+function calculatePopularity(confession) {
+    let score = 0;
+    
+    // Add points for views
+    score += (confession.views || 0) * 0.1;
+    
+    // Add points for reactions
+    if (confession.reactions) {
+        // Sum all reactions
+        const reactionsSum = Object.values(confession.reactions).reduce((sum, val) => sum + val, 0);
+        score += reactionsSum * 5;
+    }
+    
+    // Add points for replies
+    if (confession.replies) {
+        score += confession.replies.length * 10;
+    }
+    
+    // Add points for tips
+    score += (confession.tips || 0) * 20;
+    
+    return score;
+}
+
+// Save Firebase settings
+function saveFirebaseSettings() {
+    const collection = document.getElementById('firebase-collection').value;
+    const limit = parseInt(document.getElementById('firebase-limit').value);
+    
+    if (!collection || isNaN(limit) || limit <= 0) {
+        showErrorMessage('Please enter valid settings');
+        return;
+    }
+    
+    FIREBASE_SETTINGS.collection = collection;
+    FIREBASE_SETTINGS.limit = limit;
+    
+    localStorage.setItem('firebaseSettings', JSON.stringify(FIREBASE_SETTINGS));
+    showSuccessMessage('Firebase settings saved');
+    
+    // If in global mode, refresh the confessions
+    if (isGlobalMode) {
+        loadGlobalConfessions();
+    }
 }
 
 // Donation System Functions
@@ -2233,1063 +2705,1656 @@ function copyAddress(address) {
 }
 
 function toggleCharityDropdown() {
-   const charitySelect = document.getElementById('charity-select');
-   if (document.getElementById('charity-donation').checked) {
-       charitySelect.style.display = 'block';
-   } else {
-       charitySelect.style.display = 'none';
-       charitySelect.value = '';
-   }
+    const charitySelect = document.getElementById('charity-select');
+    if (document.getElementById('charity-donation').checked) {
+        charitySelect.style.display = 'block';
+    } else {
+        charitySelect.style.display = 'none';
+        charitySelect.value = '';
+    }
+ }
+ 
+ function updateDonateButton() {
+    const submitBtn = document.getElementById('donate-submit-btn');
+    if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
+        submitBtn.disabled = false;
+    } else {
+        submitBtn.disabled = true;
+    }
+ }
+ 
+ function processDonation() {
+    const amount = parseFloat(selectedDonationAmount);
+    if (!amount || amount <= 0) {
+        showErrorMessage('Please enter a valid donation amount');
+        return;
+    }
+    
+    const isCharity = document.getElementById('charity-donation').checked;
+    const charityType = document.getElementById('charity-select').value;
+    
+    const donation = {
+        id: 'donation_' + Date.now(),
+        userId: userId,
+        amount: amount,
+        method: selectedPaymentMethod,
+        isCharity: isCharity,
+        charityType: charityType,
+        timestamp: new Date().toISOString(),
+        verified: false // In real app, this would be verified through payment confirmation
+    };
+    
+    // Check if this is a tip for a specific confession
+    if (currentTipConfessionId) {
+        donation.type = 'tip';
+        donation.confessionId = currentTipConfessionId;
+        
+        // Update the confession with the tip
+        if (isGlobalMode && firebaseInitialized) {
+            updateConfessionTipInFirebase(currentTipConfessionId, amount, userId);
+        } else {
+            let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+            const confessionIndex = confessions.findIndex(c => c.id === currentTipConfessionId);
+            
+            if (confessionIndex !== -1) {
+                confessions[confessionIndex].tips = (confessions[confessionIndex].tips || 0) + amount;
+                if (!confessions[confessionIndex].donors) {
+                    confessions[confessionIndex].donors = [];
+                }
+                confessions[confessionIndex].donors.push(userId);
+                localStorage.setItem('confessions', JSON.stringify(confessions));
+                
+                // Add karma to the confession owner
+                const confessionOwner = confessions[confessionIndex].userId;
+                if (confessionOwner && confessionOwner !== userId) {
+                    addKarmaToUser(confessionOwner, KARMA_POINTS.donateMedium);
+                }
+            }
+        }
+    } else {
+        donation.type = 'general';
+    }
+    
+    // Save donation
+    donations.push(donation);
+    userDonations.push(donation);
+    localStorage.setItem('donations', JSON.stringify(donations));
+    localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
+    
+    // Update funding goals
+    updateFundingGoalProgress(donation);
+    
+    // Award karma based on donation amount
+    let karmaAwarded = 0;
+    if (amount <= 10) {
+        karmaAwarded = KARMA_POINTS.donateSmall;
+    } else if (amount <= 50) {
+        karmaAwarded = KARMA_POINTS.donateMedium;
+    } else {
+        karmaAwarded = KARMA_POINTS.donateLarge;
+    }
+    
+    if (isCharity) {
+        karmaAwarded += KARMA_POINTS.donateCharity;
+    }
+    
+    addKarma(karmaAwarded, 'donation');
+    
+    // Check donation achievements
+    checkDonationAchievements(donation);
+    
+    // Show thank you message
+    showThankYouModal(amount, isCharity);
+    
+    // Reset tip confession ID
+    currentTipConfessionId = null;
+    
+    closeDonationModal();
+    
+    // If in global mode and Firebase is available, also save the donation to Firebase
+    if (isGlobalMode && firebaseInitialized) {
+        saveDonationToFirebase(donation);
+    }
+    
+    // Refresh the display
+    if (isGlobalMode) {
+        loadGlobalConfessions();
+    } else {
+        loadConfessions();
+    }
+ }
+ 
+ // Update Firestore with tip information
+ async function updateConfessionTipInFirebase(confessionId, amount, donorId) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, updateDoc } = window.firebaseServices;
+         
+         // Get a reference to the confession document
+         const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+         
+         // Update the document with the new tip amount and donor
+         await updateDoc(confessionRef, {
+             tips: amount, // This would ideally use a server-side increment operation
+             donors: [donorId], // This would ideally use a server-side array union
+             popularity: amount * 20 // Simple popularity boost based on tip amount
+         });
+         
+         console.log(`Tip added to confession ${confessionId} in Firebase`);
+     } catch (error) {
+         console.error("Error updating tip in Firebase:", error);
+         showErrorMessage('Error saving tip to Firebase. The tip was processed locally.');
+     }
+ }
+ 
+ // Save donation to Firebase
+ async function saveDonationToFirebase(donation) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+         
+         // Create a reference to the donations collection
+         const donationsRef = collection(db, FIREBASE_SETTINGS.donationCollection);
+         
+         // Prepare the data for Firebase
+         const firestoreData = {
+             ...donation,
+             serverTimestamp: serverTimestamp()
+         };
+         
+         // Add the document to Firestore
+         await addDoc(donationsRef, firestoreData);
+         
+         console.log('Donation saved to Firebase');
+     } catch (error) {
+         console.error("Error saving donation to Firebase:", error);
+     }
+ }
+ 
+ function showThankYouModal(amount, isCharity) {
+    const modal = document.createElement('div');
+    modal.className = 'donation-modal';
+    modal.style.display = 'block';
+    
+    modal.innerHTML = `
+        <div class="donation-modal-content thank-you-modal">
+            <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
+            <div class="thank-you-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2>Thank You for Your Support!</h2>
+            <p>Your donation of $${amount} helps keep our community running.</p>
+            ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
+            <p>You've earned karma points and are helping us reach our goals!</p>
+            <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
+                Close
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+ }
+ 
+ function updateFundingGoalProgress(donation) {
+    const amount = donation.amount;
+    
+    // Distribute donation to goals
+    if (donation.isCharity) {
+        FUNDING_GOALS.charity.current += amount * 0.1;
+        FUNDING_GOALS.server.current += amount * 0.45;
+        FUNDING_GOALS.feature.current += amount * 0.45;
+    } else {
+        FUNDING_GOALS.server.current += amount * 0.5;
+        FUNDING_GOALS.feature.current += amount * 0.5;
+    }
+    
+    localStorage.setItem('fundingGoals', JSON.stringify(FUNDING_GOALS));
+    updateFundingGoals();
+    
+    // If in global mode and Firebase is available, also update funding goals in Firebase
+    if (isGlobalMode && firebaseInitialized) {
+        updateFundingGoalsInFirebase();
+    }
+ }
+ 
+ // Update funding goals in Firebase
+ async function updateFundingGoalsInFirebase() {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, setDoc } = window.firebaseServices;
+         
+         // Get a reference to the funding document
+         const fundingRef = doc(db, FIREBASE_SETTINGS.fundingCollection, 'goals');
+         
+         // Update the document with the current funding goals
+         await setDoc(fundingRef, FUNDING_GOALS);
+         
+         console.log('Funding goals updated in Firebase');
+     } catch (error) {
+         console.error("Error updating funding goals in Firebase:", error);
+     }
+ }
+ 
+ function updateFundingGoals() {
+    // Load saved goals
+    const savedGoals = localStorage.getItem('fundingGoals');
+    if (savedGoals) {
+        Object.assign(FUNDING_GOALS, JSON.parse(savedGoals));
+    }
+    
+    // Update server goal
+    const serverProgress = Math.min((FUNDING_GOALS.server.current / FUNDING_GOALS.server.target) * 100, 100);
+    document.getElementById('server-goal-progress').style.width = serverProgress + '%';
+    document.getElementById('server-goal-progress').textContent = Math.round(serverProgress) + '%';
+    document.getElementById('server-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.server.current)} raised`;
+    
+    // Update feature goal
+    const featureProgress = Math.min((FUNDING_GOALS.feature.current / FUNDING_GOALS.feature.target) * 100, 100);
+    document.getElementById('feature-goal-progress').style.width = featureProgress + '%';
+    document.getElementById('feature-goal-progress').textContent = Math.round(featureProgress) + '%';
+    document.getElementById('feature-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.feature.current)} raised`;
+    
+    // Update charity goal
+    const charityProgress = Math.min((FUNDING_GOALS.charity.current / FUNDING_GOALS.charity.target) * 100, 100);
+    document.getElementById('charity-goal-progress').style.width = charityProgress + '%';
+    document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
+    document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
+ }
+ 
+ function checkDonationAchievements(donation) {
+    // First donation achievement
+    if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
+        userAchievements.push('supporter');
+        addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.supporter);
+    }
+    
+    // Charity donation achievement
+    if (donation.isCharity && !userAchievements.includes('philanthropist')) {
+        userAchievements.push('philanthropist');
+        addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.philanthropist);
+    }
+    
+    // Large donation achievement
+    if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
+        userAchievements.push('crypto_whale');
+        addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.cryptoWhale);
+    }
+    
+    saveUserData();
+ }
+ 
+ function loadDonationData() {
+    const savedDonations = localStorage.getItem('donations');
+    if (savedDonations) {
+        donations = JSON.parse(savedDonations);
+    }
+    
+    const savedUserDonations = localStorage.getItem('userDonations_' + userId);
+    if (savedUserDonations) {
+        userDonations = JSON.parse(savedUserDonations);
+    }
+ }
+ 
+ function tipConfession(confessionId) {
+    const confession = getConfessionById(confessionId);
+    if (!confession) return;
+    
+    currentTipConfessionId = confessionId;
+    openDonationModal();
+    
+    // Customize modal for tipping
+    const titleElement = document.querySelector('.donation-title');
+    const subtitleElement = document.querySelector('.donation-subtitle');
+    
+    if (titleElement) {
+        titleElement.textContent = 'Tip This Confession';
+    }
+    
+    if (subtitleElement) {
+        if (confession.walletAddress && confession.walletType) {
+            subtitleElement.innerHTML = `
+                Direct tip to author's ${confession.walletType.toUpperCase()} wallet<br>
+                <small style="font-family: monospace; word-break: break-all;">${confession.walletAddress}</small>
+            `;
+        } else {
+            subtitleElement.textContent = 'Show appreciation for this confession (goes to platform)';
+        }
+    }
+    
+    // If confession has a wallet address, show it in the donation modal
+    if (confession.walletAddress && confession.walletType) {
+        const addressDiv = document.getElementById('donation-address');
+        addressDiv.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 8px;">Send directly to author's wallet:</div>
+            <div style="margin-bottom: 10px; word-break: break-all;">${confession.walletAddress}</div>
+            <button class="copy-address-btn" onclick="copyAddress('${confession.walletAddress}')">
+                <i class="fas fa-copy"></i> Copy Author's Address
+            </button>
+        `;
+        addressDiv.style.display = 'block';
+        
+        // Pre-select the matching payment method
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        paymentMethods.forEach(method => {
+            if (method.dataset.method === confession.walletType) {
+                selectPaymentMethod(method);
+            }
+        });
+    }
+ }
+ 
+ // Theme and UI Functions
+ function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcon(newTheme);
+ }
+ 
+ function updateThemeToggleIcon(theme) {
+    const iconElement = document.querySelector('#theme-toggle i');
+    if (theme === 'dark') {
+        iconElement.className = 'fas fa-sun';
+    } else {
+        iconElement.className = 'fas fa-moon';
+    }
+ }
+ 
+ // User Data Management
+ function loadUserData() {
+    const userData = localStorage.getItem('userData_' + userId);
+    if (userData) {
+        const data = JSON.parse(userData);
+        userKarma = data.karma || 0;
+        userAchievements = data.achievements || [];
+    }
+    updateKarmaDisplay();
+ }
+ 
+ function saveUserData() {
+    const userData = {
+        karma: userKarma,
+        achievements: userAchievements,
+        lastSubmissionDate: new Date().toDateString()
+    };
+    localStorage.setItem('userData_' + userId, JSON.stringify(userData));
+    
+    // If in global mode and Firebase is available, also save user data to Firebase
+    if (isGlobalMode && firebaseInitialized) {
+        saveUserDataToFirebase(userData);
+    }
+ }
+ 
+ // Save user data to Firebase
+ async function saveUserDataToFirebase(userData) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, setDoc } = window.firebaseServices;
+         
+         // Get a reference to the user document
+         const userRef = doc(db, FIREBASE_SETTINGS.userCollection, userId);
+         
+         // Update the document with the user data
+         await setDoc(userRef, {
+             ...userData,
+             lastSynced: new Date().toISOString()
+         });
+         
+         console.log('User data saved to Firebase');
+     } catch (error) {
+         console.error("Error saving user data to Firebase:", error);
+     }
+ }
+ 
+ function updateKarmaDisplay() {
+    document.getElementById('user-karma').textContent = userKarma;
+ }
+ 
+ function addKarma(points, reason) {
+    userKarma += points;
+    updateKarmaDisplay();
+    saveUserData();
+    checkAchievements();
+ }
+ 
+ function showAchievement(achievement) {
+    const popup = document.getElementById('achievement-popup');
+    document.getElementById('achievement-title').textContent = achievement.title;
+    document.getElementById('achievement-description').textContent = achievement.description;
+    
+    popup.classList.add('show');
+    
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 5000);
+ }
+ 
+ function checkAchievements() {
+    // Check for various achievements
+    
+    // Check for first confession achievement
+    const confessions = isGlobalMode ? [] : (JSON.parse(localStorage.getItem('confessions')) || []);
+    const userConfessions = confessions.filter(c => c.userId === userId);
+    
+    if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
+        userAchievements.push('first_confession');
+        addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.firstConfession);
+    }
+    
+    // Check for karma legend achievement
+    if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
+        userAchievements.push('karma_legend');
+        addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.karmaLegend);
+    }
+    
+    saveUserData();
+ }
+ 
+ function checkDailyStreak() {
+    const userData = localStorage.getItem('userData_' + userId);
+    if (userData) {
+        const data = JSON.parse(userData);
+        const lastSubmission = data.lastSubmissionDate;
+        const today = new Date().toDateString();
+        
+        if (lastSubmission && lastSubmission !== today) {
+            // Check if it's consecutive days
+            const lastDate = new Date(lastSubmission);
+            const diffTime = Math.abs(new Date() - lastDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) {
+                // Consecutive day
+                const currentStreak = (data.currentStreak || 0) + 1;
+                data.currentStreak = currentStreak;
+                
+                if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
+                    userAchievements.push('daily_streak');
+                    addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
+                    showAchievement(ACHIEVEMENTS.dailyStreak);
+                }
+            } else {
+                // Streak broken
+                data.currentStreak = 0;
+            }
+            
+            localStorage.setItem('userData_' + userId, JSON.stringify(data));
+        }
+    }
+ }
+ 
+ function handleConfessionSubmit(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    const confessionText = document.getElementById('confession-text').value.trim();
+    const submitBtn = document.getElementById('submit-btn');
+    const shareGlobally = document.getElementById('share-globally').checked;
+    
+    if (!confessionText) {
+        showErrorMessage('Please enter a confession');
+        return;
+    }
+    
+    // Basic content moderation
+    if (containsForbiddenWords(confessionText)) {
+        showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
+        return;
+    }
+    
+    // Check if trying to share globally but Firebase is not available
+    if (shareGlobally && (!firebaseInitialized || !navigator.onLine)) {
+        showErrorMessage('Cannot share globally. Please check your connection or try again later.');
+        return;
+    }
+    
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    
+    // Simulate API call
+    setTimeout(() => {
+        if (shareGlobally) {
+            addGlobalConfession(confessionText, selectedCategory);
+        } else {
+            addLocalConfession(confessionText, selectedCategory);
+        }
+        
+        document.getElementById('confession-text').value = '';
+        document.querySelector('.character-count').textContent = '0/1000 characters';
+        showSuccessMessage(shareGlobally ? 'Your confession has been shared globally!' : 'Your confession has been submitted successfully!');
+        
+        // Reset category selection
+        document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+        document.querySelector('.category-tag[data-category="all"]').classList.add('active');
+        selectedCategory = null;
+        
+        // Reset wallet fields
+        document.getElementById('wallet-type').value = '';
+        document.getElementById('wallet-address').value = '';
+        document.getElementById('wallet-address').style.display = 'none';
+        
+        // Reset global sharing checkbox
+        document.getElementById('share-globally').checked = false;
+        
+        // Add karma for submission
+        addKarma(KARMA_POINTS.submitConfession, 'submission');
+        
+        // Add karma for global contribution if shared globally
+        if (shareGlobally && !userAchievements.includes('global_contributor')) {
+            userAchievements.push('global_contributor');
+            addKarma(ACHIEVEMENTS.globalContributor.karma, 'achievement');
+            showAchievement(ACHIEVEMENTS.globalContributor);
+        }
+        
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
+        
+        // Refresh the confessions list
+        if (isGlobalMode && shareGlobally) {
+            loadGlobalConfessions();
+        } else if (!isGlobalMode && !shareGlobally) {
+            loadConfessions();
+        }
+    }, 1000);
+ }
+ 
+ function containsForbiddenWords(text) {
+    const lowerText = text.toLowerCase();
+    return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
+ }
+ 
+ function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
+    const successMessage = document.getElementById('success-message');
+    if (message !== 'Your confession has been submitted successfully!') {
+        successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    } else {
+        successMessage.innerHTML = `<i class="fas fa-check-circle"></i> Your confession has been submitted successfully!`;
+    }
+    successMessage.style.display = 'flex';
+    
+    setTimeout(() => {
+        successMessage.style.display = 'none';
+    }, 3000);
+ }
+ 
+ function showErrorMessage(message) {
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    errorText.textContent = message;
+    errorMessage.style.display = 'flex';
+    
+    setTimeout(() => {
+        errorMessage.style.display = 'none';
+    }, 3000);
+ }
+ 
+ // Add a confession to Firebase
+ async function addGlobalConfession(text, category = null) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+         
+         const walletType = document.getElementById('wallet-type').value;
+         const walletAddress = document.getElementById('wallet-address').value.trim();
+         
+         // Create a reference to the confessions collection
+         const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+         
+         // Prepare the confession data
+         const confession = {
+             text: text,
+             category: category,
+             userId: userId,
+             timestamp: new Date().toISOString(),
+             views: 0,
+             reactions: {
+                 like: 0,
+                 dislike: 0,
+                 love: 0,
+                 haha: 0,
+                 wow: 0,
+                 sad: 0
+             },
+             replies: [],
+             reports: 0,
+             reported: false,
+             tips: 0,
+             donors: [],
+             walletType: walletType || null,
+             walletAddress: walletAddress || null,
+             serverTimestamp: serverTimestamp(),
+             popularity: 0,
+             isGlobal: true
+         };
+         
+         // Add the document to Firestore
+         const docRef = await addDoc(confessionsRef, confession);
+         console.log('Confession added to Firebase with ID:', docRef.id);
+         
+         // Also save locally for offline access
+         saveConfessionLocally({
+             ...confession,
+             id: docRef.id
+         });
+         
+         // Check if we need to set a new confession of the day
+         const lastUpdate = localStorage.getItem('last_cotd_update');
+         if (!lastUpdate) {
+             setConfessionOfDay();
+         }
+         
+         checkDailyStreak();
+         checkAchievements();
+         
+         return true;
+     } catch (error) {
+         console.error("Error adding confession to Firebase:", error);
+         showErrorMessage("Error sharing globally. The confession was saved locally.");
+         
+         // Fallback to local storage
+         addLocalConfession(text, category);
+         return false;
+     }
+ }
+ 
+ // Save a copy of a global confession to local storage
+ function saveConfessionLocally(confession) {
+     let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+     confessions.unshift(confession);
+     localStorage.setItem('confessions', JSON.stringify(confessions));
+ }
+ 
+ function addLocalConfession(text, category = null) {
+    try {
+        const walletType = document.getElementById('wallet-type').value;
+        const walletAddress = document.getElementById('wallet-address').value.trim();
+        
+        const confession = {
+            id: 'conf_' + Date.now(),
+            userId: userId,
+            text: text,
+            category: category,
+            timestamp: new Date().toISOString(),
+            views: 0,
+            reactions: {
+                like: 0,
+                dislike: 0,
+                love: 0,
+                haha: 0,
+                wow: 0,
+                sad: 0
+            },
+            replies: [],
+            reports: 0,
+            reported: false,
+            tips: 0,
+            donors: [],
+            walletType: walletType || null,
+            walletAddress: walletAddress || null,
+            isGlobal: false
+        };
+        
+        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+        confessions.unshift(confession);
+        
+        localStorage.setItem('confessions', JSON.stringify(confessions));
+        
+        // Check if we need to set a new confession of the day
+        const lastUpdate = localStorage.getItem('last_cotd_update');
+        if (!lastUpdate) {
+            setConfessionOfDay();
+        }
+        
+        loadConfessions();
+        updateStatistics();
+        checkDailyStreak();
+        checkAchievements();
+        
+        return true;
+    } catch (error) {
+        console.error("Error adding confession:", error);
+        showErrorMessage("There was an error saving your confession. Please try again.");
+        return false;
+    }
+ }
+ 
+ function loadConfessions() {
+    try {
+        const confessionsContainer = document.getElementById('confessions-list');
+        let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+        
+        // Apply filters
+        confessions = applyFilters(confessions);
+        
+        // Calculate pagination
+        const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
+        const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
+        const end = start + CONFESSIONS_PER_PAGE;
+        const pageConfessions = confessions.slice(start, end);
+        
+        displayConfessions(pageConfessions, totalPages);
+    } catch (error) {
+        console.error("Error in loadConfessions:", error);
+        document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
+    }
+ }
+ 
+ function displayConfessions(confessions, totalPages) {
+     const confessionsContainer = document.getElementById('confessions-list');
+     
+     if (confessions.length === 0) {
+         confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
+         document.getElementById('pagination').innerHTML = '';
+         return;
+     }
+     
+     confessionsContainer.innerHTML = '';
+     
+     confessions.forEach(confession => {
+         const confessionElement = createConfessionElement(confession);
+         confessionsContainer.appendChild(confessionElement);
+         incrementViewCount(confession.id);
+     });
+     
+     // Create pagination if totalPages is provided
+     if (totalPages) {
+         createPagination(totalPages);
+     }
+ }
+ 
+ function applyFilters(confessions) {
+    let filtered = [...confessions];
+    
+    // Category filter
+    if (currentCategory !== 'all') {
+        filtered = filtered.filter(c => c.category === currentCategory);
+    }
+    
+    // Search filter
+    if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
+    }
+    
+    // Sort
+    switch (currentSort) {
+        case 'oldest':
+            filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            break;
+        case 'popular':
+            filtered.sort((a, b) => {
+                const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
+                const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
+                return bReactions - aReactions;
+            });
+            break;
+        default: // newest
+            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    }
+    
+    return filtered;
+ }
+ 
+ function createConfessionElement(confession) {
+    const confessionElement = document.createElement('div');
+    confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
+    confessionElement.setAttribute('data-id', confession.id);
+    
+    const categoryBadge = confession.category ? 
+        `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
+    
+    const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+    
+    // Check if user is a donor
+    const isDonor = userDonations.length > 0;
+    const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
+   
+    // Check if confession has received tips
+    const tipAmount = confession.tips || 0;
+    const tipBadge = tipAmount > 0 ? `<span class="tip-badge" style="background: var(--success-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">$${tipAmount} tipped</span>` : '';
+    
+    // Show wallet badge if author accepts tips
+    const walletBadge = confession.walletAddress ? 
+        `<span class="wallet-badge" style="background: var(--crypto-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">
+            <i class="fas fa-wallet"></i> ${confession.walletType} Tips
+        </span>` : '';
+    
+    // Global badge for confessions shared globally
+    const globalBadge = confession.isGlobal ? 
+        `<span class="global-badge">
+            <i class="fas fa-globe"></i> Global
+        </span>` : '';
+    
+    // Update tip button based on wallet status
+    const tipButtonText = confession.walletAddress ? 
+        '<i class="fas fa-hand-holding-usd"></i> Tip Author' : 
+        '<i class="fas fa-hand-holding-usd"></i> Tip';
+    
+    confessionElement.innerHTML = `
+        ${categoryBadge}
+        <p>${confession.text}</p>
+        <div class="meta">
+            <div class="meta-info">
+                <div class="timestamp">
+                    <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
+                    ${donorBadge}
+                    ${tipBadge}
+                    ${walletBadge}
+                    ${globalBadge}
+                </div>
+                <div class="views">
+                    <i class="far fa-eye"></i> ${confession.views || 0} views
+                </div>
+            </div>
+            <div class="actions">
+                ${createReactionButtons(confession)}
+                <button class="tip-button" onclick="tipConfession('${confession.id}')">
+                    ${tipButtonText}
+                </button>
+                <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <div class="share-options" id="share-options-${confession.id}">
+                    <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
+                        <i class="fab fa-twitter"></i> Twitter
+                    </button>
+                    <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
+                        <i class="fas fa-link"></i> Copy Link
+                    </button>
+                    <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
+                        <i class="fas fa-image"></i> Create Card
+                    </button>
+                </div>
+                <button class="report-button" onclick="reportConfession('${confession.id}')">
+                    <i class="fas fa-flag"></i>
+                </button>
+            </div>
+        </div>
+        ${createRepliesSection(confession)}
+        <button class="admin-action" onclick="deleteConfession('${confession.id}')">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Check if this confession is popular enough for achievement
+    if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
+        userAchievements.push('popular_confession');
+        addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
+        showAchievement(ACHIEVEMENTS.popularConfession);
+    }
+    
+    return confessionElement;
+ }
+ 
+ function createReactionButtons(confession) {
+    const reactions = [
+        { name: 'like', icon: 'fas fa-thumbs-up' },
+        { name: 'dislike', icon: 'fas fa-thumbs-down' },
+        { name: 'love', icon: 'fas fa-heart' },
+        { name: 'haha', icon: 'fas fa-laugh' },
+        { name: 'wow', icon: 'fas fa-surprise' },
+        { name: 'sad', icon: 'fas fa-sad-tear' }
+    ];
+    
+    return reactions.map(reaction => {
+        const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
+        return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
+            <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
+        </button>`;
+    }).join('');
+ }
+ 
+ function createRepliesSection(confession) {
+    const replies = confession.replies || [];
+    const replyCount = replies.length;
+    
+    return `
+        <div class="replies-section">
+            <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
+                <i class="fas fa-comments"></i>
+                Replies <span class="reply-count">(${replyCount})</span>
+            </button>
+            <div class="replies-container" id="replies-${confession.id}">
+                ${replies.map(reply => `
+                    <div class="reply">
+                        <p>${reply.text}</p>
+                        <div class="reply-meta">
+                            <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
+                        </div>
+                    </div>
+                `).join('')}
+                <div class="reply-form">
+                    <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
+                    <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
+                </div>
+            </div>
+        </div>
+    `;
+ }
+ 
+ function toggleReplies(confessionId) {
+    const repliesContainer = document.getElementById(`replies-${confessionId}`);
+    repliesContainer.classList.toggle('active');
+ }
+ 
+ function submitReply(confessionId) {
+    const replyInput = document.getElementById(`reply-input-${confessionId}`);
+    const replyText = replyInput.value.trim();
+    
+    if (!replyText) return;
+    
+    // Check if this is a global confession
+    if (isGlobalMode && firebaseInitialized) {
+        submitReplyToFirebase(confessionId, replyText);
+    } else {
+        submitLocalReply(confessionId, replyText);
+    }
+    
+    replyInput.value = '';
+ }
+ 
+ // Submit reply to Firebase
+ async function submitReplyToFirebase(confessionId, replyText) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, updateDoc, arrayUnion } = window.firebaseServices;
+         
+         const reply = {
+             id: 'reply_' + Date.now(),
+             text: replyText,
+             timestamp: new Date().toISOString(),
+             userId: userId
+         };
+         
+         // Get a reference to the confession document
+         const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+         
+         // Update the document with the new reply
+         await updateDoc(confessionRef, {
+             replies: arrayUnion(reply)
+         });
+         
+         console.log(`Reply added to confession ${confessionId} in Firebase`);
+         
+         // Refresh the confessions
+         loadGlobalConfessions();
+     } catch (error) {
+         console.error("Error submitting reply to Firebase:", error);
+         showErrorMessage('Error submitting reply to Firebase. Trying locally...');
+         
+         // Fallback to local storage
+         submitLocalReply(confessionId, replyText);
+     }
+ }
+ 
+ function submitLocalReply(confessionId, replyText) {
+    const reply = {
+        id: 'reply_' + Date.now(),
+        text: replyText,
+        timestamp: new Date().toISOString(),
+        userId: userId
+    };
+    
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+    
+    if (confessionIndex !== -1) {
+        if (!confessions[confessionIndex].replies) {
+            confessions[confessionIndex].replies = [];
+        }
+        
+        confessions[confessionIndex].replies.push(reply);
+        localStorage.setItem('confessions', JSON.stringify(confessions));
+        
+        // Add karma to the confession owner if they receive a reply
+        const confessionOwner = confessions[confessionIndex].userId;
+        if (confessionOwner && confessionOwner !== userId) {
+            addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
+        }
+        
+        // Check for conversation starter achievement
+        if (confessions[confessionIndex].replies.length >= 10 && 
+            confessions[confessionIndex].userId === userId && 
+            !userAchievements.includes('conversation_starter')) {
+            userAchievements.push('conversation_starter');
+            addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
+            showAchievement(ACHIEVEMENTS.conversationStarter);
+        }
+        
+        loadConfessions();
+    }
+ }
+ 
+ function addKarmaToUser(targetUserId, points) {
+    const userData = localStorage.getItem('userData_' + targetUserId);
+    if (userData) {
+        const data = JSON.parse(userData);
+        data.karma = (data.karma || 0) + points;
+        localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
+    }
+ }
+ 
+ function openShareOptions(event, confessionId) {
+    event.stopPropagation();
+    const shareOptions = document.getElementById(`share-options-${confessionId}`);
+    
+    // Close all other share options
+    document.querySelectorAll('.share-options').forEach(el => {
+        if (el !== shareOptions) {
+            el.classList.remove('active');
+        }
+    });
+    
+    shareOptions.classList.toggle('active');
+    
+    // Position the share options properly
+    const button = event.currentTarget;
+    shareOptions.style.top = `${button.offsetHeight + 5}px`;
+    shareOptions.style.right = '0';
+    
+    // Close share options when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', function closeShareOptions(e) {
+            if (!shareOptions.contains(e.target) && e.target !== button) {
+                shareOptions.classList.remove('active');
+                document.removeEventListener('click', closeShareOptions);
+            }
+        });
+    }, 100);
+ }
+ 
+ function shareToTwitter(confessionId) {
+    const confession = getConfessionById(confessionId);
+    if (confession) {
+        const text = confession.text.substring(0, 200) + (confession.text.length > 200 ? '...' : '');
+        const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
+        window.open(twitterUrl, '_blank');
+    }
+ }
+ 
+ function copyShareLink(confessionId) {
+    const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+    navigator.clipboard.writeText(url).then(() => {
+        showSuccessMessage('Link copied to clipboard!');
+    }).catch(() => {
+        prompt('Copy this link:', url);
+    });
+ }
+ 
+ function createShareCard(confessionId) {
+    const confession = getConfessionById(confessionId);
+    if (!confession) return;
+    
+    // Update share card content
+    document.getElementById('share-card-text').textContent = confession.text;
+    document.getElementById('share-card-date').textContent = formatDate(new Date(confession.timestamp));
+    
+    const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+    document.getElementById('share-card-stats').innerHTML = `
+        <span><i class="fas fa-heart"></i> ${totalReactions}</span>
+        <span><i class="fas fa-eye"></i> ${confession.views || 0}</span>
+    `;
+    
+    // Generate QR code
+    const qrContainer = document.getElementById('share-card-qr');
+    qrContainer.innerHTML = '';
+    const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+    new QRCode(qrContainer, {
+        text: url,
+        width: 80,
+        height: 80
+    });
+    
+    // Create image preview
+    setTimeout(() => {
+        const shareCard = document.querySelector('#share-card-canvas .share-card');
+        html2canvas(shareCard).then(canvas => {
+            // Show preview in modal
+            const modal = document.getElementById('share-card-modal');
+            const previewContainer = document.getElementById('share-card-preview');
+            previewContainer.innerHTML = '';
+            
+            // Create image element from canvas
+            const image = new Image();
+            image.src = canvas.toDataURL('image/png');
+            image.style.maxWidth = '100%';
+            image.style.borderRadius = '8px';
+            image.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+            
+            previewContainer.appendChild(image);
+            
+            // Store the image data for potential download
+            window.currentShareCardData = canvas.toDataURL('image/png');
+            window.currentShareCardId = confessionId;
+            
+            // Show the modal
+            modal.style.display = 'block';
+        });
+    }, 100);
+ }
+ 
+ function getConfessionById(confessionId) {
+    if (isGlobalMode && firebaseInitialized) {
+        // For global mode, we might need to fetch from Firebase
+        // This should be implemented with caching for better performance
+        const cachedConfessions = JSON.parse(localStorage.getItem('confessions')) || [];
+        return cachedConfessions.find(c => c.id === confessionId);
+    } else {
+        const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+        return confessions.find(c => c.id === confessionId);
+    }
+ }
+ 
+ function showLeaderboard() {
+    const modal = document.getElementById('leaderboard-modal');
+    const content = document.getElementById('leaderboard-content');
+    
+    modal.style.display = 'block';
+    content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
+    
+    if (isGlobalMode && firebaseInitialized) {
+        loadGlobalLeaderboard().then(users => {
+            displayLeaderboard(users);
+        }).catch(error => {
+            console.error("Error loading global leaderboard:", error);
+            
+            // Fallback to local leaderboard
+            const localUsers = getLocalLeaderboardData();
+            displayLeaderboard(localUsers);
+        });
+    } else {
+        // Load local leaderboard
+        const users = getLocalLeaderboardData();
+        displayLeaderboard(users);
+    }
+ }
+ 
+ // Load global leaderboard from Firebase
+ async function loadGlobalLeaderboard() {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, collection, getDocs, query, orderBy, limit } = window.firebaseServices;
+         
+         // Create a reference to the users collection
+         const usersRef = collection(db, FIREBASE_SETTINGS.userCollection);
+         
+         // Create a query to get the top users by karma
+         const usersQuery = query(
+             usersRef,
+             orderBy('karma', 'desc'),
+             limit(10)
+         );
+         
+         // Execute the query
+         const querySnapshot = await getDocs(usersQuery);
+         
+         // Process the results
+         let users = [];
+         querySnapshot.forEach((doc) => {
+             const userData = doc.data();
+             users.push({
+                 id: doc.id,
+                 karma: userData.karma || 0,
+                 achievements: userData.achievements || [],
+                 totalDonated: 0 // We would need to calculate this from donation records
+             });
+         });
+         
+         return users;
+     } catch (error) {
+         console.error("Error loading global leaderboard:", error);
+         throw error;
+     }
+ }
+ 
+ // Get local leaderboard data
+ function getLocalLeaderboardData() {
+    const users = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('userData_')) {
+            const userData = JSON.parse(localStorage.getItem(key));
+            const userId = key.replace('userData_', '');
+            const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
+            const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
+            
+            users.push({
+                id: userId,
+                karma: userData.karma || 0,
+                achievements: userData.achievements || [],
+                totalDonated: totalDonated
+            });
+        }
+    }
+    
+    // Sort by karma
+    users.sort((a, b) => b.karma - a.karma);
+    
+    return users;
+ }
+ 
+ // Display leaderboard data
+ function displayLeaderboard(users) {
+    const content = document.getElementById('leaderboard-content');
+    
+    content.innerHTML = users.slice(0, 10).map((user, index) => {
+        const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+        const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
+        
+        return `
+            <div class="leaderboard-item">
+                <span class="rank ${rankClass}">#${index + 1}</span>
+                <div class="user-info">
+                    <span class="user-name">Anonymous User ${user.id.substr(-4)}${donorBadge}</span>
+                    <div class="user-achievements">
+                        ${user.achievements.length} achievements | $${user.totalDonated} donated
+                    </div>
+                </div>
+                <span class="karma-badge">${user.karma} karma</span>
+            </div>
+        `;
+    }).join('');
+ }
+ 
+ function reactToConfession(confessionId, reactionType) {
+    try {
+        if (isGlobalMode && firebaseInitialized) {
+            reactToGlobalConfession(confessionId, reactionType);
+        } else {
+            reactToLocalConfession(confessionId, reactionType);
+        }
+    } catch (error) {
+        console.error("Error in reactToConfession:", error);
+    }
+ }
+ 
+ // React to global confession in Firebase
+ async function reactToGlobalConfession(confessionId, reactionType) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, updateDoc, increment } = window.firebaseServices;
+         
+         // Get a reference to the confession document
+         const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+         
+         // Update the document with the new reaction count
+         await updateDoc(confessionRef, {
+             [`reactions.${reactionType}`]: increment(1)
+         });
+         
+         console.log(`Reaction added to confession ${confessionId} in Firebase`);
+         
+         // Refresh the confessions
+         loadGlobalConfessions();
+     } catch (error) {
+         console.error("Error reacting to global confession:", error);
+         showErrorMessage("Error adding reaction. The reaction was processed locally.");
+         
+         // Fallback to local storage
+         reactToLocalConfession(confessionId, reactionType);
+     }
+ }
+ 
+ function reactToLocalConfession(confessionId, reactionType) {
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+    
+    if (confessionIndex !== -1) {
+        if (!confessions[confessionIndex].reactions) {
+            confessions[confessionIndex].reactions = {
+                like: 0,
+                dislike: 0,
+                love: 0,
+                haha: 0,
+                wow: 0,
+                sad: 0
+            };
+        }
+        
+        confessions[confessionIndex].reactions[reactionType]++;
+        localStorage.setItem('confessions', JSON.stringify(confessions));
+        
+        // Add karma to the confession owner
+        const confessionOwner = confessions[confessionIndex].userId;
+        if (confessionOwner && confessionOwner !== userId) {
+            // Give extra karma for love reactions
+            const karmaPoints = reactionType === 'love' ? KARMA_POINTS.receiveLove : KARMA_POINTS.receiveReaction;
+            addKarmaToUser(confessionOwner, karmaPoints);
+        }
+        
+        loadConfessions();
+    }
+ }
+ 
+ function createPagination(totalPages) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+    
+    if (totalPages <= 1) return;
+    
+    // Previous button
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => changePage(currentPage - 1);
+    paginationContainer.appendChild(prevBtn);
+    
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => changePage(i);
+            paginationContainer.appendChild(pageBtn);
+        } else if (i === currentPage - 3 || i === currentPage + 3) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.style.margin = '0 5px';
+            paginationContainer.appendChild(ellipsis);
+        }
+    }
+    
+    // Next button
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => changePage(currentPage + 1);
+    paginationContainer.appendChild(nextBtn);
+ }
+ 
+ function changePage(page) {
+    currentPage = page;
+    
+    if (isGlobalMode) {
+        loadGlobalConfessions();
+    } else {
+        loadConfessions();
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+ 
+ function formatDate(date) {
+    try {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHour = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHour / 24);
+        
+        if (diffSec < 60) {
+            return 'just now';
+        } else if (diffMin < 60) {
+            return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+        } else if (diffHour < 24) {
+            return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
+        } else {
+            return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+        }
+    } catch (error) {
+        console.error("Error formatting date:", error);
+        return "unknown time";
+    }
+ }
+ 
+ function reportConfession(confessionId) {
+    try {
+        if (isGlobalMode && firebaseInitialized) {
+            reportGlobalConfession(confessionId);
+        } else {
+            reportLocalConfession(confessionId);
+        }
+    } catch (error) {
+        console.error("Error in reportConfession:", error);
+    }
+ }
+ 
+ // Report global confession in Firebase
+ async function reportGlobalConfession(confessionId) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, updateDoc, increment } = window.firebaseServices;
+         
+         // Get a reference to the confession document
+         const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+         
+         // Update the document with the report
+         await updateDoc(confessionRef, {
+             reports: increment(1),
+             reported: true // Auto-flag as reported
+         });
+         
+         console.log(`Confession ${confessionId} reported in Firebase`);
+         
+         // Refresh the confessions
+         loadGlobalConfessions();
+         
+         alert('Thank you for reporting. We will review this confession.');
+     } catch (error) {
+         console.error("Error reporting global confession:", error);
+         showErrorMessage("Error reporting confession. The report was processed locally.");
+         
+         // Fallback to local storage
+         reportLocalConfession(confessionId);
+     }
+ }
+ 
+ function reportLocalConfession(confessionId) {
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+    
+    if (confessionIndex !== -1) {
+        if (!confessions[confessionIndex].reports) {
+            confessions[confessionIndex].reports = 0;
+        }
+        
+        confessions[confessionIndex].reports++;
+        
+        // Auto-hide after 5 reports
+        if (confessions[confessionIndex].reports >= 5) {
+            confessions[confessionIndex].reported = true;
+        }
+        
+        localStorage.setItem('confessions', JSON.stringify(confessions));
+        loadConfessions();
+        alert('Thank you for reporting. We will review this confession.');
+    }
+ }
+ 
+ function deleteConfession(confessionId) {
+    if (confirm('Are you sure you want to delete this confession?')) {
+        if (isGlobalMode && firebaseInitialized) {
+            deleteGlobalConfession(confessionId);
+        } else {
+            deleteLocalConfession(confessionId);
+        }
+    }
+ }
+ 
+ // Delete confession from Firebase
+ async function deleteGlobalConfession(confessionId) {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, doc, deleteDoc } = window.firebaseServices;
+         
+         // Get a reference to the confession document
+         const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+         
+         // Delete the document
+         await deleteDoc(confessionRef);
+         
+         console.log(`Confession ${confessionId} deleted from Firebase`);
+         
+         // Also delete from local storage for synced state
+         deleteLocalConfession(confessionId, false);
+         
+         // Refresh the confessions
+         loadGlobalConfessions();
+     } catch (error) {
+         console.error("Error deleting global confession:", error);
+         showErrorMessage("Error deleting confession. The deletion was processed locally.");
+         
+         // Fallback to local storage
+         deleteLocalConfession(confessionId);
+     }
+ }
+ 
+ function deleteLocalConfession(confessionId, reload = true) {
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    confessions = confessions.filter(c => c.id !== confessionId);
+    localStorage.setItem('confessions', JSON.stringify(confessions));
+    
+    // Check if this was the confession of the day
+    const cotd = localStorage.getItem('confession_of_day');
+    if (cotd === confessionId) {
+        setConfessionOfDay();
+    }
+    
+    if (reload) {
+        loadConfessions();
+        updateStatistics();
+    }
+ }
+ 
+ function showRandomConfession() {
+    if (isGlobalMode && firebaseInitialized) {
+        showRandomGlobalConfession();
+    } else {
+        showRandomLocalConfession();
+    }
+ }
+ 
+ // Show random global confession from Firebase
+ async function showRandomGlobalConfession() {
+     try {
+         if (!window.firebaseServices) {
+             throw new Error('Firebase services not available');
+         }
+         
+         const { db, collection, getDocs, query, limit } = window.firebaseServices;
+         
+         // Create a reference to the confessions collection
+         const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+         
+         // Get a random count of confessions
+         const countQuery = query(confessionsRef, limit(1));
+         const countSnapshot = await getDocs(countQuery);
+         
+         // Check if we have any confessions
+         if (countSnapshot.empty) {
+             alert('No confessions available to show.');
+             return;
+         }
+         
+         // Get a random confession
+         const randomLimit = Math.floor(Math.random() * 100) + 1; // Limit to 100 for performance
+         const randomQuery = query(confessionsRef, limit(randomLimit));
+         const randomSnapshot = await getDocs(randomQuery);
+         
+         if (randomSnapshot.empty) {
+             alert('No confessions available to show.');
+             return;
+         }
+         
+         // Pick a random confession from the results
+         const confessions = [];
+         randomSnapshot.forEach((doc) => {
+             confessions.push({
+                 id: doc.id,
+                 ...doc.data()
+             });
+         });
+         
+         const randomIndex = Math.floor(Math.random() * confessions.length);
+         const randomConfession = confessions[randomIndex];
+         
+         // Increment view count
+         incrementViewCount(randomConfession.id);
+         
+         // Find the confession in the current display and scroll to it
+         setTimeout(() => {
+             const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
+             if (confessionElement) {
+                 confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                 confessionElement.style.backgroundColor = 'var(--primary-light)';
+                 setTimeout(() => {
+                     confessionElement.style.backgroundColor = '';
+                     confessionElement.style.transition = 'background-color 1s ease';
+                 }, 2000);
+             } else {
+                 // If the confession is not in the current view, load it
+                 loadGlobalConfessions().then(() => {
+                    const element = document.querySelector(`[data-id="${randomConfession.id}"]`);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        element.style.backgroundColor = 'var(--primary-light)';
+                        setTimeout(() => {
+                            element.style.backgroundColor = '';
+                            element.style.transition = 'background-color 1s ease';
+                        }, 2000);
+                    } else {
+                        // Still couldn't find it, just reload
+                        showErrorMessage('Could not display the random confession. Try again.');
+                    }
+                });
+            }
+        });
+        
+    } catch (error) {
+        console.error("Error showing random global confession:", error);
+        showErrorMessage('Error finding a random confession.');
+        
+        // Fallback to local random confession
+        showRandomLocalConfession();
+    }
 }
 
-function updateDonateButton() {
-   const submitBtn = document.getElementById('donate-submit-btn');
-   if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
-       submitBtn.disabled = false;
-   } else {
-       submitBtn.disabled = true;
-   }
-}
-
-function processDonation() {
-   const amount = parseFloat(selectedDonationAmount);
-   if (!amount || amount <= 0) {
-       showErrorMessage('Please enter a valid donation amount');
-       return;
-   }
-   
-   const isCharity = document.getElementById('charity-donation').checked;
-   const charityType = document.getElementById('charity-select').value;
-   
-   const donation = {
-       id: 'donation_' + Date.now(),
-       userId: userId,
-       amount: amount,
-       method: selectedPaymentMethod,
-       isCharity: isCharity,
-       charityType: charityType,
-       timestamp: new Date().toISOString(),
-       verified: false // In real app, this would be verified through payment confirmation
-   };
-   
-   // Check if this is a tip for a specific confession
-   if (currentTipConfessionId) {
-       donation.type = 'tip';
-       donation.confessionId = currentTipConfessionId;
-       
-       // Update the confession with the tip
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       const confessionIndex = confessions.findIndex(c => c.id === currentTipConfessionId);
-       
-       if (confessionIndex !== -1) {
-           confessions[confessionIndex].tips = (confessions[confessionIndex].tips || 0) + amount;
-           if (!confessions[confessionIndex].donors) {
-               confessions[confessionIndex].donors = [];
-           }
-           confessions[confessionIndex].donors.push(userId);
-           localStorage.setItem('confessions', JSON.stringify(confessions));
-           
-           // Add karma to the confession owner
-           const confessionOwner = confessions[confessionIndex].userId;
-           if (confessionOwner && confessionOwner !== userId) {
-               addKarmaToUser(confessionOwner, KARMA_POINTS.donateMedium);
-           }
-       }
-   } else {
-       donation.type = 'general';
-   }
-   
-   // Save donation
-   donations.push(donation);
-   userDonations.push(donation);
-   localStorage.setItem('donations', JSON.stringify(donations));
-   localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
-   
-   // Update funding goals
-   updateFundingGoalProgress(donation);
-   
-   // Award karma based on donation amount
-   let karmaAwarded = 0;
-   if (amount <= 10) {
-       karmaAwarded = KARMA_POINTS.donateSmall;
-   } else if (amount <= 50) {
-       karmaAwarded = KARMA_POINTS.donateMedium;
-   } else {
-       karmaAwarded = KARMA_POINTS.donateLarge;
-   }
-   
-   if (isCharity) {
-       karmaAwarded += KARMA_POINTS.donateCharity;
-   }
-   
-   addKarma(karmaAwarded, 'donation');
-   
-   // Check donation achievements
-   checkDonationAchievements(donation);
-   
-   // Show thank you message
-   showThankYouModal(amount, isCharity);
-   
-   // Reset tip confession ID
-   currentTipConfessionId = null;
-   
-   closeDonationModal();
-   loadConfessions();
-}
-
-function showThankYouModal(amount, isCharity) {
-   const modal = document.createElement('div');
-   modal.className = 'donation-modal';
-   modal.style.display = 'block';
-   
-   modal.innerHTML = `
-       <div class="donation-modal-content thank-you-modal">
-           <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
-           <div class="thank-you-icon">
-               <i class="fas fa-heart"></i>
-           </div>
-           <h2>Thank You for Your Support!</h2>
-           <p>Your donation of $${amount} helps keep our community running.</p>
-           ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
-           <p>You've earned karma points and are helping us reach our goals!</p>
-           <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
-               Close
-           </button>
-       </div>
-   `;
-   
-   document.body.appendChild(modal);
-}
-
-function updateFundingGoalProgress(donation) {
-   const amount = donation.amount;
-   
-   // Distribute donation to goals
-   if (donation.isCharity) {
-       FUNDING_GOALS.charity.current += amount * 0.1;
-       FUNDING_GOALS.server.current += amount * 0.45;
-       FUNDING_GOALS.feature.current += amount * 0.45;
-   } else {
-       FUNDING_GOALS.server.current += amount * 0.5;
-       FUNDING_GOALS.feature.current += amount * 0.5;
-   }
-   
-   localStorage.setItem('fundingGoals', JSON.stringify(FUNDING_GOALS));
-   updateFundingGoals();
-}
-
-function updateFundingGoals() {
-   // Load saved goals
-   const savedGoals = localStorage.getItem('fundingGoals');
-   if (savedGoals) {
-       Object.assign(FUNDING_GOALS, JSON.parse(savedGoals));
-   }
-   
-   // Update server goal
-   const serverProgress = Math.min((FUNDING_GOALS.server.current / FUNDING_GOALS.server.target) * 100, 100);
-   document.getElementById('server-goal-progress').style.width = serverProgress + '%';
-   document.getElementById('server-goal-progress').textContent = Math.round(serverProgress) + '%';
-   document.getElementById('server-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.server.current)} raised`;
-   
-   // Update feature goal
-   const featureProgress = Math.min((FUNDING_GOALS.feature.current / FUNDING_GOALS.feature.target) * 100, 100);
-   document.getElementById('feature-goal-progress').style.width = featureProgress + '%';
-   document.getElementById('feature-goal-progress').textContent = Math.round(featureProgress) + '%';
-   document.getElementById('feature-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.feature.current)} raised`;
-   
-   // Update charity goal
-   const charityProgress = Math.min((FUNDING_GOALS.charity.current / FUNDING_GOALS.charity.target) * 100, 100);
-   document.getElementById('charity-goal-progress').style.width = charityProgress + '%';
-   document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
-   document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
-}
-
-function checkDonationAchievements(donation) {
-   // First donation achievement
-   if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
-       userAchievements.push('supporter');
-       addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.supporter);
-   }
-   
-   // Charity donation achievement
-   if (donation.isCharity && !userAchievements.includes('philanthropist')) {
-       userAchievements.push('philanthropist');
-       addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.philanthropist);
-   }
-   
-   // Large donation achievement
-   if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
-       userAchievements.push('crypto_whale');
-       addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.cryptoWhale);
-   }
-   
-   saveUserData();
-}
-
-function loadDonationData() {
-   const savedDonations = localStorage.getItem('donations');
-   if (savedDonations) {
-       donations = JSON.parse(savedDonations);
-   }
-   
-   const savedUserDonations = localStorage.getItem('userDonations_' + userId);
-   if (savedUserDonations) {
-       userDonations = JSON.parse(savedUserDonations);
-   }
-}
-
-function tipConfession(confessionId) {
-   const confession = getConfessionById(confessionId);
-   if (!confession) return;
-   
-   currentTipConfessionId = confessionId;
-   openDonationModal();
-   
-   // Customize modal for tipping
-   const titleElement = document.querySelector('.donation-title');
-   const subtitleElement = document.querySelector('.donation-subtitle');
-   
-   if (titleElement) {
-       titleElement.textContent = 'Tip This Confession';
-   }
-   
-   if (subtitleElement) {
-       if (confession.walletAddress && confession.walletType) {
-           subtitleElement.innerHTML = `
-               Direct tip to author's ${confession.walletType.toUpperCase()} wallet<br>
-               <small style="font-family: monospace; word-break: break-all;">${confession.walletAddress}</small>
-           `;
-       } else {
-           subtitleElement.textContent = 'Show appreciation for this confession (goes to platform)';
-       }
-   }
-   
-   // If confession has a wallet address, show it in the donation modal
-   if (confession.walletAddress && confession.walletType) {
-       const addressDiv = document.getElementById('donation-address');
-       addressDiv.innerHTML = `
-           <div style="font-weight: 600; margin-bottom: 8px;">Send directly to author's wallet:</div>
-           <div style="margin-bottom: 10px; word-break: break-all;">${confession.walletAddress}</div>
-           <button class="copy-address-btn" onclick="copyAddress('${confession.walletAddress}')">
-               <i class="fas fa-copy"></i> Copy Author's Address
-           </button>
-       `;
-       addressDiv.style.display = 'block';
-       
-       // Pre-select the matching payment method
-       const paymentMethods = document.querySelectorAll('.payment-method');
-       paymentMethods.forEach(method => {
-           if (method.dataset.method === confession.walletType) {
-               selectPaymentMethod(method);
-           }
-       });
-   }
-}
-
-// Original functions continued...
-function toggleTheme() {
-   const currentTheme = document.documentElement.getAttribute('data-theme');
-   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-   
-   document.documentElement.setAttribute('data-theme', newTheme);
-   localStorage.setItem('theme', newTheme);
-   updateThemeToggleIcon(newTheme);
-}
-
-function updateThemeToggleIcon(theme) {
-   const iconElement = document.querySelector('#theme-toggle i');
-   if (theme === 'dark') {
-       iconElement.className = 'fas fa-sun';
-   } else {
-       iconElement.className = 'fas fa-moon';
-   }
-}
-
-function loadUserData() {
-   const userData = localStorage.getItem('userData_' + userId);
-   if (userData) {
-       const data = JSON.parse(userData);
-       userKarma = data.karma || 0;
-       userAchievements = data.achievements || [];
-   }
-   updateKarmaDisplay();
-}
-
-function saveUserData() {
-   const userData = {
-       karma: userKarma,
-       achievements: userAchievements,
-       lastSubmissionDate: new Date().toDateString()
-   };
-   localStorage.setItem('userData_' + userId, JSON.stringify(userData));
-}
-
-function updateKarmaDisplay() {
-   document.getElementById('user-karma').textContent = userKarma;
-}
-
-function addKarma(points, reason) {
-   userKarma += points;
-   updateKarmaDisplay();
-   saveUserData();
-   checkAchievements();
-}
-
-function showAchievement(achievement) {
-   const popup = document.getElementById('achievement-popup');
-   document.getElementById('achievement-title').textContent = achievement.title;
-   document.getElementById('achievement-description').textContent = achievement.description;
-   
-   popup.classList.add('show');
-   
-   setTimeout(() => {
-       popup.classList.remove('show');
-   }, 5000);
-}
-
-function checkAchievements() {
-   // Check for first confession achievement
-   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-   const userConfessions = confessions.filter(c => c.userId === userId);
-   
-   if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
-       userAchievements.push('first_confession');
-       addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.firstConfession);
-   }
-   
-   // Check for karma legend achievement
-   if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
-       userAchievements.push('karma_legend');
-       addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.karmaLegend);
-   }
-   
-   saveUserData();
-}
-
-function checkDailyStreak() {
-   const userData = localStorage.getItem('userData_' + userId);
-   if (userData) {
-       const data = JSON.parse(userData);
-       const lastSubmission = data.lastSubmissionDate;
-       const today = new Date().toDateString();
-       
-       if (lastSubmission && lastSubmission !== today) {
-           // Check if it's consecutive days
-           const lastDate = new Date(lastSubmission);
-           const diffTime = Math.abs(new Date() - lastDate);
-           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-           
-           if (diffDays === 1) {
-               // Consecutive day
-               const currentStreak = (data.currentStreak || 0) + 1;
-               data.currentStreak = currentStreak;
-               
-               if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
-                   userAchievements.push('daily_streak');
-                   addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
-                   showAchievement(ACHIEVEMENTS.dailyStreak);
-               }
-           } else {
-               // Streak broken
-               data.currentStreak = 0;
-           }
-           
-           localStorage.setItem('userData_' + userId, JSON.stringify(data));
-       }
-   }
-}
-
-function handleConfessionSubmit(e) {
-   e.preventDefault();
-   
-   if (isSubmitting) return;
-   
-   const confessionText = document.getElementById('confession-text').value.trim();
-   const submitBtn = document.getElementById('submit-btn');
-   
-   if (confessionText) {
-       // Basic content moderation
-       if (containsForbiddenWords(confessionText)) {
-           showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
-           return;
-       }
-       
-       isSubmitting = true;
-       submitBtn.disabled = true;
-       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-       
-       // Simulate API call
-       setTimeout(() => {
-           if (addConfession(confessionText, selectedCategory)) {
-               document.getElementById('confession-text').value = '';
-               document.querySelector('.character-count').textContent = '0/1000 characters';
-               showSuccessMessage();
-               
-               // Reset category selection
-               document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-               document.querySelector('.category-tag[data-category="all"]').classList.add('active');
-               selectedCategory = null;
-               
-               // Add karma for submission
-               addKarma(KARMA_POINTS.submitConfession, 'submission');
-           }
-           
-           isSubmitting = false;
-           submitBtn.disabled = false;
-           submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
-       }, 1000);
-   }
-}
-
-function containsForbiddenWords(text) {
-   const lowerText = text.toLowerCase();
-   return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
-}
-
-function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
-   const successMessage = document.getElementById('success-message');
-   if (message !== 'Your confession has been submitted successfully!') {
-       successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-   }
-   successMessage.style.display = 'flex';
-   
-   setTimeout(() => {
-       successMessage.style.display = 'none';
-   }, 3000);
-}
-
-function showErrorMessage(message) {
-   const errorMessage = document.getElementById('error-message');
-   const errorText = document.getElementById('error-text');
-   errorText.textContent = message;
-   errorMessage.style.display = 'flex';
-   
-   setTimeout(() => {
-       errorMessage.style.display = 'none';
-   }, 3000);
-}
-
-function addConfession(text, category = null) {
-   try {
-       const walletType = document.getElementById('wallet-type').value;
-       const walletAddress = document.getElementById('wallet-address').value.trim();
-       
-       const confession = {
-           id: 'conf_' + Date.now(),
-           userId: userId,
-           text: text,
-           category: category,
-           timestamp: new Date().toISOString(),
-           views: 0,
-           reactions: {
-               like: 0,
-               dislike: 0,
-               love: 0,
-               haha: 0,
-               wow: 0,
-               sad: 0
-           },
-           replies: [],
-           reports: 0,
-           reported: false,
-           tips: 0,
-           donors: [],
-           walletType: walletType || null,
-           walletAddress: walletAddress || null
-       };
-       
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       confessions.unshift(confession);
-       
-       localStorage.setItem('confessions', JSON.stringify(confessions));
-       
-       // Clear wallet fields after submission
-       document.getElementById('wallet-type').value = '';
-       document.getElementById('wallet-address').value = '';
-       document.getElementById('wallet-address').style.display = 'none';
-       
-       loadConfessions();
-       updateStatistics();
-       checkDailyStreak();
-       checkAchievements();
-       
-       // Check if we need to set a new confession of the day
-       const lastUpdate = localStorage.getItem('last_cotd_update');
-       if (!lastUpdate) {
-           setConfessionOfDay();
-       }
-       
-       return true;
-   } catch (error) {
-       console.error("Error adding confession:", error);
-       showErrorMessage("There was an error saving your confession. Please try again.");
-       return false;
-   }
-}
-
-function loadConfessions() {
-   try {
-       const confessionsContainer = document.getElementById('confessions-list');
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       
-       // Apply filters
-       confessions = applyFilters(confessions);
-       
-       // Calculate pagination
-       const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
-       const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
-       const end = start + CONFESSIONS_PER_PAGE;
-       const pageConfessions = confessions.slice(start, end);
-       
-       if (pageConfessions.length === 0) {
-           confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found.</div>';
-           document.getElementById('pagination').innerHTML = '';
-           return;
-       }
-       
-       confessionsContainer.innerHTML = '';
-       
-       pageConfessions.forEach(confession => {
-           const confessionElement = createConfessionElement(confession);
-           confessionsContainer.appendChild(confessionElement);
-           incrementViewCount(confession.id);
-       });
-       
-       // Create pagination
-       createPagination(totalPages);
-   } catch (error) {
-       console.error("Error in loadConfessions:", error);
-       document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
-   }
-}
-
-function applyFilters(confessions) {
-   let filtered = [...confessions];
-   
-   // Category filter
-   if (currentCategory !== 'all') {
-       filtered = filtered.filter(c => c.category === currentCategory);
-   }
-   
-   // Search filter
-   if (searchQuery) {
-       const query = searchQuery.toLowerCase();
-       filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
-   }
-   
-   // Sort
-   switch (currentSort) {
-       case 'oldest':
-           filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-           break;
-       case 'popular':
-           filtered.sort((a, b) => {
-               const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
-               const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
-               return bReactions - aReactions;
-           });
-           break;
-       default: // newest
-           filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-   }
-   
-   return filtered;
-}
-
-function createConfessionElement(confession) {
-   const confessionElement = document.createElement('div');
-   confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
-   confessionElement.setAttribute('data-id', confession.id);
-   
-   const categoryBadge = confession.category ? 
-       `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
-   
-   const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
-   
-   // Check if user is a donor
-   const isDonor = userDonations.length > 0;
-   const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
-   
-   // Check if confession has received tips
-   const tipAmount = confession.tips || 0;
-   const tipBadge = tipAmount > 0 ? `<span class="tip-badge" style="background: var(--success-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">$${tipAmount} tipped</span>` : '';
-   
-   // Show wallet badge if author accepts tips
-   const walletBadge = confession.walletAddress ? 
-       `<span class="wallet-badge" style="background: var(--crypto-color); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">
-           <i class="fas fa-wallet"></i> ${confession.walletType} Tips
-       </span>` : '';
-   
-   // Update tip button based on wallet status
-   const tipButtonText = confession.walletAddress ? 
-       '<i class="fas fa-hand-holding-usd"></i> Tip Author' : 
-       '<i class="fas fa-hand-holding-usd"></i> Tip';
-   
-   confessionElement.innerHTML = `
-       ${categoryBadge}
-       <p>${confession.text}</p>
-       <div class="meta">
-           <div class="meta-info">
-               <div class="timestamp">
-                   <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
-                   ${donorBadge}
-                   ${tipBadge}
-                   ${walletBadge}
-               </div>
-               <div class="views">
-                   <i class="far fa-eye"></i> ${confession.views || 0} views
-               </div>
-           </div>
-           <div class="actions">
-               ${createReactionButtons(confession)}
-               <button class="tip-button" onclick="tipConfession('${confession.id}')">
-                   ${tipButtonText}
-               </button>
-               <button class="share-button" onclick="openShareOptions(event, '${confession.id}')">
-                   <i class="fas fa-share-alt"></i>
-               </button>
-               <div class="share-options" id="share-options-${confession.id}">
-                   <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
-                       <i class="fab fa-twitter"></i> Twitter
-                   </button>
-                   <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
-                       <i class="fas fa-link"></i> Copy Link
-                   </button>
-                   <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
-                       <i class="fas fa-image"></i> Create Card
-                   </button>
-               </div>
-               <button class="report-button" onclick="reportConfession('${confession.id}')">
-                   <i class="fas fa-flag"></i>
-               </button>
-           </div>
-       </div>
-       ${createRepliesSection(confession)}
-       <button class="admin-action" onclick="deleteConfession('${confession.id}')">
-           <i class="fas fa-times"></i>
-       </button>
-   `;
-   
-   // Check if this confession is popular enough for achievement
-   if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
-       userAchievements.push('popular_confession');
-       addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
-       showAchievement(ACHIEVEMENTS.popularConfession);
-   }
-   
-   return confessionElement;
-}
-
-function createReactionButtons(confession) {
-   const reactions = [
-       { name: 'like', icon: 'fas fa-thumbs-up' },
-       { name: 'dislike', icon: 'fas fa-thumbs-down' },
-       { name: 'love', icon: 'fas fa-heart' },
-       { name: 'haha', icon: 'fas fa-laugh' },
-       { name: 'wow', icon: 'fas fa-surprise' },
-       { name: 'sad', icon: 'fas fa-sad-tear' }
-   ];
-   
-   return reactions.map(reaction => {
-       const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
-       return `<button class="react-button ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
-           <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
-       </button>`;
-   }).join('');
-}
-
-function createRepliesSection(confession) {
-   const replies = confession.replies || [];
-   const replyCount = replies.length;
-   
-   return `
-       <div class="replies-section">
-           <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
-               <i class="fas fa-comments"></i>
-               Replies <span class="reply-count">(${replyCount})</span>
-           </button>
-           <div class="replies-container" id="replies-${confession.id}">
-               ${replies.map(reply => `
-                   <div class="reply">
-                       <p>${reply.text}</p>
-                       <div class="reply-meta">
-                           <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
-                       </div>
-                   </div>
-               `).join('')}
-               <div class="reply-form">
-                   <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
-                   <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
-               </div>
-           </div>
-       </div>
-   `;
-}
-
-function toggleReplies(confessionId) {
-   const repliesContainer = document.getElementById(`replies-${confessionId}`);
-   repliesContainer.classList.toggle('active');
-}
-
-function submitReply(confessionId) {
-   const replyInput = document.getElementById(`reply-input-${confessionId}`);
-   const replyText = replyInput.value.trim();
-   
-   if (!replyText) return;
-   
-   const reply = {
-       id: 'reply_' + Date.now(),
-       text: replyText,
-       timestamp: new Date().toISOString(),
-       userId: userId
-   };
-   
-   let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-   const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-   
-   if (confessionIndex !== -1) {
-       if (!confessions[confessionIndex].replies) {
-           confessions[confessionIndex].replies = [];
-       }
-       
-       confessions[confessionIndex].replies.push(reply);
-       localStorage.setItem('confessions', JSON.stringify(confessions));
-       
-       // Add karma to the confession owner if they receive a reply
-       const confessionOwner = confessions[confessionIndex].userId;
-       if (confessionOwner && confessionOwner !== userId) {
-           addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
-       }
-       
-       // Check for conversation starter achievement
-       if (confessions[confessionIndex].replies.length >= 10 && 
-           confessions[confessionIndex].userId === userId && 
-           !userAchievements.includes('conversation_starter')) {
-           userAchievements.push('conversation_starter');
-           addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
-           showAchievement(ACHIEVEMENTS.conversationStarter);
-       }
-       
-       loadConfessions();
-       replyInput.value = '';
-   }
-}
-
-function addKarmaToUser(targetUserId, points) {
-   const userData = localStorage.getItem('userData_' + targetUserId);
-   if (userData) {
-       const data = JSON.parse(userData);
-       data.karma = (data.karma || 0) + points;
-       localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
-   }
-}
-
-function openShareOptions(event, confessionId) {
-   event.stopPropagation();
-   const shareOptions = document.getElementById(`share-options-${confessionId}`);
-   
-   // Close all other share options
-   document.querySelectorAll('.share-options').forEach(el => {
-       if (el !== shareOptions) {
-           el.classList.remove('active');
-       }
-   });
-   
-   shareOptions.classList.toggle('active');
-   
-   // Position the share options properly
-   const button = event.currentTarget;
-   const rect = button.getBoundingClientRect();
-   shareOptions.style.top = `${button.offsetHeight + 5}px`;
-   shareOptions.style.right = '0';
-   
-   // Close share options when clicking outside
-   setTimeout(() => {
-       document.addEventListener('click', function closeShareOptions(e) {
-           if (!shareOptions.contains(e.target) && e.target !== button) {
-               shareOptions.classList.remove('active');
-               document.removeEventListener('click', closeShareOptions);
-           }
-       });
-   }, 100);
-}
-
-function shareToTwitter(confessionId) {
-   const confession = getConfessionById(confessionId);
-   if (confession) {
-       const text = confession.text.substring(0, 200) + '...';
-       const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
-       window.open(twitterUrl, '_blank');
-   }
-}
-
-function copyShareLink(confessionId) {
-   const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-   navigator.clipboard.writeText(url).then(() => {
-       showSuccessMessage('Link copied to clipboard!');
-   }).catch(() => {
-       prompt('Copy this link:', url);
-   });
-}
-
-function createShareCard(confessionId) {
-   const confession = getConfessionById(confessionId);
-   if (!confession) return;
-   
-   // Update share card content
-   document.getElementById('share-card-text').textContent = confession.text;
-   document.getElementById('share-card-date').textContent = formatDate(new Date(confession.timestamp));
-   
-   const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
-   document.getElementById('share-card-stats').innerHTML = `
-       <span><i class="fas fa-heart"></i> ${totalReactions}</span>
-       <span><i class="fas fa-eye"></i> ${confession.views || 0}</span>
-   `;
-   
-   // Generate QR code
-   const qrContainer = document.getElementById('share-card-qr');
-   qrContainer.innerHTML = '';
-   const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-   new QRCode(qrContainer, {
-       text: url,
-       width: 80,
-       height: 80
-   });
-   
-   // Create image preview
-   setTimeout(() => {
-       const shareCard = document.querySelector('#share-card-canvas .share-card');
-       html2canvas(shareCard).then(canvas => {
-           // Show preview in modal
-           const modal = document.getElementById('share-card-modal');
-           const previewContainer = document.getElementById('share-card-preview');
-           previewContainer.innerHTML = '';
-           
-           // Create image element from canvas
-           const image = new Image();
-           image.src = canvas.toDataURL('image/png');
-           image.style.maxWidth = '100%';
-           image.style.borderRadius = '8px';
-           image.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-           
-           previewContainer.appendChild(image);
-           
-           // Store the image data for potential download
-           window.currentShareCardData = canvas.toDataURL('image/png');
-           window.currentShareCardId = confessionId;
-           
-           // Show the modal
-           modal.style.display = 'block';
-       });
-   }, 100);
-}
-
-function getConfessionById(confessionId) {
-   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-   return confessions.find(c => c.id === confessionId);
-}
-
-function showLeaderboard() {
-   const modal = document.getElementById('leaderboard-modal');
-   const content = document.getElementById('leaderboard-content');
-   
-   modal.style.display = 'block';
-   
-   // Get all users' karma and donation info
-   const users = [];
-   for (let i = 0; i < localStorage.length; i++) {
-       const key = localStorage.key(i);
-       if (key.startsWith('userData_')) {
-           const userData = JSON.parse(localStorage.getItem(key));
-           const userId = key.replace('userData_', '');
-           const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
-           const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
-           
-           users.push({
-               id: userId,
-               karma: userData.karma || 0,
-               achievements: userData.achievements || [],
-               totalDonated: totalDonated
-           });
-       }
-   }
-   
-   // Sort by karma
-   users.sort((a, b) => b.karma - a.karma);
-   
-   // Display top 10
-   content.innerHTML = users.slice(0, 10).map((user, index) => {
-       const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-       const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
-       
-       return `
-           <div class="leaderboard-item">
-               <span class="rank ${rankClass}">#${index + 1}</span>
-               <div class="user-info">
-                   <span class="user-name">Anonymous User ${user.id.substr(-4)}${donorBadge}</span>
-                   <div class="user-achievements">
-                       ${user.achievements.length} achievements | $${user.totalDonated} donated
-                   </div>
-               </div>
-               <span class="karma-badge">${user.karma} karma</span>
-           </div>
-       `;
-   }).join('');
-}
-
-function reactToConfession(confessionId, reactionType) {
-   try {
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-       
-       if (confessionIndex !== -1) {
-           if (!confessions[confessionIndex].reactions) {
-               confessions[confessionIndex].reactions = {
-                   like: 0,
-                   dislike: 0,
-                   love: 0,
-                   haha: 0,
-                   wow: 0,
-                   sad: 0
-               };
-           }
-           
-           confessions[confessionIndex].reactions[reactionType]++;
-           localStorage.setItem('confessions', JSON.stringify(confessions));
-           
-           // Add karma to the confession owner
-           const confessionOwner = confessions[confessionIndex].userId;
-           if (confessionOwner && confessionOwner !== userId) {
-               const karmaPoints = reactionType === 'love' ? KARMA_POINTS.receiveLove : KARMA_POINTS.receiveReaction;
-               addKarmaToUser(confessionOwner, karmaPoints);
-           }
-           
-           loadConfessions();
-       }
-   } catch (error) {
-       console.error("Error in reactToConfession:", error);
-   }
-}
-
-function createPagination(totalPages) {
-   const paginationContainer = document.getElementById('pagination');
-   paginationContainer.innerHTML = '';
-   
-   if (totalPages <= 1) return;
-   
-   // Previous button
-   const prevBtn = document.createElement('button');
-   prevBtn.className = 'page-btn';
-   prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-   prevBtn.disabled = currentPage === 1;
-   prevBtn.onclick = () => changePage(currentPage - 1);
-   paginationContainer.appendChild(prevBtn);
-   
-   // Page numbers
-   for (let i = 1; i <= totalPages; i++) {
-       if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-           const pageBtn = document.createElement('button');
-           pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-           pageBtn.textContent = i;
-           pageBtn.onclick = () => changePage(i);
-           paginationContainer.appendChild(pageBtn);
-       } else if (i === currentPage - 3 || i === currentPage + 3) {
-           const ellipsis = document.createElement('span');
-           ellipsis.textContent = '...';
-           ellipsis.style.margin = '0 5px';
-           paginationContainer.appendChild(ellipsis);
-       }
-   }
-   
-   // Next button
-   const nextBtn = document.createElement('button');
-   nextBtn.className = 'page-btn';
-   nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-   nextBtn.disabled = currentPage === totalPages;
-   nextBtn.onclick = () => changePage(currentPage + 1);
-   paginationContainer.appendChild(nextBtn);
-}
-
-function changePage(page) {
-   currentPage = page;
-   loadConfessions();
-   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function formatDate(date) {
-   try {
-       const now = new Date();
-       const diffMs = now - date;
-       const diffSec = Math.floor(diffMs / 1000);
-       const diffMin = Math.floor(diffSec / 60);
-       const diffHour = Math.floor(diffMin / 60);
-       const diffDay = Math.floor(diffHour / 24);
-       
-       if (diffSec < 60) {
-           return 'just now';
-       } else if (diffMin < 60) {
-           return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
-       } else if (diffHour < 24) {
-           return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
-       } else {
-           return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
-       }
-   } catch (error) {
-       console.error("Error formatting date:", error);
-       return "unknown time";
-   }
-}
-
-function reportConfession(confessionId) {
-   try {
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-       
-       if (confessionIndex !== -1) {
-           if (!confessions[confessionIndex].reports) {
-               confessions[confessionIndex].reports = 0;
-           }
-           
-           confessions[confessionIndex].reports++;
-           
-           // Auto-hide after 5 reports
-           if (confessions[confessionIndex].reports >= 5) {
-               confessions[confessionIndex].reported = true;
-           }
-           
-           localStorage.setItem('confessions', JSON.stringify(confessions));
-           loadConfessions();
-           alert('Thank you for reporting. We will review this confession.');
-       }
-   } catch (error) {
-       console.error("Error in reportConfession:", error);
-   }
-}
-
-function deleteConfession(confessionId) {
-   if (confirm('Are you sure you want to delete this confession?')) {
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       confessions = confessions.filter(c => c.id !== confessionId);
-       localStorage.setItem('confessions', JSON.stringify(confessions));
-       
-       // Check if this was the confession of the day
-       const cotd = localStorage.getItem('confession_of_day');
-       if (cotd === confessionId) {
-           setConfessionOfDay();
-       }
-       
-       loadConfessions();
-       updateStatistics();
-   }
-}
-
-function showRandomConfession() {
+function showRandomLocalConfession() {
    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    
    if (confessions.length === 0) {
@@ -3330,20 +4395,78 @@ function setConfessionOfDay() {
    const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : null;
    
    if (!lastUpdate || lastUpdateDate.toDateString() !== now.toDateString()) {
-       const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       
-       if (confessions.length > 0) {
-           const randomIndex = Math.floor(Math.random() * confessions.length);
-           const cotdId = confessions[randomIndex].id;
-           
-           localStorage.setItem('confession_of_day', cotdId);
-           localStorage.setItem('last_cotd_update', now.toISOString());
+       if (isGlobalMode && firebaseInitialized) {
+           setGlobalConfessionOfDay();
        } else {
-           localStorage.removeItem('confession_of_day');
+           setLocalConfessionOfDay();
        }
    }
    
    displayConfessionOfDay();
+}
+
+// Set confession of the day from global confessions
+async function setGlobalConfessionOfDay() {
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, collection, getDocs, query, limit, orderBy } = window.firebaseServices;
+        
+        // Create a reference to the confessions collection
+        const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+        
+        // Get a popular confession
+        const popularQuery = query(
+            confessionsRef,
+            orderBy('popularity', 'desc'),
+            limit(10)
+        );
+        
+        const querySnapshot = await getDocs(popularQuery);
+        
+        if (querySnapshot.empty) {
+            // Fallback to local confession of the day
+            setLocalConfessionOfDay();
+            return;
+        }
+        
+        // Get a random confession from the top 10 popular ones
+        const confessions = [];
+        querySnapshot.forEach((doc) => {
+            confessions.push({
+                id: doc.id
+            });
+        });
+        
+        const randomIndex = Math.floor(Math.random() * confessions.length);
+        const cotdId = confessions[randomIndex].id;
+        
+        localStorage.setItem('confession_of_day', cotdId);
+        localStorage.setItem('last_cotd_update', now.toISOString());
+        
+        console.log('Global confession of the day set:', cotdId);
+    } catch (error) {
+        console.error("Error setting global confession of the day:", error);
+        
+        // Fallback to local confession of the day
+        setLocalConfessionOfDay();
+    }
+}
+
+function setLocalConfessionOfDay() {
+   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   
+   if (confessions.length > 0) {
+       const randomIndex = Math.floor(Math.random() * confessions.length);
+       const cotdId = confessions[randomIndex].id;
+       
+       localStorage.setItem('confession_of_day', cotdId);
+       localStorage.setItem('last_cotd_update', new Date().toISOString());
+   } else {
+       localStorage.removeItem('confession_of_day');
+   }
 }
 
 function displayConfessionOfDay() {
@@ -3355,40 +4478,60 @@ function displayConfessionOfDay() {
        return;
    }
    
-   const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-   const cotd = confessions.find(c => c.id === cotdId);
+   const confession = getConfessionById(cotdId);
    
-   if (!cotd) {
+   if (!confession) {
        localStorage.removeItem('confession_of_day');
        setConfessionOfDay();
        return;
    }
    
-   incrementViewCount(cotd.id);
+   incrementViewCount(cotdId);
+   
+   const categoryBadge = confession.category ? 
+       `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${confession.category}</span>` : '';
+   
+   // Global badge for confessions shared globally
+   const globalBadge = confession.isGlobal ? 
+       `<span class="global-badge">
+           <i class="fas fa-globe"></i> Global
+       </span>` : '';
    
    cotdContainer.innerHTML = `
        <div class="container">
            <h2><i class="fas fa-star"></i> Confession of the Day</h2>
-           <div class="confession confession-of-day" data-id="${cotd.id}">
-               ${cotd.category ? `<span class="category-badge" style="background-color: var(--primary-light); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block;">${cotd.category}</span>` : ''}
-               <p>${cotd.text}</p>
+           <div class="confession confession-of-day" data-id="${cotdId}">
+               ${categoryBadge}
+               <p>${confession.text}</p>
                <div class="meta">
                    <div class="meta-info">
                        <div class="timestamp">
-                           <i class="far fa-clock"></i> ${formatDate(new Date(cotd.timestamp))}
+                           <i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}
+                           ${globalBadge}
                        </div>
                        <div class="views">
-                           <i class="far fa-eye"></i> ${cotd.views || 0} views
+                           <i class="far fa-eye"></i> ${confession.views || 0} views
                        </div>
                    </div>
                    <div class="actions">
-                       ${createReactionButtons(cotd)}
-                       <button class="tip-button" onclick="tipConfession('${cotd.id}')">
+                       ${createReactionButtons(confession)}
+                       <button class="tip-button" onclick="tipConfession('${cotdId}')">
                            <i class="fas fa-hand-holding-usd"></i> Tip
                        </button>
-                       <button class="share-button" onclick="shareConfession('${cotd.id}', '${encodeURIComponent(cotd.text)}')">
+                       <button class="share-button" onclick="openShareOptions(event, '${cotdId}')">
                            <i class="fas fa-share-alt"></i>
                        </button>
+                       <div class="share-options" id="share-options-${cotdId}">
+                           <button class="share-option-btn" onclick="shareToTwitter('${cotdId}')">
+                               <i class="fab fa-twitter"></i> Twitter
+                           </button>
+                           <button class="share-option-btn" onclick="copyShareLink('${cotdId}')">
+                               <i class="fas fa-link"></i> Copy Link
+                           </button>
+                           <button class="share-option-btn" onclick="createShareCard('${cotdId}')">
+                               <i class="fas fa-image"></i> Create Card
+                           </button>
+                       </div>
                    </div>
                </div>
            </div>
@@ -3396,6 +4539,7 @@ function displayConfessionOfDay() {
 }
 
 function updateStatistics() {
+   // Local stats
    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    const today = new Date();
    const todayConfessions = confessions.filter(c => {
@@ -3403,10 +4547,73 @@ function updateStatistics() {
        return confDate.toDateString() === today.toDateString();
    });
    
-   document.getElementById('total-confessions').textContent = confessions.length;
-   document.getElementById('today-confessions').textContent = todayConfessions.length;
-   
-   // Count active users based on leaderboard
+   if (isGlobalMode && firebaseInitialized) {
+       // Get global stats from Firebase
+       getGlobalStatistics().then(stats => {
+           document.getElementById('total-confessions').textContent = stats.totalConfessions || 0;
+           document.getElementById('today-confessions').textContent = stats.todayConfessions || 0;
+           document.getElementById('active-users').textContent = stats.activeUsers || 0;
+       }).catch(error => {
+           console.error("Error getting global statistics:", error);
+           
+           // Fallback to local stats
+           document.getElementById('total-confessions').textContent = confessions.length;
+           document.getElementById('today-confessions').textContent = todayConfessions.length;
+           document.getElementById('active-users').textContent = getLocalActiveUsers();
+       });
+   } else {
+       // Use local stats
+       document.getElementById('total-confessions').textContent = confessions.length;
+       document.getElementById('today-confessions').textContent = todayConfessions.length;
+       document.getElementById('active-users').textContent = getLocalActiveUsers();
+   }
+}
+
+// Get global statistics from Firebase
+async function getGlobalStatistics() {
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, collection, getDocs, query, where, orderBy } = window.firebaseServices;
+        
+        // Create a reference to the confessions collection
+        const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+        
+        // Get total confessions count
+        const totalQuery = query(confessionsRef, limit(1));
+        const totalSnapshot = await getDocs(totalQuery);
+        const totalConfessions = totalSnapshot.size; // This is not accurate for large collections
+        
+        // Get today's confessions count
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayQuery = query(
+            confessionsRef,
+            where('timestamp', '>=', today.toISOString())
+        );
+        const todaySnapshot = await getDocs(todayQuery);
+        const todayConfessions = todaySnapshot.size;
+        
+        // Get active users count
+        const usersRef = collection(db, FIREBASE_SETTINGS.userCollection);
+        const usersQuery = query(usersRef, limit(1));
+        const usersSnapshot = await getDocs(usersQuery);
+        const activeUsers = usersSnapshot.size; // This is not accurate for large collections
+        
+        return {
+            totalConfessions,
+            todayConfessions,
+            activeUsers
+        };
+    } catch (error) {
+        console.error("Error getting global statistics:", error);
+        throw error;
+    }
+}
+
+function getLocalActiveUsers() {
    let activeUsers = 0;
    for (let i = 0; i < localStorage.length; i++) {
        const key = localStorage.key(i);
@@ -3414,10 +4621,13 @@ function updateStatistics() {
            activeUsers++;
        }
    }
-   document.getElementById('active-users').textContent = activeUsers;
+   return activeUsers;
 }
 
 function autoArchiveOldConfessions() {
+   // Only archive local confessions
+   if (isGlobalMode) return;
+   
    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    let archivedConfessions = JSON.parse(localStorage.getItem('archived_confessions')) || [];
    
@@ -3453,41 +4663,134 @@ function checkSharedConfession() {
    if (sharedConfessionId) {
        incrementViewCount(sharedConfessionId);
        
-       const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       const sharedConfession = confessions.find(c => c.id === sharedConfessionId);
+       // Try to find the confession in local storage first
+       let confession = getConfessionById(sharedConfessionId);
        
-       if (sharedConfession) {
-           setTimeout(() => {
-               const confessionElement = document.querySelector(`[data-id="${sharedConfessionId}"]`);
-               if (confessionElement) {
-                   confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                   confessionElement.style.backgroundColor = 'var(--primary-light)';
-                   setTimeout(() => {
-                       confessionElement.style.backgroundColor = '';
-                       confessionElement.style.transition = 'background-color 1s ease';
-                   }, 3000);
+       if (confession) {
+           // Found locally, highlight it
+           highlightSharedConfession(sharedConfessionId);
+       } else if (isGlobalMode && firebaseInitialized) {
+           // Not found locally, try to fetch from Firebase
+           fetchConfessionFromFirebase(sharedConfessionId).then(confession => {
+               if (confession) {
+                   // Save locally for future reference
+                   saveConfessionLocally(confession);
+                   
+                   // Reload and highlight
+                   if (isGlobalMode) {
+                       loadGlobalConfessions().then(() => {
+                           highlightSharedConfession(sharedConfessionId);
+                       });
+                   } else {
+                       loadConfessions();
+                       highlightSharedConfession(sharedConfessionId);
+                   }
+               } else {
+                   showErrorMessage('The shared confession could not be found.');
                }
-           }, 500);
+           }).catch(error => {
+               console.error("Error fetching shared confession:", error);
+               showErrorMessage('Error loading the shared confession.');
+           });
+       } else {
+           showErrorMessage('The shared confession could not be found.');
        }
    }
 }
 
+// Fetch a specific confession from Firebase
+async function fetchConfessionFromFirebase(confessionId) {
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, doc, getDoc } = window.firebaseServices;
+        
+        // Get a reference to the confession document
+        const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+        
+        // Get the document
+        const docSnap = await getDoc(confessionRef);
+        
+        if (docSnap.exists()) {
+            return {
+                id: docSnap.id,
+                ...docSnap.data()
+            };
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching confession from Firebase:", error);
+        throw error;
+    }
+}
+
+function highlightSharedConfession(confessionId) {
+   setTimeout(() => {
+       const confessionElement = document.querySelector(`[data-id="${confessionId}"]`);
+       if (confessionElement) {
+           confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+           confessionElement.style.backgroundColor = 'var(--primary-light)';
+           setTimeout(() => {
+               confessionElement.style.backgroundColor = '';
+               confessionElement.style.transition = 'background-color 1s ease';
+           }, 3000);
+       }
+   }, 500);
+}
+
 function incrementViewCount(confessionId) {
    try {
-       let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-       const confessionIndex = confessions.findIndex(c => c.id === confessionId);
-       
-       if (confessionIndex !== -1) {
-           if (typeof confessions[confessionIndex].views !== 'number') {
-               confessions[confessionIndex].views = 0;
-           }
-           
-           confessions[confessionIndex].views++;
-           localStorage.setItem('confessions', JSON.stringify(confessions));
-           return confessions[confessionIndex].views;
+       if (isGlobalMode && firebaseInitialized) {
+           incrementGlobalViewCount(confessionId);
        }
+       
+       // Always increment locally too for performance
+       incrementLocalViewCount(confessionId);
    } catch (error) {
        console.error("Error incrementing view count:", error);
+   }
+}
+
+// Increment view count in Firebase
+async function incrementGlobalViewCount(confessionId) {
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, doc, updateDoc, increment } = window.firebaseServices;
+        
+        // Get a reference to the confession document
+        const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+        
+        // Update the document with the incremented view count
+        await updateDoc(confessionRef, {
+            views: increment(1),
+            popularity: increment(0.1) // Small popularity boost for views
+        });
+        
+        console.log(`View count incremented for confession ${confessionId} in Firebase`);
+    } catch (error) {
+        console.error("Error incrementing global view count:", error);
+        // Just continue with local increment, no need to show error
+    }
+}
+
+function incrementLocalViewCount(confessionId) {
+   let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+   const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+   
+   if (confessionIndex !== -1) {
+       if (typeof confessions[confessionIndex].views !== 'number') {
+           confessions[confessionIndex].views = 0;
+       }
+       
+       confessions[confessionIndex].views++;
+       localStorage.setItem('confessions', JSON.stringify(confessions));
+       return confessions[confessionIndex].views;
    }
    return 0;
 }
@@ -3495,19 +4798,34 @@ function incrementViewCount(confessionId) {
 function handleSearch(e) {
    searchQuery = e.target.value;
    currentPage = 1;
-   loadConfessions();
+   
+   if (isGlobalMode) {
+       loadGlobalConfessions();
+   } else {
+       loadConfessions();
+   }
 }
 
 function handleSortChange(e) {
    currentSort = e.target.value;
    currentPage = 1;
-   loadConfessions();
+   
+   if (isGlobalMode) {
+       loadGlobalConfessions();
+   } else {
+       loadConfessions();
+   }
 }
 
 function handleCategoryFilterChange(e) {
    currentCategory = e.target.value;
    currentPage = 1;
-   loadConfessions();
+   
+   if (isGlobalMode) {
+       loadGlobalConfessions();
+   } else {
+       loadConfessions();
+   }
 }
 
 function handleAdminLogin() {
@@ -3519,6 +4837,9 @@ function handleAdminLogin() {
        document.getElementById('admin-password').value = '';
        document.body.classList.add('admin-mode');
        sessionStorage.setItem('isAdmin', 'true');
+       
+       // Show Firebase settings for admins
+       document.getElementById('firebase-settings').style.display = 'block';
    } else {
        alert('Incorrect password');
    }
@@ -3526,14 +4847,67 @@ function handleAdminLogin() {
 
 function clearAllConfessions() {
    if (confirm('Are you sure you want to clear all confessions? This action cannot be undone.')) {
-       localStorage.removeItem('confessions');
-       localStorage.removeItem('archived_confessions');
-       localStorage.removeItem('confession_of_day');
-       localStorage.removeItem('last_cotd_update');
-       loadConfessions();
-       setConfessionOfDay();
-       updateStatistics();
+       if (isGlobalMode && firebaseInitialized) {
+           clearAllGlobalConfessions();
+       } else {
+           clearAllLocalConfessions();
+       }
    }
+}
+
+// Clear all confessions from Firebase
+async function clearAllGlobalConfessions() {
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, collection, getDocs, deleteDoc, doc } = window.firebaseServices;
+        
+        // This is dangerous and should be protected by proper authentication in production
+        if (!confirm('WARNING: This will delete ALL confessions from the global database. This action CANNOT be undone. Are you absolutely sure?')) {
+            return;
+        }
+        
+        // Create a reference to the confessions collection
+        const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+        
+        // Get all confessions
+        const querySnapshot = await getDocs(confessionsRef);
+        
+        // Delete each confession
+        const deletePromises = [];
+        querySnapshot.forEach((docSnap) => {
+            deletePromises.push(deleteDoc(doc(db, FIREBASE_SETTINGS.collection, docSnap.id)));
+        });
+        
+        await Promise.all(deletePromises);
+        
+        console.log('All global confessions deleted');
+        
+        // Also clear local confessions
+        clearAllLocalConfessions();
+        
+        // Refresh
+        loadGlobalConfessions();
+    } catch (error) {
+        console.error("Error clearing all global confessions:", error);
+        showErrorMessage('Error clearing global confessions. Try again or check your connection.');
+    }
+}
+
+function clearAllLocalConfessions() {
+   localStorage.removeItem('confessions');
+   localStorage.removeItem('archived_confessions');
+   localStorage.removeItem('confession_of_day');
+   localStorage.removeItem('last_cotd_update');
+   
+   if (!isGlobalMode) {
+       loadConfessions();
+   }
+   
+   setConfessionOfDay();
+   updateStatistics();
 }
 
 function downloadShareCard() {
@@ -3555,6 +4929,38 @@ function closeShareCardModal() {
    // Clean up stored data
    window.currentShareCardData = null;
    window.currentShareCardId = null;
+}
+
+// Sync User to Firebase - this function would be called when a user makes meaningful changes
+async function syncUserToFirebase() {
+    if (!isGlobalMode || !firebaseInitialized) return;
+    
+    try {
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, doc, setDoc } = window.firebaseServices;
+        
+        // Get user data
+        const userData = JSON.parse(localStorage.getItem('userData_' + userId)) || {
+            karma: 0,
+            achievements: []
+        };
+        
+        // Add last synced timestamp
+        userData.lastSynced = new Date().toISOString();
+        
+        // Get a reference to the user document
+        const userRef = doc(db, FIREBASE_SETTINGS.userCollection, userId);
+        
+        // Update the document with the user data
+        await setDoc(userRef, userData, { merge: true });
+        
+        console.log('User synced to Firebase');
+    } catch (error) {
+        console.error("Error syncing user to Firebase:", error);
+    }
 }
 </script>
 </body>
