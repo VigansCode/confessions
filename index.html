@@ -18,8 +18,7 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, increment, arrayUnion, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, increment, arrayUnion, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyADTUf0vuhZXm2rnNLoXC9fjxAtMtiTSnA",
@@ -52,7 +51,8 @@
     serverTimestamp,
     increment,
     arrayUnion,
-    getDoc
+    getDoc,
+    setDoc
   };
   
   // Add a debug console message to confirm Firebase has loaded
