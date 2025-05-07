@@ -2022,51 +2022,6 @@ input[type="password"]:focus {
 </div>
 
 <script>
-// Add this debugging code
-function debugFirebase() {
-    console.log("DEBUG - Firebase Services Available:", !!window.firebaseServices);
-    console.log("DEBUG - Current Mode:", isGlobalMode ? "GLOBAL" : "LOCAL");
-    
-    if (window.firebaseServices) {
-        const { db, collection, getDocs } = window.firebaseServices;
-        const confessionsRef = collection(db, "confessions");
-        
-        getDocs(confessionsRef)
-            .then((snapshot) => {
-                console.log("DEBUG - Firebase Data Retrieved:", snapshot.size, "documents");
-                snapshot.forEach(doc => console.log("Document ID:", doc.id));
-            })
-            .catch(error => console.error("DEBUG - Firebase Error:", error));
-    }
-}
-
-// Run the debugging function
-debugFirebase();
-
-// Force global mode and reload confessions
-function forceGlobalMode() {
-    isGlobalMode = true;
-    localStorage.setItem('globalMode', 'true');
-    
-    if (window.loadGlobalConfessions) {
-        loadGlobalConfessions();
-    } else {
-        console.error("loadGlobalConfessions function not found");
-    }
-    
-    console.log("Global mode forced ON");
-}
-
-// Add a button to force global mode
-const debugButton = document.createElement('button');
-debugButton.innerHTML = "DEBUG: Force Global Mode";
-debugButton.style.position = "fixed";
-debugButton.style.bottom = "10px";
-debugButton.style.left = "10px";
-debugButton.style.zIndex = "9999";
-debugButton.onclick = forceGlobalMode;
-document.body.appendChild(debugButton);
-
 // Configuration
 const CONFESSIONS_PER_PAGE = 10;
 const MAX_CONFESSION_LENGTH = 1000;
@@ -2398,29 +2353,6 @@ function initializeApp() {
        e.preventDefault();
        window.scrollTo({ top: 0, behavior: 'smooth' });
    });
-
-   // Find your global-link click handler and update it to this
-document.getElementById('global-link').addEventListener('click', function(e) {
-    e.preventDefault();
-    isGlobalMode = !isGlobalMode;
-    localStorage.setItem('globalMode', isGlobalMode);
-    
-    // Update UI
-    this.textContent = isGlobalMode ? 'Local' : 'Global';
-    
-    // Clear and show loading indicator
-    document.getElementById('confessions-list').innerHTML = 
-        '<div class="loading"><i class="fas fa-spinner"></i></div>';
-    
-    // Load the appropriate data
-    if (isGlobalMode) {
-        console.log("Switching to GLOBAL mode");
-        loadGlobalConfessions();
-    } else {
-        console.log("Switching to LOCAL mode");
-        loadConfessions();
-    }
-});
    
    document.getElementById('about-link').addEventListener('click', (e) => {
        e.preventDefault();
@@ -2487,16 +2419,14 @@ function toggleGlobalMode(force) {
     showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
 }
 
-// Find this function in your code
+// Load confessions from Firebase
 async function loadGlobalConfessions() {
     try {
         const confessionsContainer = document.getElementById('confessions-list');
         confessionsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
         
-        // ADD THIS CHECK WITH CLEAR ERROR MESSAGE
         if (!window.firebaseServices) {
-            confessionsContainer.innerHTML = '<div class="error">Firebase services not available. Please reload the page.</div>';
-            console.error("Firebase services not available");
+            showErrorMessage('Firebase services are not available');
             return;
         }
         
