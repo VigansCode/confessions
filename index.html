@@ -2767,29 +2767,29 @@ async function loadGlobalConfessions() {
        
        try {
            // Apply category filter
-           if (currentCategory !== 'all') {
-               firestoreQuery = query(
-                   confessionsRef,
-                   where('category', '==', currentCategory),
-                   orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
-                   limit(FIREBASE_SETTINGS.limit)
-               );
-           } else {
-               // Apply sort filter
-               if (currentSort === 'popular') {
-                   firestoreQuery = query(
-                       confessionsRef,
-                       orderBy('popularity', 'desc'),
-                       limit(FIREBASE_SETTINGS.limit)
-                   );
-               } else {
-                   firestoreQuery = query(
-                       confessionsRef,
-                       orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
-                       limit(FIREBASE_SETTINGS.limit)
-                   );
-               }
-           }
+if (currentCategory !== 'all') {
+    firestoreQuery = query(
+        confessionsRef,
+        where('category', '==', currentCategory),
+        orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+        limit(FIREBASE_SETTINGS.limit)
+    );
+} else {
+    // Apply sort filter
+    if (currentSort === 'popular') {
+        firestoreQuery = query(
+            confessionsRef,
+            orderBy('popularity', 'desc'),
+            limit(FIREBASE_SETTINGS.limit)
+        );
+    } else {
+        firestoreQuery = query(
+            confessionsRef,
+            orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+            limit(FIREBASE_SETTINGS.limit)
+        );
+    }
+}
            console.log("Query built successfully");
            
            // Execute the query
