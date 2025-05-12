@@ -3702,11 +3702,17 @@ function handleConfessionSubmit(e) {
        submitBtn.disabled = false;
        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
        
-       // Refresh the confessions list
-       if (isGlobalMode && shareGlobally) {
+       // UPDATED: Always refresh the confessions list regardless of mode combinations
+       if (isGlobalMode) {
            loadGlobalConfessions();
-       } else if (!isGlobalMode && !shareGlobally) {
+       } else {
            loadConfessions();
+       }
+       
+       // Optional: Scroll to see the new confession
+       const confessionsContainer = document.getElementById('confessions-list');
+       if (confessionsContainer) {
+           confessionsContainer.scrollIntoView({ behavior: 'smooth' });
        }
    }, 1000);
 }
