@@ -2246,62 +2246,25 @@ function checkFirebaseLoaded() {
 }
 initFirebaseInterval = setInterval(checkFirebaseLoaded, 100);
 
-// Initialize Firebase
-function initializeFirebase() {
-   try {
-       console.log("Initializing Firebase...");
-       // Load settings from localStorage if available
-       const savedSettings = localStorage.getItem('firebaseSettings');
-       if (savedSettings) {
-           Object.assign(FIREBASE_SETTINGS, JSON.parse(savedSettings));
-           console.log("Loaded saved Firebase settings:", FIREBASE_SETTINGS);
-       }
-       
-       updateConnectionStatus('connecting');
-       
-       // Check for required Firebase imports
-       if (!window.firebaseServices || !window.firebaseServices.db || !window.firebaseServices.collection) {
-           console.error("Firebase SDK not properly loaded");
-           updateConnectionStatus('offline');
-           return;
-       }
-       
-       // Check if the user's browser is online
-       if (navigator.onLine) {
-           firebaseInitialized = true;
-           updateConnectionStatus('online');
-           console.log("Firebase initialized successfully");
-           
-           // Test the connection with a simple query
-           testFirebaseConnection();
-           
-// Load Firebase data if global mode is active
-if (isGlobalMode) {
-    // Use real-time listener instead of one-time load
-    setupConfessionListener();
-}
-       } else {
-           console.error("Browser is offline");
-           updateConnectionStatus('offline');
-       }
-       
-       // Listen for online/offline events
-window.addEventListener('online', () => {
-    console.log("Browser went online");
-    updateConnectionStatus('online');
-    if (isGlobalMode) {
-        setupConfessionListener();
+// Function to periodically refresh global confessions
+function setupGlobalConfessionRefresh() {
+  // Clear any existing refresh timer
+  if (window.confessionRefreshTimer) {
+    clearInterval(window.confessionRefreshTimer);
+  }
+  
+  // Set up a timer to refresh confessions every 5 seconds
+  window.confessionRefreshTimer = setInterval(() => {
+    if (isGlobalMode && firebaseInitialized && navigator.onLine) {
+      console.log("Auto-refreshing global confessions...");
+      loadGlobalConfessions();
     }
-});
-       
-       window.addEventListener('offline', () => {
-           console.log("Browser went offline");
-           updateConnectionStatus('offline');
-       });
-   } catch (error) {
-       console.error("Firebase initialization error:", error);
-       updateConnectionStatus('offline');
-   }
+  }, 5000); // Refresh every 5 seconds
+  
+  // Initial load
+  if (isGlobalMode && firebaseInitialized && navigator.onLine) {
+    loadGlobalConfessions();
+  }
 }
 
 // Set up a real-time listener for confessions
