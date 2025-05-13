@@ -2274,23 +2274,24 @@ function initializeFirebase() {
            // Test the connection with a simple query
            testFirebaseConnection();
            
-           // Load Firebase data if global mode is active
-           if (isGlobalMode) {
-               loadGlobalConfessions();
-           }
+// Load Firebase data if global mode is active
+if (isGlobalMode) {
+    // Use real-time listener instead of one-time load
+    setupConfessionListener();
+}
        } else {
            console.error("Browser is offline");
            updateConnectionStatus('offline');
        }
        
        // Listen for online/offline events
-       window.addEventListener('online', () => {
-           console.log("Browser went online");
-           updateConnectionStatus('online');
-           if (isGlobalMode) {
-               loadGlobalConfessions();
-           }
-       });
+window.addEventListener('online', () => {
+    console.log("Browser went online");
+    updateConnectionStatus('online');
+    if (isGlobalMode) {
+        setupConfessionListener();
+    }
+});
        
        window.addEventListener('offline', () => {
            console.log("Browser went offline");
@@ -2300,6 +2301,92 @@ function initializeFirebase() {
        console.error("Firebase initialization error:", error);
        updateConnectionStatus('offline');
    }
+}
+
+// Set up a real-time listener for confessions
+function setupConfessionListener() {
+  if (!window.firebaseServices) {
+    console.error("Firebase services are not available");
+    return;
+  }
+  
+  const { db, collection, query, orderBy, limit, where, onSnapshot } = window.firebaseServices;
+  
+  // Clear any existing listeners
+  if (window.confessionListener) {
+    window.confessionListener();
+  }
+  
+  console.log("Setting up real-time confession listener...");
+  
+  // Create a reference to the confessions collection
+  const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+  
+  // Build the query based on filters
+  let firestoreQuery;
+  
+  try {
+    // Apply category filter
+    if (currentCategory !== 'all') {
+      firestoreQuery = query(
+        confessionsRef,
+        where('category', '==', currentCategory),
+        orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+        limit(FIREBASE_SETTINGS.limit)
+      );
+    } else {
+      // Apply sort filter
+      if (currentSort === 'popular') {
+        firestoreQuery = query(
+          confessionsRef,
+          orderBy('popularity', 'desc'),
+          limit(FIREBASE_SETTINGS.limit)
+        );
+      } else {
+        firestoreQuery = query(
+          confessionsRef,
+          orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+          limit(FIREBASE_SETTINGS.limit)
+        );
+      }
+    }
+    
+    // Set up the real-time listener
+    window.confessionListener = onSnapshot(firestoreQuery, (querySnapshot) => {
+      console.log("Real-time update received!");
+      
+      let confessions = [];
+      querySnapshot.forEach((doc) => {
+        confessions.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      // Apply search filter if needed
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        confessions = confessions.filter(c => c.text.toLowerCase().includes(query));
+      }
+      
+      // Display the confessions
+      displayConfessions(confessions);
+      
+      // Update statistics
+      updateStatistics();
+    }, (error) => {
+      console.error("Error in real-time listener:", error);
+      showErrorMessage('Error listening for updates. Some changes may not appear in real-time.');
+    });
+    
+    console.log("Real-time listener set up successfully");
+  } catch (error) {
+    console.error("Error setting up real-time listener:", error);
+    showErrorMessage('Error setting up real-time updates. Falling back to manual refresh.');
+    
+    // Fallback to manual loading
+    loadGlobalConfessions();
+  }
 }
 
 // Test Firebase connection
@@ -2729,15 +2816,21 @@ function toggleGlobalMode(force) {
    isGlobalMode = newGlobalMode;
    localStorage.setItem('globalMode', isGlobalMode);
    
-   // Update UI to indicate current mode
-   const globalLink = document.getElementById('global-link');
-   if (isGlobalMode) {
-       globalLink.innerHTML = 'Local';
-       loadGlobalConfessions();
-   } else {
-       globalLink.innerHTML = 'Global';
-       loadConfessions(); // Load local confessions
-   }
+// Update UI to indicate current mode
+const globalLink = document.getElementById('global-link');
+if (isGlobalMode) {
+    globalLink.innerHTML = 'Local';
+    // Use real-time listener
+    setupConfessionListener();
+} else {
+    globalLink.innerHTML = 'Global';
+    // Remove any existing listener
+    if (window.confessionListener) {
+        window.confessionListener();
+        window.confessionListener = null;
+    }
+    loadConfessions(); // Load local confessions
+}
    
    currentPage = 1; // Reset to first page when switching modes
    showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
@@ -3702,12 +3795,11 @@ function handleConfessionSubmit(e) {
        submitBtn.disabled = false;
        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
        
-       // UPDATED: Always refresh the confessions list regardless of mode combinations
-       if (isGlobalMode) {
-           loadGlobalConfessions();
-       } else {
-           loadConfessions();
-       }
+// No need to manually refresh - the real-time listener will handle it for global mode
+// For local mode, we still need to refresh
+if (!isGlobalMode) {
+    loadConfessions();
+}
        
        // Optional: Scroll to see the new confession
        const confessionsContainer = document.getElementById('confessions-list');
@@ -5333,18 +5425,18 @@ function handleSearch(e) {
    currentPage = 1;
    
    if (isGlobalMode) {
-       loadGlobalConfessions();
+       setupConfessionListener();
    } else {
        loadConfessions();
    }
 }
 
-function handleSortChange(e) {
-   currentSort = e.target.value;
+function handleCategoryFilterChange(e) {
+   currentCategory = e.target.value;
    currentPage = 1;
    
    if (isGlobalMode) {
-       loadGlobalConfessions();
+       setupConfessionListener();
    } else {
        loadConfessions();
    }
