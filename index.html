@@ -2279,23 +2279,22 @@ function initializeFirebase() {
            // Test the connection with a simple query
            testFirebaseConnection();
            
-           // Load Firebase data if global mode is active
-           if (isGlobalMode) {
-               loadGlobalConfessions();
-           }
+// Load Firebase data if global mode is active
+if (isGlobalMode) {
+    setupGlobalConfessionRefresh();
+}
        } else {
            console.error("Browser is offline");
            updateConnectionStatus('offline');
        }
        
-       // Listen for online/offline events
-       window.addEventListener('online', () => {
-           console.log("Browser went online");
-           updateConnectionStatus('online');
-           if (isGlobalMode) {
-               loadGlobalConfessions();
-           }
-       });
+window.addEventListener('online', () => {
+    console.log("Browser went online");
+    updateConnectionStatus('online');
+    if (isGlobalMode) {
+        setupGlobalConfessionRefresh();
+    }
+});
        
        window.addEventListener('offline', () => {
            console.log("Browser went offline");
@@ -2705,7 +2704,12 @@ function initializeApp() {
    // Add Firebase test button for debugging
    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
        addTestButton();
-   }
+
+          window.addEventListener('beforeunload', () => {
+     if (window.confessionRefreshTimer) {
+       clearInterval(window.confessionRefreshTimer);
+     }
+   });
 }
 // Check if an image URL is valid
 function isValidImageUrl(url) {
@@ -2759,18 +2763,18 @@ function toggleGlobalMode(force) {
    isGlobalMode = newGlobalMode;
    localStorage.setItem('globalMode', isGlobalMode);
    
-   // Update UI to indicate current mode
-   const globalLink = document.getElementById('global-link');
-   if (isGlobalMode) {
-       globalLink.innerHTML = 'Local';
-       loadGlobalConfessions();
-   } else {
-       globalLink.innerHTML = 'Global';
-       loadConfessions(); // Load local confessions
-   }
-   
-   currentPage = 1; // Reset to first page when switching modes
-   showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
+// Update UI to indicate current mode
+const globalLink = document.getElementById('global-link');
+if (isGlobalMode) {
+    globalLink.innerHTML = 'Local';
+    setupGlobalConfessionRefresh();
+} else {
+    globalLink.innerHTML = 'Global';
+    // Clear any refresh timer
+    if (window.confessionRefreshTimer) {
+        clearInterval(window.confessionRefreshTimer);
+    }
+    loadConfessions(); // Load local confessions
 }
 
 // Load confessions from Firebase
