@@ -19,6 +19,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, increment, arrayUnion, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// Separately import onSnapshot to ensure it's correctly loaded
+import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyADTUf0vuhZXm2rnNLoXC9fjxAtMtiTSnA",
@@ -58,8 +61,9 @@ window.firebaseServices = {
   
   // Add a debug console message to confirm Firebase has loaded
   console.log("Firebase SDK loaded successfully");
+  console.log("onSnapshot imported as:", typeof onSnapshot);
+  console.log("window.firebaseServices.onSnapshot:", typeof window.firebaseServices.onSnapshot);
 </script>
-
 <style>
 :root {
     --primary-color: #8847ff; 
@@ -2246,111 +2250,61 @@ function checkFirebaseLoaded() {
 }
 initFirebaseInterval = setInterval(checkFirebaseLoaded, 100);
 
-// Function to periodically refresh global confessions
-function setupGlobalConfessionRefresh() {
-  // Clear any existing refresh timer
-  if (window.confessionRefreshTimer) {
-    clearInterval(window.confessionRefreshTimer);
-  }
-  
-  // Set up a timer to refresh confessions every 5 seconds
-  window.confessionRefreshTimer = setInterval(() => {
-    if (isGlobalMode && firebaseInitialized && navigator.onLine) {
-      console.log("Auto-refreshing global confessions...");
-      loadGlobalConfessions();
-    }
-  }, 5000); // Refresh every 5 seconds
-  
-  // Initial load
-  if (isGlobalMode && firebaseInitialized && navigator.onLine) {
-    loadGlobalConfessions();
-  }
-}
-
-// Set up a real-time listener for confessions
-function setupConfessionListener() {
-  if (!window.firebaseServices) {
-    console.error("Firebase services are not available");
-    return;
-  }
-  
-  const { db, collection, query, orderBy, limit, where, onSnapshot } = window.firebaseServices;
-  
-  // Clear any existing listeners
-  if (window.confessionListener) {
-    window.confessionListener();
-  }
-  
-  console.log("Setting up real-time confession listener...");
-  
-  // Create a reference to the confessions collection
-  const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
-  
-  // Build the query based on filters
-  let firestoreQuery;
-  
-  try {
-    // Apply category filter
-    if (currentCategory !== 'all') {
-      firestoreQuery = query(
-        confessionsRef,
-        where('category', '==', currentCategory),
-        orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
-        limit(FIREBASE_SETTINGS.limit)
-      );
-    } else {
-      // Apply sort filter
-      if (currentSort === 'popular') {
-        firestoreQuery = query(
-          confessionsRef,
-          orderBy('popularity', 'desc'),
-          limit(FIREBASE_SETTINGS.limit)
-        );
-      } else {
-        firestoreQuery = query(
-          confessionsRef,
-          orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
-          limit(FIREBASE_SETTINGS.limit)
-        );
-      }
-    }
-    
-    // Set up the real-time listener
-    window.confessionListener = onSnapshot(firestoreQuery, (querySnapshot) => {
-      console.log("Real-time update received!");
-      
-      let confessions = [];
-      querySnapshot.forEach((doc) => {
-        confessions.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      
-      // Apply search filter if needed
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        confessions = confessions.filter(c => c.text.toLowerCase().includes(query));
-      }
-      
-      // Display the confessions
-      displayConfessions(confessions);
-      
-      // Update statistics
-      updateStatistics();
-    }, (error) => {
-      console.error("Error in real-time listener:", error);
-      showErrorMessage('Error listening for updates. Some changes may not appear in real-time.');
-    });
-    
-    console.log("Real-time listener set up successfully");
-  } catch (error) {
-    console.error("Error setting up real-time listener:", error);
-    showErrorMessage('Error setting up real-time updates. Falling back to manual refresh.');
-    
-    // Fallback to manual loading
-    loadGlobalConfessions();
-  }
+// Initialize Firebase
+function initializeFirebase() {
+   try {
+       console.log("Initializing Firebase...");
+       // Load settings from localStorage if available
+       const savedSettings = localStorage.getItem('firebaseSettings');
+       if (savedSettings) {
+           Object.assign(FIREBASE_SETTINGS, JSON.parse(savedSettings));
+           console.log("Loaded saved Firebase settings:", FIREBASE_SETTINGS);
+       }
+       
+       updateConnectionStatus('connecting');
+       
+       // Check for required Firebase imports
+       if (!window.firebaseServices || !window.firebaseServices.db || !window.firebaseServices.collection) {
+           console.error("Firebase SDK not properly loaded");
+           updateConnectionStatus('offline');
+           return;
+       }
+       
+       // Check if the user's browser is online
+       if (navigator.onLine) {
+           firebaseInitialized = true;
+           updateConnectionStatus('online');
+           console.log("Firebase initialized successfully");
+           
+           // Test the connection with a simple query
+           testFirebaseConnection();
+           
+           // Load Firebase data if global mode is active
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           }
+       } else {
+           console.error("Browser is offline");
+           updateConnectionStatus('offline');
+       }
+       
+       // Listen for online/offline events
+       window.addEventListener('online', () => {
+           console.log("Browser went online");
+           updateConnectionStatus('online');
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           }
+       });
+       
+       window.addEventListener('offline', () => {
+           console.log("Browser went offline");
+           updateConnectionStatus('offline');
+       });
+   } catch (error) {
+       console.error("Firebase initialization error:", error);
+       updateConnectionStatus('offline');
+   }
 }
 
 // Test Firebase connection
@@ -2780,21 +2734,15 @@ function toggleGlobalMode(force) {
    isGlobalMode = newGlobalMode;
    localStorage.setItem('globalMode', isGlobalMode);
    
-// Update UI to indicate current mode
-const globalLink = document.getElementById('global-link');
-if (isGlobalMode) {
-    globalLink.innerHTML = 'Local';
-    // Use real-time listener
-    setupConfessionListener();
-} else {
-    globalLink.innerHTML = 'Global';
-    // Remove any existing listener
-    if (window.confessionListener) {
-        window.confessionListener();
-        window.confessionListener = null;
-    }
-    loadConfessions(); // Load local confessions
-}
+   // Update UI to indicate current mode
+   const globalLink = document.getElementById('global-link');
+   if (isGlobalMode) {
+       globalLink.innerHTML = 'Local';
+       loadGlobalConfessions();
+   } else {
+       globalLink.innerHTML = 'Global';
+       loadConfessions(); // Load local confessions
+   }
    
    currentPage = 1; // Reset to first page when switching modes
    showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
@@ -3759,11 +3707,12 @@ function handleConfessionSubmit(e) {
        submitBtn.disabled = false;
        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
        
-// No need to manually refresh - the real-time listener will handle it for global mode
-// For local mode, we still need to refresh
-if (!isGlobalMode) {
-    loadConfessions();
-}
+       // UPDATED: Always refresh the confessions list regardless of mode combinations
+       if (isGlobalMode) {
+           loadGlobalConfessions();
+       } else {
+           loadConfessions();
+       }
        
        // Optional: Scroll to see the new confession
        const confessionsContainer = document.getElementById('confessions-list');
@@ -5389,18 +5338,18 @@ function handleSearch(e) {
    currentPage = 1;
    
    if (isGlobalMode) {
-       setupConfessionListener();
+       loadGlobalConfessions();
    } else {
        loadConfessions();
    }
 }
 
-function handleCategoryFilterChange(e) {
-   currentCategory = e.target.value;
+function handleSortChange(e) {
+   currentSort = e.target.value;
    currentPage = 1;
    
    if (isGlobalMode) {
-       setupConfessionListener();
+       loadGlobalConfessions();
    } else {
        loadConfessions();
    }
