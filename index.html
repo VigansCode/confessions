@@ -2307,6 +2307,31 @@ function initializeFirebase() {
    }
 }
 
+// Function to periodically refresh global confessions
+function setupGlobalConfessionRefresh() {
+  console.log("Setting up periodic confession refresh");
+  
+  // Clear any existing refresh timer
+  if (window.confessionRefreshTimer) {
+    clearInterval(window.confessionRefreshTimer);
+  }
+  
+  // Initial load
+  loadGlobalConfessions();
+  
+  // Set up a timer to refresh confessions every 3 seconds
+  window.confessionRefreshTimer = setInterval(() => {
+    if (isGlobalMode && firebaseInitialized && navigator.onLine) {
+      console.log("Auto-refreshing global confessions...");
+      loadGlobalConfessions();
+    } else if (!isGlobalMode && window.confessionRefreshTimer) {
+      // If no longer in global mode, clear the timer
+      clearInterval(window.confessionRefreshTimer);
+      console.log("Cleared global refresh timer - no longer in global mode");
+    }
+  }, 3000); // Refresh every 3 seconds
+}
+
 // Test Firebase connection
 async function testFirebaseConnection() {
    console.log("Testing Firebase connection...");
