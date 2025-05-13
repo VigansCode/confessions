@@ -15,13 +15,10 @@
 
 <!-- Firebase SDK -->
 <script type="module">
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, increment, arrayUnion, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-// Separately import onSnapshot to ensure it's correctly loaded
-import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, limit, where, serverTimestamp, increment, arrayUnion, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyADTUf0vuhZXm2rnNLoXC9fjxAtMtiTSnA",
@@ -38,32 +35,30 @@ import { onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-f
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
 
-// Make Firebase services available globally
-window.firebaseServices = {
-  db,
-  collection,
-  addDoc,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
-  orderBy,
-  limit,
-  where,
-  serverTimestamp,
-  increment,
-  arrayUnion,
-  getDoc,
-  setDoc,
-  onSnapshot
-};
+  // Make Firebase services available globally
+  window.firebaseServices = {
+    db,
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    updateDoc,
+    deleteDoc,
+    query,
+    orderBy,
+    limit,
+    where,
+    serverTimestamp,
+    increment,
+    arrayUnion,
+    getDoc,
+    setDoc
+  };
   
   // Add a debug console message to confirm Firebase has loaded
   console.log("Firebase SDK loaded successfully");
-  console.log("onSnapshot imported as:", typeof onSnapshot);
-  console.log("window.firebaseServices.onSnapshot:", typeof window.firebaseServices.onSnapshot);
 </script>
+
 <style>
 :root {
     --primary-color: #8847ff; 
@@ -2279,22 +2274,23 @@ function initializeFirebase() {
            // Test the connection with a simple query
            testFirebaseConnection();
            
-// Load Firebase data if global mode is active
-if (isGlobalMode) {
-    setupGlobalConfessionRefresh();
-}
+           // Load Firebase data if global mode is active
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           }
        } else {
            console.error("Browser is offline");
            updateConnectionStatus('offline');
        }
        
-window.addEventListener('online', () => {
-    console.log("Browser went online");
-    updateConnectionStatus('online');
-    if (isGlobalMode) {
-        setupGlobalConfessionRefresh();
-    }
-});
+       // Listen for online/offline events
+       window.addEventListener('online', () => {
+           console.log("Browser went online");
+           updateConnectionStatus('online');
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           }
+       });
        
        window.addEventListener('offline', () => {
            console.log("Browser went offline");
@@ -2304,31 +2300,6 @@ window.addEventListener('online', () => {
        console.error("Firebase initialization error:", error);
        updateConnectionStatus('offline');
    }
-}
-
-// Function to periodically refresh global confessions
-function setupGlobalConfessionRefresh() {
-  console.log("Setting up periodic confession refresh");
-  
-  // Clear any existing refresh timer
-  if (window.confessionRefreshTimer) {
-    clearInterval(window.confessionRefreshTimer);
-  }
-  
-  // Initial load
-  loadGlobalConfessions();
-  
-  // Set up a timer to refresh confessions every 3 seconds
-  window.confessionRefreshTimer = setInterval(() => {
-    if (isGlobalMode && firebaseInitialized && navigator.onLine) {
-      console.log("Auto-refreshing global confessions...");
-      loadGlobalConfessions();
-    } else if (!isGlobalMode && window.confessionRefreshTimer) {
-      // If no longer in global mode, clear the timer
-      clearInterval(window.confessionRefreshTimer);
-      console.log("Cleared global refresh timer - no longer in global mode");
-    }
-  }, 3000); // Refresh every 3 seconds
 }
 
 // Test Firebase connection
@@ -2704,12 +2675,7 @@ function initializeApp() {
    // Add Firebase test button for debugging
    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
        addTestButton();
-
-          window.addEventListener('beforeunload', () => {
-     if (window.confessionRefreshTimer) {
-       clearInterval(window.confessionRefreshTimer);
-     }
-   });
+   }
 }
 // Check if an image URL is valid
 function isValidImageUrl(url) {
@@ -2763,18 +2729,18 @@ function toggleGlobalMode(force) {
    isGlobalMode = newGlobalMode;
    localStorage.setItem('globalMode', isGlobalMode);
    
-// Update UI to indicate current mode
-const globalLink = document.getElementById('global-link');
-if (isGlobalMode) {
-    globalLink.innerHTML = 'Local';
-    setupGlobalConfessionRefresh();
-} else {
-    globalLink.innerHTML = 'Global';
-    // Clear any refresh timer
-    if (window.confessionRefreshTimer) {
-        clearInterval(window.confessionRefreshTimer);
-    }
-    loadConfessions(); // Load local confessions
+   // Update UI to indicate current mode
+   const globalLink = document.getElementById('global-link');
+   if (isGlobalMode) {
+       globalLink.innerHTML = 'Local';
+       loadGlobalConfessions();
+   } else {
+       globalLink.innerHTML = 'Global';
+       loadConfessions(); // Load local confessions
+   }
+   
+   currentPage = 1; // Reset to first page when switching modes
+   showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
 }
 
 // Load confessions from Firebase
