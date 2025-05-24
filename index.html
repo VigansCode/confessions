@@ -113,15 +113,28 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background: var(--bg-color);
-    background-image: 
-        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%);
+    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     color: var(--text-color);
     line-height: 1.6;
     transition: all 0.3s ease;
     min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* Navigation Bar */
@@ -292,6 +305,45 @@ body {
 
 .goal-target {
     color: var(--text-light);
+}
+
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.particle:nth-child(1) { left: 10%; animation-delay: 0s; top: 20%; }
+.particle:nth-child(2) { left: 20%; animation-delay: 1s; top: 80%; }
+.particle:nth-child(3) { left: 40%; animation-delay: 2s; top: 40%; }
+.particle:nth-child(4) { left: 60%; animation-delay: 3s; top: 60%; }
+.particle:nth-child(5) { left: 80%; animation-delay: 4s; top: 30%; }
+.particle:nth-child(6) { left: 90%; animation-delay: 5s; top: 70%; }
+.particle:nth-child(7) { left: 30%; animation-delay: 6s; top: 10%; }
+.particle:nth-child(8) { left: 70%; animation-delay: 7s; top: 90%; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+    50% { transform: translateY(-30px) rotate(180deg); opacity: 1; }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Wallet Section Styles */
@@ -1231,10 +1283,11 @@ button:disabled {
    animation: fadeIn 0.5s ease-out;
  }
  
- .confession:hover {
-   transform: translateY(-3px);
-   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
- }
+.confession:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 30px rgba(102, 126, 234, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
  
  .confession.reported {
    opacity: 0.6;
@@ -1789,9 +1842,20 @@ button:disabled {
 </style>
 </head>
 <body>
+
 <button id="theme-toggle" aria-label="Toggle dark mode">
 <i class="fas fa-moon"></i>
 </button>
+<div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
 
 <div id="connection-status" class="connection-status status-connecting">
     <i class="fas fa-circle-notch fa-spin"></i>
