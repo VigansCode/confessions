@@ -890,6 +890,15 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
+/* New confessions notification */
+.new-confessions-notification {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.new-confessions-notification:hover {
+    transform: translateY(-2px);
+}
+
 /* Stats Dashboard Update */
 .stats-container {
     display: grid;
@@ -1025,7 +1034,7 @@ textarea:focus {
     border-radius: 4px;
 }
 
-.character-count.warning {
+.character.character-count.warning {
     color: var(--danger-color);
 }
 [data-theme="dark"] .character-count {
@@ -1952,7 +1961,7 @@ button:disabled {
 
 <footer>
 <p>&copy; 2024 Anonymous Confessions. All rights reserved.</p>
-<p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a></p>
+<p><a href="#">Privacy Policy </a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a></p>
 </footer>
 
 <!-- Donation Modal -->
@@ -2228,6 +2237,8 @@ let userDonations = [];
 let currentTipConfessionId = null;
 let isGlobalMode = true; // Start in global mode by default
 let firebaseInitialized = false;
+let autoRefreshInterval = null;
+let lastRefreshTime = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
@@ -2277,6 +2288,7 @@ function initializeFirebase() {
            // Load Firebase data if global mode is active
            if (isGlobalMode) {
                loadGlobalConfessions();
+               startAutoRefresh(); // Start auto-refresh for global mode
            }
        } else {
            console.error("Browser is offline");
@@ -2289,12 +2301,14 @@ function initializeFirebase() {
            updateConnectionStatus('online');
            if (isGlobalMode) {
                loadGlobalConfessions();
+               startAutoRefresh(); // Restart auto-refresh when back online
            }
        });
        
        window.addEventListener('offline', () => {
            console.log("Browser went offline");
            updateConnectionStatus('offline');
+           stopAutoRefresh(); // Stop auto-refresh when offline
        });
    } catch (error) {
        console.error("Firebase initialization error:", error);
@@ -2477,6 +2491,11 @@ function initializeApp() {
    // Update the global link text to reflect the current mode
    const globalLink = document.getElementById('global-link');
    globalLink.innerHTML = 'Local';
+   
+   // Start auto-refresh for global mode
+   if (isGlobalMode) {
+       startAutoRefresh();
+   }
    // Event listeners
    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
    document.getElementById('global-link').addEventListener('click', toggleGlobalMode);
@@ -2677,24 +2696,6 @@ function initializeApp() {
        addTestButton();
    }
 }
-// Check if an image URL is valid
-function isValidImageUrl(url) {
-   // Basic validation for image URLs
-   return url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null || 
-          url.startsWith('https://ipfs.io/') || 
-          url.startsWith('ipfs://');
-}
-
-// Helper function for project role text
-function getProjectRoleText(role) {
-   switch(role) {
-       case 'holder': return 'a token holder';
-       case 'team': return 'a team member';
-       case 'investor': return 'an early investor';
-       case 'community': return 'a community manager';
-       default: return 'an unspecified role';
-   }
-}
 
 // Add test button for easier debugging
 function addTestButton() {
@@ -2712,6 +2713,128 @@ function addTestButton() {
    button.style.cursor = 'pointer';
    button.onclick = testFirebaseConnection;
    document.body.appendChild(button);
+}
+
+// Auto-refresh functionality
+function startAutoRefresh() {
+   // Don't start if already running
+   if (autoRefreshInterval) return;
+   
+   console.log("Starting auto-refresh for global confessions");
+   lastRefreshTime = new Date();
+   
+   // Check for new confessions every 30 seconds
+   autoRefreshInterval = setInterval(() => {
+       if (isGlobalMode && firebaseInitialized && navigator.onLine) {
+           checkForNewConfessions();
+       }
+   }, 30000); // 30 seconds
+}
+
+function stopAutoRefresh() {
+   if (autoRefreshInterval) {
+       console.log("Stopping auto-refresh");
+       clearInterval(autoRefreshInterval);
+       autoRefreshInterval = null;
+   }
+}
+
+// Check for new confessions since last refresh
+async function checkForNewConfessions() {
+   try {
+       if (!window.firebaseServices || !lastRefreshTime) return;
+       
+       const { db, collection, getDocs, query, where, orderBy } = window.firebaseServices;
+       
+       // Create a reference to the confessions collection
+       const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+       
+       // Query for confessions newer than last refresh time
+       const newConfessionsQuery = query(
+           confessionsRef,
+           where('timestamp', '>', lastRefreshTime.toISOString()),
+           orderBy('timestamp', 'desc')
+       );
+       
+       const querySnapshot = await getDocs(newConfessionsQuery);
+       
+       if (!querySnapshot.empty) {
+           console.log(`Found ${querySnapshot.size} new confession(s)`);
+           
+           // Show notification about new confessions
+           showNewConfessionsNotification(querySnapshot.size);
+           
+           // Auto-refresh if user is on the first page and sorting by newest
+if (currentPage === 1 && currentSort === 'newest' && currentCategory === 'all' && !searchQuery) {
+               loadGlobalConfessions();
+           }
+       }
+       
+       // Update last refresh time
+       lastRefreshTime = new Date();
+   } catch (error) {
+       console.error("Error checking for new confessions:", error);
+   }
+}
+
+// Show notification about new confessions
+function showNewConfessionsNotification(count) {
+   // Create notification element
+   const notification = document.createElement('div');
+   notification.className = 'new-confessions-notification';
+   notification.style.cssText = `
+       position: fixed;
+       top: 80px;
+       right: 20px;
+       background: var(--primary-color);
+       color: white;
+       padding: 12px 20px;
+       border-radius: 8px;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+       z-index: 1000;
+       cursor: pointer;
+       animation: slideIn 0.3s ease-out;
+       display: flex;
+       align-items: center;
+       gap: 8px;
+       font-size: 0.9rem;
+       font-weight: 500;
+   `;
+   
+   notification.innerHTML = `
+       <i class="fas fa-bell"></i>
+       <span>${count} new confession${count > 1 ? 's' : ''}</span>
+       <i class="fas fa-times" style="margin-left: 10px; opacity: 0.7; cursor: pointer;" onclick="event.stopPropagation(); this.closest('.new-confessions-notification').remove();"></i>
+   `;
+   
+   // Click to refresh and go to top
+   notification.onclick = () => {
+       if (currentPage !== 1 || currentSort !== 'newest' || currentCategory !== 'all' || searchQuery) {
+           // Reset filters to show new confessions
+           currentPage = 1;
+           currentSort = 'newest';
+           currentCategory = 'all';
+           searchQuery = '';
+           
+           // Update UI
+           document.getElementById('sort-select').value = 'newest';
+           document.getElementById('category-filter').value = 'all';
+           document.getElementById('search-input').value = '';
+       }
+       
+       loadGlobalConfessions();
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+       notification.remove();
+   };
+   
+   document.body.appendChild(notification);
+   
+   // Auto-remove after 10 seconds
+   setTimeout(() => {
+       if (notification.parentNode) {
+           notification.remove();
+       }
+   }, 10000);
 }
 
 // Toggle between local and global mode
@@ -2734,9 +2857,11 @@ function toggleGlobalMode(force) {
    if (isGlobalMode) {
        globalLink.innerHTML = 'Local';
        loadGlobalConfessions();
+       startAutoRefresh(); // Start auto-refresh when switching to global mode
    } else {
        globalLink.innerHTML = 'Global';
        loadConfessions(); // Load local confessions
+       stopAutoRefresh(); // Stop auto-refresh when switching to local mode
    }
    
    currentPage = 1; // Reset to first page when switching modes
@@ -2992,6 +3117,7 @@ function resetDonationForm() {
   selectedDonationAmount = null;
   selectedPaymentMethod = null;
 }
+
 function selectDonationAmount(btn) {
    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
    btn.classList.add('selected');
@@ -3170,6 +3296,7 @@ function processDonation() {
        loadConfessions();
    }
 }
+
 // Update Firestore with tip information
 async function updateConfessionTipInFirebase(confessionId, amount, donorId) {
     try {
@@ -3246,6 +3373,7 @@ function showThankYouModal(amount, isCharity) {
    
    document.body.appendChild(modal);
 }
+
 function updateFundingGoalProgress(donation) {
    const amount = donation.amount;
    
@@ -3314,6 +3442,7 @@ function updateFundingGoals() {
    document.getElementById('charity-goal-progress').textContent = Math.round(charityProgress) + '%';
    document.getElementById('charity-goal-raised').textContent = `$${Math.round(FUNDING_GOALS.charity.current)} raised`;
 }
+
 function checkDonationAchievements(donation) {
    // First donation achievement
    if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
@@ -3405,6 +3534,7 @@ function tipConfession(confessionId) {
        });
    }
 }
+
 // Theme and UI Functions
 function toggleTheme() {
    const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -3462,7 +3592,7 @@ async function saveUserDataToFirebase(userData) {
         const userRef = doc(db, FIREBASE_SETTINGS.userCollection, userId);
         
         // Update the document with the user data
-        await setDoc(userRef, {
+await setDoc(userRef, {
             ...userData,
             lastSynced: new Date().toISOString()
         });
@@ -3483,6 +3613,7 @@ function addKarma(points, reason) {
    saveUserData();
    checkAchievements();
 }
+
 function showAchievement(achievement) {
    const popup = document.getElementById('achievement-popup');
    document.getElementById('achievement-title').textContent = achievement.title;
@@ -3606,6 +3737,7 @@ function checkDailyStreak() {
        }
    }
 }
+
 function handleConfessionSubmit(e) {
    e.preventDefault();
    
@@ -3839,6 +3971,7 @@ async function addGlobalConfession(text, category = null, memeUrl = null, contra
         return false;
     }
 }
+
 // Save a copy of a global confession to local storage
 function saveConfessionLocally(confession) {
     let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
@@ -3997,6 +4130,15 @@ function applyFilters(confessions) {
   return filtered;
 }
 
+// Check if an image URL is valid
+function isValidImageUrl(url) {
+   // Basic validation for image URLs
+   return url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null || 
+          url.startsWith('https://ipfs.io/') || 
+          url.startsWith('ipfs://');
+}
+
+// Continue with all remaining functions...
 function createConfessionElement(confession) {
   const confessionElement = document.createElement('div');
   confessionElement.className = `confession ${confession.reported ? 'reported' : ''}`;
@@ -4131,6 +4273,7 @@ function createConfessionElement(confession) {
   
   return confessionElement;
 }
+
 function createReactionButtons(confession) {
    const reactions = [
        { name: 'like', icon: 'fas fa-thumbs-up' },
@@ -4166,7 +4309,7 @@ function createRepliesSection(confession) {
                    return `
                    <div class="reply">
                        <p>${reply.text}</p>
-                       <div class="reply-meta">
+<div class="reply-meta">
                            <span class="reply-author">${replyAuthor}</span>
                            <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
                        </div>
@@ -4201,6 +4344,7 @@ function submitReply(confessionId) {
    
    replyInput.value = '';
 }
+
 // Submit reply to Firebase
 async function submitReplyToFirebase(confessionId, replyText) {
     try {
@@ -4275,6 +4419,7 @@ function submitLocalReply(confessionId, replyText) {
        loadConfessions();
    }
 }
+
 function addKarmaToUser(targetUserId, points) {
    const userData = localStorage.getItem('userData_' + targetUserId);
    if (userData) {
@@ -4331,6 +4476,7 @@ function copyShareLink(confessionId) {
        prompt('Copy this link:', url);
    });
 }
+
 function createShareCard(confessionId) {
    const confession = getConfessionById(confessionId);
    if (!confession) return;
@@ -4394,6 +4540,7 @@ function getConfessionById(confessionId) {
        return confessions.find(c => c.id === confessionId);
    }
 }
+
 function showLeaderboard() {
    const modal = document.getElementById('leaderboard-modal');
    const content = document.getElementById('leaderboard-content');
@@ -4484,6 +4631,7 @@ function getLocalLeaderboardData() {
    
    return users;
 }
+
 // Display leaderboard data
 function displayLeaderboard(users) {
    const content = document.getElementById('leaderboard-content');
@@ -4555,6 +4703,7 @@ async function reactToGlobalConfession(confessionId, reactionType) {
         reactToLocalConfession(confessionId, reactionType);
     }
 }
+
 function reactToLocalConfession(confessionId, reactionType) {
    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -4624,6 +4773,7 @@ function createPagination(totalPages) {
    nextBtn.onclick = () => changePage(currentPage + 1);
    paginationContainer.appendChild(nextBtn);
 }
+
 function changePage(page) {
    currentPage = page;
    
@@ -4704,6 +4854,7 @@ async function reportGlobalConfession(confessionId) {
         reportLocalConfession(confessionId);
     }
 }
+
 function reportLocalConfession(confessionId) {
    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -5004,7 +5155,7 @@ function displayConfessionOfDay() {
    const confession = getConfessionById(cotdId);
    
    if (!confession) {
-       localStorage.removeItem('confession_of_day');
+localStorage.removeItem('confession_of_day');
        setConfessionOfDay();
        return;
    }
@@ -5232,6 +5383,7 @@ function checkSharedConfession() {
        }
    }
 }
+
 // Fetch a specific confession from Firebase
 async function fetchConfessionFromFirebase(confessionId) {
    try {
@@ -5312,6 +5464,7 @@ async function incrementGlobalViewCount(confessionId) {
        // Just continue with local increment, no need to show error
    }
 }
+
 function incrementLocalViewCount(confessionId) {
    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
    const confessionIndex = confessions.findIndex(c => c.id === confessionId);
@@ -5387,6 +5540,7 @@ function clearAllConfessions() {
        }
    }
 }
+
 // Clear all confessions from Firebase
 async function clearAllGlobalConfessions() {
    try {
@@ -5462,6 +5616,18 @@ function closeShareCardModal() {
   window.currentShareCardData = null;
   window.currentShareCardId = null;
 }
+
+// Helper function for project role text
+function getProjectRoleText(role) {
+   switch(role) {
+       case 'holder': return 'a token holder';
+       case 'team': return 'a team member';
+       case 'investor': return 'an early investor';
+       case 'community': return 'a community manager';
+       default: return 'an unspecified role';
+   }
+}
+
 // Sync User to Firebase - this function would be called when a user makes meaningful changes
 async function syncUserToFirebase() {
    if (!isGlobalMode || !firebaseInitialized) return;
