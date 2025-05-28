@@ -3300,16 +3300,13 @@ feed.insertBefore(newItem, feed.firstChild);
                document.body.classList.add('admin-mode');
            }
            
-           // Check if welcome modal should be shown
-           const welcomeShown = localStorage.getItem('welcomeShown');
-           if (!welcomeShown) {
-               setTimeout(() => {
-                   const welcomeModal = document.getElementById('welcome-modal');
-                   if (welcomeModal) {
-                       welcomeModal.classList.add('active');
-                   }
-               }, 1000);
-           }
+// Show welcome modal every time
+setTimeout(() => {
+    const welcomeModal = document.getElementById('welcome-modal');
+    if (welcomeModal) {
+        welcomeModal.classList.add('active');
+    }
+}, 1000);
            
            // Start enhanced animations
            createFloatingBubbles();
