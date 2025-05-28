@@ -2382,18 +2382,41 @@ left: 10px;
                    <div class="character-count">0/1000 characters</div>
                </div>
                
-               <!-- Meme Section -->
-               <div class="meme-section">
-                   <label for="meme-url">
-                       <i class="fas fa-image"></i> Add a Meme (optional)
-                       <span class="meme-info-tooltip" title="Share a meme related to your confession">
-                           <i class="fas fa-info-circle"></i>
-                       </span>
-                   </label>
-                   <input type="url" id="meme-url" class="meme-input" placeholder="Enter image URL (IPFS or direct image link)">
-                   <div id="meme-preview" class="meme-preview"></div>
-                   <small class="meme-disclaimer">Only use memes you have rights to share. No NSFW content.</small>
-               </div>
+<!-- Meme Section -->
+<div class="meme-section">
+    <label for="meme-url">
+        <i class="fas fa-image"></i> Add a Meme (optional)
+        <span class="meme-info-tooltip" title="Share a meme related to your confession">
+            <i class="fas fa-info-circle"></i>
+        </span>
+    </label>
+    
+    <!-- Upload or URL tabs -->
+    <div class="meme-tabs" style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button type="button" class="meme-tab active" data-tab="url" style="padding: 8px 16px; border: 1px solid var(--glass-border); background: var(--primary-color); color: white; border-radius: 8px; cursor: pointer;">
+            URL
+        </button>
+        <button type="button" class="meme-tab" data-tab="upload" style="padding: 8px 16px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: var(--text-color); border-radius: 8px; cursor: pointer;">
+            Upload
+        </button>
+    </div>
+    
+    <!-- URL Input -->
+    <div id="meme-url-section" class="meme-input-section">
+        <input type="url" id="meme-url" class="meme-input" placeholder="Enter image URL (IPFS or direct image link)">
+    </div>
+    
+    <!-- File Upload -->
+    <div id="meme-upload-section" class="meme-input-section" style="display: none;">
+        <input type="file" id="meme-file" class="meme-input" accept="image/*" style="padding: 10px;">
+        <small style="color: var(--text-light); font-size: 0.8rem; display: block; margin-top: 5px;">
+            Max file size: 5MB. Supported formats: JPG, PNG, GIF, WebP
+        </small>
+    </div>
+    
+    <div id="meme-preview" class="meme-preview"></div>
+    <small class="meme-disclaimer">Only use memes you have rights to share. No NSFW content.</small>
+</div>
                
                <!-- Wallet address section -->
                <div class="wallet-section">
@@ -3168,19 +3191,88 @@ feed.insertBefore(newItem, feed.firstChild);
                }
            });
            
-           // Meme URL input
-           document.getElementById('meme-url').addEventListener('input', function() {
-               const memeUrl = this.value.trim();
-               const previewDiv = document.getElementById('meme-preview');
-               
-               if (memeUrl && isValidImageUrl(memeUrl)) {
-                   previewDiv.innerHTML = `<img src="${memeUrl}" alt="Meme preview">`;
-                   previewDiv.style.display = 'block';
-               } else {
-                   previewDiv.innerHTML = '';
-                   previewDiv.style.display = 'none';
-               }
-           });
+// Meme URL input
+document.getElementById('meme-url').addEventListener('input', function() {
+    const memeUrl = this.value.trim();
+    const previewDiv = document.getElementById('meme-preview');
+    
+    if (memeUrl && isValidImageUrl(memeUrl)) {
+        previewDiv.innerHTML = `<img src="${memeUrl}" alt="Meme preview">`;
+        previewDiv.style.display = 'block';
+    } else {
+        previewDiv.innerHTML = '';
+        previewDiv.style.display = 'none';
+    }
+});
+
+// ADD YOUR NEW CODE HERE:
+// Meme tab switching
+document.querySelectorAll('.meme-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.meme-tab').forEach(t => {
+            t.classList.remove('active');
+            t.style.background = 'var(--glass-bg)';
+            t.style.color = 'var(--text-color)';
+        });
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        this.style.background = 'var(--primary-color)';
+        this.style.color = 'white';
+        
+        // Show/hide sections based on tab
+        const tabType = this.getAttribute('data-tab');
+        if (tabType === 'url') {
+            document.getElementById('meme-url-section').style.display = 'block';
+            document.getElementById('meme-upload-section').style.display = 'none';
+        } else {
+            document.getElementById('meme-url-section').style.display = 'none';
+            document.getElementById('meme-upload-section').style.display = 'block';
+        }
+        
+        // Clear preview when switching tabs
+        document.getElementById('meme-preview').innerHTML = '';
+        document.getElementById('meme-preview').style.display = 'none';
+    });
+});
+
+// File upload handling
+document.getElementById('meme-file').addEventListener('change', function() {
+    const file = this.files[0];
+    const previewDiv = document.getElementById('meme-preview');
+    
+    if (file) {
+        // Check file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB');
+            this.value = '';
+            previewDiv.innerHTML = '';
+            previewDiv.style.display = 'none';
+            return;
+        }
+        
+        // Check file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            this.value = '';
+            previewDiv.innerHTML = '';
+            previewDiv.style.display = 'none';
+            return;
+        }
+        
+        // Create preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewDiv.innerHTML = `<img src="${e.target.result}" alt="Meme preview">`;
+            previewDiv.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewDiv.innerHTML = '';
+        previewDiv.style.display = 'none';
+    }
+});
            
            // Category tag event listeners
            document.querySelectorAll('.category-tag').forEach(tag => {
@@ -3644,15 +3736,118 @@ setTimeout(() => {
 
        // Sample of other essential functions (full implementation would include ALL functions):
        
-       function handleConfessionSubmit(e) {
-           e.preventDefault();
-           
-           if (isSubmitting) return;
-           
-           const confessionText = document.getElementById('confession-text').value.trim();
-           const submitBtn = document.getElementById('submit-btn');
-           const shareGlobally = document.getElementById('share-globally').checked;
-           const memeUrl = document.getElementById('meme-url').value.trim();
+function handleConfessionSubmit(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    
+    const confessionText = document.getElementById('confession-text').value.trim();
+    const submitBtn = document.getElementById('submit-btn');
+    const shareGlobally = document.getElementById('share-globally').checked;
+    
+    // Handle meme URL or file upload
+    let memeUrl = '';
+    const activeTab = document.querySelector('.meme-tab.active');
+    if (activeTab) {
+        const tabType = activeTab.getAttribute('data-tab');
+        if (tabType === 'url') {
+            memeUrl = document.getElementById('meme-url').value.trim();
+        } else {
+            const fileInput = document.getElementById('meme-file');
+            if (fileInput.files[0]) {
+                // Convert file to base64 for storage
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const memeDataUrl = e.target.result; // This will be a data URL
+                    // Continue with confession submission using this memeUrl
+                    proceedWithConfessionSubmission(confessionText, selectedCategory, shareGlobally, memeDataUrl, submitBtn);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+                return; // Exit early, will continue in reader.onload
+            }
+        }
+    } else {
+        // Fallback if no tab is active (shouldn't happen)
+        memeUrl = document.getElementById('meme-url').value.trim();
+    }
+    
+    // Continue with normal submission for URL or no meme
+    proceedWithConfessionSubmission(confessionText, selectedCategory, shareGlobally, memeUrl, submitBtn);
+}
+
+// Add this new function to handle the actual submission
+function proceedWithConfessionSubmission(confessionText, selectedCategory, shareGlobally, memeUrl, submitBtn) {
+    if (!confessionText) {
+        showErrorMessage('Please enter a confession');
+        return;
+    }
+    
+    if (containsForbiddenWords(confessionText)) {
+        showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
+        return;
+    }
+    
+    if (shareGlobally && (!firebaseInitialized || !navigator.onLine)) {
+        showErrorMessage('Cannot share globally. Please check your connection or try again later.');
+        return;
+    }
+    
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    
+    setTimeout(() => {
+        if (shareGlobally) {
+            addGlobalConfession(confessionText, selectedCategory, memeUrl);
+        } else {
+            addLocalConfession(confessionText, selectedCategory, memeUrl);
+        }
+        
+        // Reset form
+        document.getElementById('confession-text').value = '';
+        document.querySelector('.character-count').textContent = '0/1000 characters';
+        showSuccessMessage(shareGlobally ? 'Your confession has been shared globally!' : 'Your confession has been submitted successfully!');
+        
+        // Reset form fields
+        document.getElementById('meme-url').value = '';
+        document.getElementById('meme-file').value = '';
+        document.getElementById('meme-preview').innerHTML = '';
+        document.getElementById('meme-preview').style.display = 'none';
+        
+        // Reset category selection
+        document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+        document.querySelector('.category-tag[data-category="all"]').classList.add('active');
+        selectedCategory = null;
+        
+        // Reset wallet fields
+        document.getElementById('wallet-type').value = '';
+        document.getElementById('wallet-address').value = '';
+        document.getElementById('wallet-address').style.display = 'none';
+        
+        addKarma(KARMA_POINTS.submitConfession, 'submission');
+        
+        if (shareGlobally && !userAchievements.includes('global_contributor')) {
+            userAchievements.push('global_contributor');
+            addKarma(ACHIEVEMENTS.globalContributor.karma, 'achievement');
+            showAchievement(ACHIEVEMENTS.globalContributor);
+        }
+        
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
+        
+        if (isGlobalMode) {
+            loadGlobalConfessions();
+        } else {
+            loadConfessions();
+        }
+        
+        const confessionsContainer = document.getElementById('confessions-list');
+        if (confessionsContainer) {
+            confessionsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, 1000);
+}
            
            if (!confessionText) {
                showErrorMessage('Please enter a confession');
