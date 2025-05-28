@@ -4770,20 +4770,70 @@ feed.insertBefore(newItem, feed.firstChild);
 function shareToTwitter(confessionId) {
     console.log('shareToTwitter called with:', confessionId);
     
-    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
-    const confession = confessions.find(c => c.id === confessionId);
+    // First try to get confession from local storage
+    let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    let confession = confessions.find(c => c.id === confessionId);
     
-    if (confession) {
-        const text = confession.text.substring(0, 200);
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=confession,anonymous`;
-        
-        const newWindow = window.open(twitterUrl, '_blank');
-        if (!newWindow) {
-            window.location.href = twitterUrl;
+    // If not found locally and we're in global mode, we might need to get it from the displayed confessions
+    if (!confession && isGlobalMode) {
+        // Try to get the confession text from the DOM element
+        const confessionElement = document.querySelector(`[data-id="${confessionId}"]`);
+        if (confessionElement) {
+            const confessionTextElement = confessionElement.querySelector('.confession-text');
+            if (confessionTextElement) {
+                confession = {
+                    text: confessionTextElement.textContent,
+                    category: confessionElement.querySelector('.category-badge')?.textContent || null
+                };
+            }
         }
+    }
+    
+    let tweetText = '';
+    
+    if (confession && confession.text) {
+        // Prepare the confession text (limit to fit Twitter's character limit)
+        let confessionText = confession.text;
+        
+        // Calculate space needed for other elements
+        const websiteUrl = 'https://www.anonfess.lol/';
+        const twitterHandle = '@anonfess_lol';
+        const hashtags = '#confession #anonymous';
+        const fixedContent = `\n\n${websiteUrl}\n${twitterHandle} ${hashtags}`;
+        
+        // Twitter's character limit is 280, leave space for fixed content
+        const maxConfessionLength = 280 - fixedContent.length;
+        
+        // Truncate confession if too long
+        if (confessionText.length > maxConfessionLength) {
+            confessionText = confessionText.substring(0, maxConfessionLength - 3) + '...';
+        }
+        
+        // Build the complete tweet
+        tweetText = `${confessionText}${fixedContent}`;
     } else {
-        const twitterUrl = 'https://twitter.com/intent/tweet?text=Test from anonymous confessions&hashtags=confession,anonymous';
-        window.open(twitterUrl, '_blank');
+        // Fallback if confession not found
+        tweetText = `Check out this anonymous confession!\n\nhttps://www.anonfess.lol/\n@anonfess_lol #confession #anonymous`;
+    }
+    
+    // Encode the tweet text for URL
+    const encodedTweet = encodeURIComponent(tweetText);
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTweet}`;
+    
+    console.log('Tweet text:', tweetText);
+    console.log('Twitter URL:', twitterUrl);
+    
+    // Open Twitter in new window/tab
+    const newWindow = window.open(twitterUrl, '_blank', 'width=600,height=400');
+    if (!newWindow) {
+        // Fallback if popup blocked
+        window.location.href = twitterUrl;
+    }
+    
+    // Close the share options dropdown
+    const shareOptions = document.getElementById(`share-options-${confessionId}`);
+    if (shareOptions) {
+        shareOptions.classList.remove('active');
     }
 }
 
