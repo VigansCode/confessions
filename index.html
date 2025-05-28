@@ -4767,15 +4767,25 @@ feed.insertBefore(newItem, feed.firstChild);
        }, 100);
    }
 
-   function shareToTwitter(confessionId) {
-       const confession = getConfessionById(confessionId);
-       if (confession) {
-           const text = confession.text.substring(0, 200) + (confession.text.length > 200 ? '...' : '');
-           const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
-           const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
-           window.open(twitterUrl, '_blank');
-       }
-   }
+function shareToTwitter(confessionId) {
+    console.log('shareToTwitter called with:', confessionId);
+    
+    const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+    const confession = confessions.find(c => c.id === confessionId);
+    
+    if (confession) {
+        const text = confession.text.substring(0, 200);
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=confession,anonymous`;
+        
+        const newWindow = window.open(twitterUrl, '_blank');
+        if (!newWindow) {
+            window.location.href = twitterUrl;
+        }
+    } else {
+        const twitterUrl = 'https://twitter.com/intent/tweet?text=Test from anonymous confessions&hashtags=confession,anonymous';
+        window.open(twitterUrl, '_blank');
+    }
+}
 
    function copyShareLink(confessionId) {
        const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
