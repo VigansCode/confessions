@@ -4798,8 +4798,7 @@ function shareToTwitter(confessionId) {
         // Calculate space needed for other elements
         const websiteUrl = 'https://www.anonfess.lol/';
         const twitterHandle = '@anonfess_lol';
-        const hashtags = '#confession #anonymous';
-        const fixedContent = `\n\n${websiteUrl}\n${twitterHandle} ${hashtags}`;
+        const fixedContent = `\n\n${websiteUrl}\n${twitterHandle}`;
         
         // Twitter's character limit is 280, leave space for fixed content
         const maxConfessionLength = 280 - fixedContent.length;
@@ -4813,7 +4812,7 @@ function shareToTwitter(confessionId) {
         tweetText = `${confessionText}${fixedContent}`;
     } else {
         // Fallback if confession not found
-        tweetText = `Check out this anonymous confession!\n\nhttps://www.anonfess.lol/\n@anonfess_lol #confession #anonymous`;
+        tweetText = `Check out this anonymous confession!\n\nhttps://www.anonfess.lol/\n@anonfess_lol`;
     }
     
     // Encode the tweet text for URL
