@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,20 +62,27 @@
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --danger-color: #ef4444;
-            --text-color: #1f2937;
-            --text-light: #6b7280;
-            --bg-color: #ffffff;
-            --card-color: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(0, 0, 0, 0.1);
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(0, 0, 0, 0.15);
+            --text-color: #f9fafb;
+            --text-light: #d1d5db;
+            --bg-color: #0f0f23;
+            --card-color: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
             --karma-bronze: #cd7f32;
             --karma-silver: #c0c0c0;
             --karma-gold: #fbbf24;
             --crypto-color: #f59e0b;
-            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.08);
-            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.12);
-            --shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] {
+            --text-color: #1f2937;
+            --text-light: #6b7280;
+            --bg-color: #f8fafc;
+            --card-color: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.4);
         }
 
         * {
@@ -101,9 +108,14 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(135deg, #f0f9ff, #f8fafc, #faf5ff, #f0fdf4);
+            background: linear-gradient(45deg, #6366f1, #8b5cf6, #06b6d4, #10b981);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
+        }
+
+        [data-theme="light"] .bg-animation {
+            background: linear-gradient(45deg, #f0f9ff, #f8fafc, #faf5ff, #f0fdf4);
+            background-size: 400% 400%;
         }
 
         @keyframes gradientShift {
@@ -125,7 +137,7 @@
 
         .floating-bubble {
             position: absolute;
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             animation: float 20s infinite linear;
             backdrop-filter: blur(10px);
@@ -163,13 +175,13 @@
             display: flex;
             align-items: center;
             gap: 30px;
-            box-shadow: var(--shadow-medium);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
         .navbar:hover {
             transform: translateX(-50%) translateY(-2px);
-            box-shadow: var(--shadow-heavy);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .logo-container {
@@ -207,8 +219,26 @@
         }
 
         .nav-link:hover {
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-1px);
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(180deg);
         }
 
         .support-btn {
@@ -223,7 +253,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: var(--shadow-light);
         }
 
         .support-btn:hover {
@@ -242,7 +271,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-light);
         }
 
         .karma-display:hover {
@@ -350,7 +378,6 @@
             gap: 12px;
             position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow-medium);
         }
 
         .cta-primary::before {
@@ -387,13 +414,12 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: var(--shadow-light);
         }
 
         .cta-secondary:hover {
             transform: translateY(-3px);
-            background: rgba(99, 102, 241, 0.1);
-            box-shadow: var(--shadow-medium);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
         }
 
         /* Live Activity Feed */
@@ -411,7 +437,6 @@
             z-index: 100;
             opacity: 0;
             animation: slideInRight 1s ease 2s forwards;
-            box-shadow: var(--shadow-medium);
         }
 
         .activity-header {
@@ -482,7 +507,6 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow-light);
         }
 
         .category-card::before {
@@ -504,7 +528,7 @@
 
         .category-card:hover {
             transform: translateY(-10px);
-            box-shadow: var(--shadow-heavy);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .category-icon {
@@ -541,13 +565,13 @@
             border-radius: 25px;
             padding: 40px;
             margin-bottom: 30px;
-            box-shadow: var(--shadow-medium);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .container:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-heavy);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
 
         /* Stats Container */
@@ -565,7 +589,7 @@
             padding: 20px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: var(--shadow-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             position: relative;
             transition: transform 0.3s ease;
         }
@@ -596,7 +620,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 25px;
             padding: 40px;
-            box-shadow: var(--shadow-medium);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .form-title {
@@ -718,7 +742,7 @@
             bottom: 10px;
             font-size: 0.8rem;
             color: var(--text-light);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.3);
             padding: 4px 8px;
             border-radius: 4px;
             backdrop-filter: blur(10px);
@@ -726,6 +750,105 @@
 
         .character-count.warning {
             color: var(--danger-color);
+        }
+
+        /* Meme Section */
+        .meme-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(108, 92, 231, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .meme-section label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .meme-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: var(--glass-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            backdrop-filter: blur(10px);
+        }
+
+        .meme-preview {
+            max-width: 100%;
+            margin: 10px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .meme-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+        }
+
+        .meme-disclaimer {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* Wallet Section */
+        .wallet-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(108, 92, 231, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .wallet-section label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .wallet-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: var(--glass-bg);
+            color: var(--text-color);
+            font-family: inherit;
+            backdrop-filter: blur(10px);
+        }
+
+        .wallet-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            background: var(--glass-bg);
+            color: var(--text-color);
+            font-family: monospace;
+            backdrop-filter: blur(10px);
+        }
+
+        .wallet-disclaimer {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 5px;
         }
 
         /* Button Styles */
@@ -766,190 +889,1210 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
             justify-content: center;
-            align-items: center;
         }
 
         #random-confession {
             background: linear-gradient(135deg, var(--accent-color), #0891b2);
         }
 
-        /* Share Globally Checkbox */
-        .share-globally-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(99, 102, 241, 0.05);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .share-globally-container input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
-            accent-color: var(--primary-color);
-        }
-
-        .share-globally-container label {
-            font-weight: 500;
-            color: var(--text-color);
-            cursor: pointer;
-        }
-
-        /* Success/Error Messages */
-        .success-message, .error-message {
-            background: var(--success-color);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px auto;
+        /* Search and Filter Styles */
+        .search-filter-container {
             max-width: 800px;
-            text-align: center;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            animation: slideDown 0.3s ease-out;
+            margin: 0 auto 40px auto;
         }
 
-        .error-message {
-            background: var(--danger-color);
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-color);
+            backdrop-filter: blur(20px);
+            font-size: 1rem;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+}
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px) translateY(-50%);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0) translateY(-50%);
-            }
-        }
+       .anon-badge {
+           background: var(--glass-bg);
+           border: 1px solid var(--glass-border);
+           color: var(--text-color);
+           padding: 4px 12px;
+           border-radius: 15px;
+           font-size: 0.8rem;
+           font-weight: 500;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+       }
 
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+       .global-badge {
+           background: linear-gradient(135deg, var(--success-color), #34d399);
+           color: white;
+           padding: 4px 12px;
+           border-radius: 15px;
+           font-size: 0.8rem;
+           font-weight: 500;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+       }
 
-        @keyframes countUp {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+       .confession-text {
+           color: var(--text-color);
+           line-height: 1.6;
+           margin-bottom: 20px;
+           font-size: 1rem;
+       }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
+       .confession-footer {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding-top: 15px;
+           border-top: 1px solid var(--border-color);
+           flex-wrap: wrap;
+           gap: 15px;
+       }
 
-            .navbar {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                transform: none;
-                padding: 10px 20px;
-                flex-wrap: wrap;
-                gap: 15px;
-            }
+       .confession-meta {
+           display: flex;
+           gap: 20px;
+           color: var(--text-light);
+           font-size: 0.9rem;
+           flex-wrap: wrap;
+       }
 
-            .nav-links {
-                gap: 15px;
-            }
+       .confession-actions {
+           display: flex;
+           gap: 10px;
+           align-items: center;
+       }
 
-            .hero h1 {
-                font-size: 3rem;
-            }
+       .reaction-btn {
+           background: var(--glass-bg);
+           border: 1px solid var(--glass-border);
+           color: var(--text-color);
+           padding: 6px 12px;
+           border-radius: 20px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           font-size: 0.9rem;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+           min-width: 45px;
+           justify-content: center;
+       }
 
-            .hero-stats {
-                flex-direction: column;
-                gap: 20px;
-            }
+       .reaction-btn:hover {
+           background: rgba(102, 126, 234, 0.1);
+           border-color: var(--primary-color);
+           transform: translateY(-1px);
+       }
 
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
+       .reaction-btn.like i { color: #3b5998; }
+       .reaction-btn.dislike i { color: #8b0000; }
+       .reaction-btn.love i { color: #e25b5b; }
+       .reaction-btn.haha i { color: #f7b928; }
+       .reaction-btn.wow i { color: #54c7ec; }
+       .reaction-btn.sad i { color: #8a8d91; }
 
-            .live-activity {
-                display: none;
-            }
+       .reaction-count {
+           font-size: 0.85rem;
+           margin-left: 2px;
+           font-weight: 600;
+           color: var(--text-light);
+           min-width: 16px;
+           text-align: left;
+       }
 
-            .categories-grid {
-                grid-template-columns: 1fr;
-            }
+       .tip-btn {
+           background: linear-gradient(135deg, var(--warning-color), #e6951e);
+           color: white;
+           border: none;
+           padding: 8px 12px;
+           border-radius: 20px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           font-size: 0.9rem;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+       }
 
-            .confession-form, .container {
-                margin: 20px;
-                padding: 30px 20px;
-            }
+       .tip-btn:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+       }
 
-            .main-container {
-                padding: 10px;
-            }
+       .share-btn, .report-button {
+           background: var(--glass-bg);
+           border: 1px solid var(--glass-border);
+           color: var(--text-light);
+           padding: 8px 12px;
+           border-radius: 20px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           font-size: 0.9rem;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+           position: relative;
+       }
 
-            .button-group {
-                flex-direction: column;
-            }
-        }
-    </style>
+       .share-btn:hover {
+           background: rgba(102, 126, 234, 0.1);
+           border-color: var(--primary-color);
+           color: var(--primary-color);
+       }
+
+       .report-button:hover {
+           background: rgba(239, 68, 68, 0.1);
+           border-color: var(--danger-color);
+           color: var(--danger-color);
+       }
+
+       /* Donor and Whale Badges */
+       .donor-badge {
+           background: linear-gradient(135deg, var(--crypto-color), #e6951e);
+           color: white;
+           padding: 3px 8px;
+           border-radius: 12px;
+           font-size: 0.7rem;
+           font-weight: 600;
+           margin-left: 8px;
+           display: inline-flex;
+           align-items: center;
+           gap: 4px;
+       }
+
+       .tip-badge {
+           background: var(--success-color);
+           color: white;
+           padding: 2px 8px;
+           border-radius: 12px;
+           font-size: 0.8rem;
+           margin-left: 8px;
+       }
+
+       .wallet-badge {
+           background: var(--crypto-color);
+           color: white;
+           padding: 2px 8px;
+           border-radius: 12px;
+           font-size: 0.8rem;
+           margin-left: 8px;
+           display: inline-flex;
+           align-items: center;
+           gap: 4px;
+       }
+
+       /* Share Options */
+       .share-options {
+           display: none;
+           position: absolute;
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           border-radius: 8px;
+           padding: 10px;
+           z-index: 100;
+           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+           right: 0;
+           top: 100%;
+           margin-top: 5px;
+           min-width: 150px;
+       }
+
+       .share-options.active {
+           display: block;
+       }
+
+       .share-option-btn {
+           display: block;
+           width: 100%;
+           text-align: left;
+           padding: 8px 12px;
+           border: none;
+           background: none;
+           cursor: pointer;
+           color: var(--text-color);
+           font-size: 0.9rem;
+           border-radius: 4px;
+           transition: background 0.2s ease;
+       }
+
+       .share-option-btn:hover {
+           background: rgba(102, 126, 234, 0.1);
+       }
+
+       .share-option-btn i {
+           margin-right: 8px;
+           width: 16px;
+           text-align: center;
+       }
+
+       /* Replies Section */
+       .replies-section {
+           margin-top: 20px;
+           border-top: 1px solid var(--border-color);
+           padding-top: 15px;
+       }
+
+       .replies-toggle {
+           background: none;
+           border: none;
+           color: var(--primary-color);
+           cursor: pointer;
+           font-size: 0.9rem;
+           padding: 5px 10px;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+           border-radius: 5px;
+           transition: background 0.2s ease;
+       }
+
+       .replies-toggle:hover {
+           background: rgba(102, 126, 234, 0.1);
+       }
+
+       .replies-container {
+           margin-top: 15px;
+           display: none;
+       }
+
+       .replies-container.active {
+           display: block;
+       }
+
+       .reply {
+           background: rgba(102, 126, 234, 0.05);
+           border-left: 3px solid var(--primary-light);
+           padding: 10px 15px;
+           margin: 10px 0;
+           border-radius: 0 8px 8px 0;
+       }
+
+       .reply-meta {
+           margin-top: 8px;
+           font-size: 0.8rem;
+           color: var(--text-light);
+           display: flex;
+           gap: 10px;
+       }
+
+       .reply-form {
+           margin-top: 15px;
+           display: flex;
+           gap: 10px;
+       }
+
+       .reply-input {
+           flex: 1;
+           padding: 8px 12px;
+           border: 1px solid var(--glass-border);
+           border-radius: 8px;
+           font-family: inherit;
+           resize: none;
+           background: var(--glass-bg);
+           color: var(--text-color);
+           backdrop-filter: blur(20px);
+       }
+
+       .reply-submit {
+           padding: 8px 16px;
+           background: var(--primary-color);
+           color: white;
+           border: none;
+           border-radius: 8px;
+           cursor: pointer;
+           font-weight: 500;
+           transition: background 0.2s ease;
+       }
+
+       .reply-submit:hover {
+           background: var(--primary-dark);
+       }
+
+       /* Admin Actions */
+       .admin-action {
+           display: none;
+           position: absolute;
+           top: 10px;
+           right: 10px;
+           background-color: #e74c3c;
+           color: white;
+           border: none;
+           width: 30px;
+           height: 30px;
+           border-radius: 50%;
+           cursor: pointer;
+           font-size: 0.8rem;
+           transition: background-color 0.3s ease;
+           align-items: center;
+           justify-content: center;
+       }
+
+       .admin-mode .admin-action {
+           display: flex;
+       }
+
+       .admin-action:hover {
+           background-color: #c0392b;
+       }
+
+       /* No Confessions State */
+       .no-confessions {
+           text-align: center;
+           color: var(--text-light);
+           padding: 60px 20px;
+           font-style: italic;
+           background: var(--glass-bg);
+           border-radius: 20px;
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+       }
+
+       .no-confessions i {
+           display: block;
+           font-size: 3rem;
+           margin-bottom: 20px;
+           color: var(--primary-light);
+       }
+
+       /* Loading States */
+       .loading {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           padding: 60px;
+           color: var(--primary-color);
+       }
+
+       .loading i {
+           font-size: 2rem;
+           animation: spin 1s linear infinite;
+       }
+
+       @keyframes spin {
+           0% { transform: rotate(0deg); }
+           100% { transform: rotate(360deg); }
+       }
+
+       /* Pagination */
+       .pagination {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           gap: 10px;
+           margin-top: 40px;
+       }
+
+       .page-btn {
+           padding: 8px 15px;
+           border: 1px solid var(--glass-border);
+           background: var(--glass-bg);
+           color: var(--text-color);
+           border-radius: 8px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           backdrop-filter: blur(20px);
+       }
+
+       .page-btn:hover {
+           background: var(--primary-light);
+           color: white;
+           border-color: var(--primary-light);
+       }
+
+       .page-btn.active {
+           background: var(--primary-color);
+           color: white;
+           border-color: var(--primary-color);
+       }
+
+       .page-btn:disabled {
+           background: var(--border-color);
+           cursor: not-allowed;
+           opacity: 0.5;
+       }
+
+       /* Success/Error Messages */
+       .success-message, .error-message {
+           background: var(--success-color);
+           color: white;
+           padding: 15px;
+           border-radius: 8px;
+           margin: 20px auto;
+           max-width: 800px;
+           text-align: center;
+           display: none;
+           align-items: center;
+           justify-content: center;
+           gap: 10px;
+           animation: slideDown 0.3s ease-out;
+       }
+
+       .error-message {
+           background: var(--danger-color);
+       }
+
+       /* Modals */
+       .modal {
+           display: none;
+           position: fixed;
+           z-index: 1000;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0,0,0,0.8);
+           backdrop-filter: blur(10px);
+       }
+
+       .modal-content {
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           margin: 5% auto;
+           padding: 30px;
+           border-radius: 20px;
+           width: 90%;
+           max-width: 600px;
+           max-height: 80vh;
+           overflow-y: auto;
+           color: var(--text-color);
+       }
+
+       .close {
+           color: var(--text-light);
+           float: right;
+           font-size: 28px;
+           font-weight: bold;
+           cursor: pointer;
+       }
+
+       .close:hover {
+           color: var(--text-color);
+       }
+
+       /* Donation Modal */
+       .donation-modal {
+           display: none;
+           position: fixed;
+           z-index: 1001;
+           left: 0;
+           top: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0,0,0,0.8);
+           backdrop-filter: blur(10px);
+           animation: fadeIn 0.3s ease;
+       }
+
+       .donation-modal-content {
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           margin: 5% auto;
+           padding: 30px;
+           border-radius: 20px;
+           width: 90%;
+           max-width: 500px;
+           position: relative;
+           animation: slideUp 0.3s ease;
+           color: var(--text-color);
+       }
+
+       @keyframes slideUp {
+           from { transform: translateY(50px); opacity: 0; }
+           to { transform: translateY(0); opacity: 1; }
+       }
+
+       .donation-header {
+           text-align: center;
+           margin-bottom: 25px;
+       }
+
+       .donation-title {
+           font-size: 1.5rem;
+           font-weight: 700;
+           color: var(--primary-color);
+           margin-bottom: 10px;
+       }
+
+       .donation-subtitle {
+           color: var(--text-light);
+           font-size: 0.95rem;
+       }
+
+       .donation-amounts {
+           display: grid;
+           grid-template-columns: repeat(3, 1fr);
+           gap: 10px;
+           margin-bottom: 20px;
+       }
+
+       .amount-btn {
+           background: var(--glass-bg);
+           border: 2px solid var(--glass-border);
+           padding: 12px;
+           border-radius: 10px;
+           cursor: pointer;
+           text-align: center;
+           transition: all 0.3s ease;
+           font-weight: 600;
+           color: var(--text-color);
+           backdrop-filter: blur(20px);
+       }
+
+       .amount-btn:hover {
+           border-color: var(--primary-color);
+           transform: translateY(-2px);
+       }
+
+       .amount-btn.selected {
+           border-color: var(--primary-color);
+           background: rgba(108, 92, 231, 0.1);
+           color: var(--primary-color);
+       }
+
+       .custom-amount-container {
+           margin-bottom: 20px;
+       }
+
+       .custom-amount-input {
+           width: 100%;
+           padding: 12px;
+           border: 2px solid var(--glass-border);
+           border-radius: 10px;
+           font-size: 1rem;
+           text-align: center;
+           background: var(--glass-bg);
+           color: var(--text-color);
+           backdrop-filter: blur(20px);
+       }
+
+       .custom-amount-input:focus {
+           border-color: var(--primary-color);
+           outline: none;
+       }
+
+       .payment-options {
+           margin-bottom: 20px;
+       }
+
+       .payment-method {
+           display: flex;
+           align-items: center;
+           padding: 15px;
+           border: 2px solid var(--glass-border);
+           border-radius: 10px;
+           margin-bottom: 10px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+       }
+
+       .payment-method:hover {
+           border-color: var(--primary-color);
+       }
+
+       .payment-method.selected {
+           border-color: var(--primary-color);
+           background: rgba(108, 92, 231, 0.1);
+       }
+
+       .payment-method i {
+           font-size: 1.5rem;
+           margin-right: 15px;
+           color: var(--crypto-color);
+       }
+
+       .payment-info {
+           flex: 1;
+       }
+
+       .payment-name {
+           font-weight: 600;
+           color: var(--text-color);
+       }
+
+       .payment-desc {
+           font-size: 0.85rem;
+           color: var(--text-light);
+       }
+
+       .donation-address {
+           display: none;
+           background: var(--bg-color);
+           padding: 15px;
+           border-radius: 10px;
+           margin-bottom: 20px;
+           word-break: break-all;
+           font-family: monospace;
+           font-size: 0.9rem;
+           text-align: center;
+       }
+
+       .copy-address-btn {
+           background: var(--primary-color);
+           color: white;
+           border: none;
+           padding: 8px 16px;
+           border-radius: 8px;
+           cursor: pointer;
+           margin-top: 10px;
+           font-weight: 600;
+       }
+
+       .charity-section {
+           margin-top: 20px;
+           padding-top: 20px;
+           border-top: 1px solid var(--border-color);
+       }
+
+       .charity-checkbox {
+           display: flex;
+           align-items: center;
+           margin-bottom: 15px;
+       }
+
+       .charity-checkbox input {
+           margin-right: 10px;
+       }
+
+       .charity-dropdown {
+           width: 100%;
+           padding: 10px;
+           border: 2px solid var(--glass-border);
+           border-radius: 10px;
+           background: var(--glass-bg);
+           color: var(--text-color);
+           display: none;
+           backdrop-filter: blur(20px);
+       }
+
+       .donate-submit-btn {
+           width: 100%;
+           padding: 15px;
+           background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+           color: white;
+           border: none;
+           border-radius: 10px;
+           font-size: 1.1rem;
+           font-weight: 600;
+           cursor: pointer;
+           transition: transform 0.3s ease;
+       }
+
+       .donate-submit-btn:hover {
+           transform: translateY(-2px);
+       }
+
+       .donate-submit-btn:disabled {
+           background: var(--text-light);
+           cursor: not-allowed;
+           transform: none;
+       }
+
+       /* Leaderboard */
+       .leaderboard-item {
+           display: flex;
+           align-items: center;
+           padding: 10px;
+           border-bottom: 1px solid var(--border-color);
+           gap: 15px;
+       }
+
+       .rank {
+           font-weight: bold;
+           font-size: 1.2rem;
+           width: 30px;
+           text-align: center;
+       }
+
+       .rank.gold { color: var(--karma-gold); }
+       .rank.silver { color: var(--karma-silver); }
+       .rank.bronze { color: var(--karma-bronze); }
+
+       .karma-badge {
+           background: var(--primary-light);
+           color: white;
+           padding: 4px 8px;
+           border-radius: 12px;
+           font-size: 0.8rem;
+           margin-left: auto;
+       }
+
+       /* Connection Status */
+       .connection-status {
+           position: fixed;
+           bottom: 20px;
+           right: 20px;
+           z-index: 1000;
+           padding: 8px 12px;
+           border-radius: 20px;
+           font-size: 0.8rem;
+           display: flex;
+           align-items: center;
+           gap: 8px;
+           box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+           animation: fadeIn 0.5s ease-out;
+           backdrop-filter: blur(20px);
+       }
+
+       .status-online {
+           background-color: var(--success-color);
+           color: white;
+       }
+
+       .status-offline {
+           background-color: var(--danger-color);
+           color: white;
+       }
+
+       .status-connecting {
+           background-color: var(--warning-color);
+           color: #333;
+       }
+
+       /* Achievement Popup */
+       .achievement-popup {
+           position: fixed;
+           top: 20px;
+           right: 20px;
+           background: var(--success-color);
+           color: white;
+           padding: 15px 20px;
+           border-radius: 8px;
+           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+           display: none;
+           animation: slideIn 0.3s ease-out;
+           z-index: 1000;
+           backdrop-filter: blur(20px);
+       }
+
+       .achievement-popup.show {
+           display: block;
+       }
+
+       .achievement-popup h4 {
+           margin: 0 0 5px 0;
+           font-size: 1rem;
+       }
+
+       .achievement-popup p {
+           margin: 0;
+           font-size: 0.85rem;
+           opacity: 0.9;
+       }
+
+       /* Toast Notifications */
+       .toast {
+           position: fixed;
+           top: 100px;
+           right: 30px;
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           border-radius: 15px;
+           padding: 20px;
+           z-index: 2000;
+           transform: translateX(400px);
+           transition: all 0.3s ease;
+           min-width: 300px;
+       }
+
+       .toast.show {
+           transform: translateX(0);
+       }
+
+       .toast-success {
+           border-left: 4px solid var(--success-color);
+       }
+
+       .toast-error {
+           border-left: 4px solid var(--danger-color);
+       }
+
+       .toast-content {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           color: var(--text-color);
+       }
+
+       /* Welcome Modal */
+       .welcome-modal {
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background: rgba(0, 0, 0, 0.8);
+           backdrop-filter: blur(10px);
+           z-index: 2000;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           opacity: 0;
+           visibility: hidden;
+           transition: all 0.3s ease;
+       }
+
+       .welcome-modal.active {
+           opacity: 1;
+           visibility: visible;
+       }
+
+       .welcome-content {
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           border-radius: 25px;
+           padding: 50px;
+           max-width: 500px;
+           text-align: center;
+           color: var(--text-color);
+           animation: modalSlideIn 0.5s ease;
+       }
+
+       @keyframes modalSlideIn {
+           from {
+               transform: scale(0.8);
+               opacity: 0;
+           }
+           to {
+               transform: scale(1);
+               opacity: 1;
+           }
+       }
+
+       .welcome-icon {
+           font-size: 4rem;
+           margin-bottom: 20px;
+           background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;
+       }
+
+       .welcome-title {
+           font-family: 'Space Grotesk', sans-serif;
+           font-size: 2rem;
+           font-weight: 700;
+           margin-bottom: 15px;
+       }
+
+       .welcome-text {
+           color: var(--text-light);
+           margin-bottom: 30px;
+           line-height: 1.6;
+       }
+
+       .welcome-button {
+           background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+           color: white;
+           border: none;
+           padding: 15px 30px;
+           border-radius: 50px;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.3s ease;
+       }
+
+       .welcome-button:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+       }
+
+       /* Floating Action Button */
+       .fab {
+           position: fixed;
+           bottom: 30px;
+           right: 30px;
+           width: 60px;
+           height: 60px;
+           background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+           border: none;
+           border-radius: 50%;
+           color: white;
+           font-size: 1.5rem;
+           cursor: pointer;
+           box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+           transition: all 0.3s ease;
+           z-index: 1000;
+       }
+
+       .fab:hover {
+           transform: scale(1.1) rotate(90deg);
+           box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+       }
+
+       /* Admin Access */
+       #admin-access {
+           margin-top: 20px;
+           border-top: 1px solid var(--border-color);
+           padding-top: 20px;
+           display: none;
+       }
+
+       summary {
+           cursor: pointer;
+           color: var(--text-light);
+           font-weight: 500;
+           transition: color 0.3s ease;
+           display: flex;
+           align-items: center;
+       }
+
+       summary:hover {
+           color: var(--primary-color);
+       }
+
+       summary i {
+           margin-right: 8px;
+       }
+
+       details {
+           margin-top: 10px;
+       }
+
+       input[type="password"] {
+           padding: 10px 15px;
+           border: 1px solid var(--glass-border);
+           border-radius: 8px;
+           margin-right: 10px;
+           font-family: inherit;
+           font-size: 0.9rem;
+           background: var(--glass-bg);
+           color: var(--text-color);
+           backdrop-filter: blur(10px);
+       }
+
+       input[type="password"]:focus {
+           border-color: var(--primary-color);
+           outline: none;
+           box-shadow: 0 0 8px rgba(108, 92, 231, 0.3);
+       }
+
+       #admin-login {
+           background-color: #34495e;
+       }
+
+       #admin-login:hover {
+           background-color: #2c3e50;
+       }
+
+       #clear-all {
+           background-color: #e74c3c;
+           margin-top: 10px;
+       }
+
+       #clear-all:hover {
+           background-color: #c0392b;
+       }
+
+       /* Animations */
+       @keyframes fadeIn {
+           from { opacity: 0; transform: translateY(10px); }
+           to { opacity: 1; transform: translateY(0); }
+       }
+
+       @keyframes fadeInUp {
+           from {
+               opacity: 0;
+               transform: translateY(30px);
+           }
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+
+       @keyframes slideInRight {
+           from {
+               opacity: 0;
+               transform: translateX(100px) translateY(-50%);
+           }
+           to {
+               opacity: 1;
+               transform: translateX(0) translateY(-50%);
+           }
+       }
+
+       @keyframes slideDown {
+           from { transform: translateY(-20px); opacity: 0; }
+           to { transform: translateY(0); opacity: 1; }
+       }
+
+       @keyframes slideIn {
+           from { transform: translateX(100%); opacity: 0; }
+           to { transform: translateX(0); opacity: 1; }
+       }
+
+       @keyframes countUp {
+           from { opacity: 0; }
+           to { opacity: 1; }
+       }
+
+       /* Loading Skeleton */
+       .skeleton {
+           background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255, 255, 255, 0.1) 50%, var(--glass-bg) 75%);
+           background-size: 200% 100%;
+           animation: loading 1.5s infinite;
+           height: 200px;
+           border-radius: 20px;
+           margin-bottom: 20px;
+       }
+
+       @keyframes loading {
+           0% { background-position: 200% 0; }
+           100% { background-position: -200% 0; }
+       }
+
+       /* Responsive Design */
+       @media (max-width: 768px) {
+           body {
+               padding: 10px;
+           }
+
+           .navbar {
+               top: 10px;
+               left: 10px;
+               right: 10px;
+               transform: none;
+               padding: 10px 20px;
+               flex-wrap: wrap;
+               gap: 15px;
+           }
+
+           .nav-links {
+               gap: 15px;
+           }
+
+.hero h1 {
+               font-size: 3rem;
+           }
+
+           .hero-stats {
+               flex-direction: column;
+               gap: 20px;
+           }
+
+           .cta-buttons {
+               flex-direction: column;
+               align-items: center;
+           }
+
+           .live-activity {
+               display: none;
+           }
+
+           .categories-grid {
+               grid-template-columns: 1fr;
+           }
+
+           .confession-form, .container {
+               margin: 20px;
+               padding: 30px 20px;
+           }
+
+           .main-container {
+               padding: 10px;
+           }
+
+           .button-group {
+               flex-direction: column;
+           }
+
+           .confession-footer {
+               flex-direction: column;
+               align-items: flex-start;
+           }
+
+           .confession-actions {
+               width: 100%;
+               justify-content: space-between;
+               margin-top: 10px;
+           }
+
+           .reaction-btn {
+               min-width: auto;
+               padding: 6px 8px;
+           }
+
+           .donation-amounts {
+               grid-template-columns: repeat(2, 1fr);
+           }
+
+           .donor-badge {
+               display: none;
+           }
+       }
+   </style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="bg-animation"></div>
-    
-    <!-- Floating Elements -->
-    <div class="floating-elements" id="floatingElements"></div>
+   <!-- Animated Background -->
+   <div class="bg-animation"></div>
+   
+   <!-- Floating Elements -->
+   <div class="floating-elements" id="floatingElements"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo-container">
-            <i class="fas fa-mask"></i>
-            <span>Confessions</span>
-        </div>
-        <div class="nav-links">
-            <a href="#" class="nav-link" id="home-link">Home</a>
-            <a href="#" class="nav-link" id="about-link">About</a>
-            <a href="#" class="nav-link" id="rules-link">Rules</a>
-            <a href="#" class="nav-link" id="global-link">Local</a>
-            <button class="support-btn" id="donate-nav-btn">
-                <i class="fas fa-heart"></i>
-                Support
-            </button>
-            <div class="karma-display" id="karma-display">
-                <i class="fas fa-star"></i>
-                <span id="user-karma">480</span> Karma
-            </div>
-        </div>
-    </nav>
+   <!-- Connection Status -->
+   <div id="connection-status" class="connection-status status-connecting">
+       <i class="fas fa-circle-notch fa-spin"></i>
+       <span>Connecting...</span>
+   </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Share Your Truth.<br>Stay Anonymous.</h1>
-            <p class="hero-subtitle">
-                Join thousands expressing themselves freely in our secure, judgment-free community
-            </p>
-<div class="hero-stats">
+   <!-- Navigation -->
+   <nav class="navbar">
+       <div class="logo-container">
+           <i class="fas fa-mask"></i>
+           <span>Confessions</span>
+       </div>
+       <div class="nav-links">
+           <a href="#" class="nav-link" id="home-link">Home</a>
+           <a href="#" class="nav-link" id="about-link">About</a>
+           <a href="#" class="nav-link" id="rules-link">Rules</a>
+           <a href="#" class="nav-link" id="global-link">Local</a>
+           <button class="support-btn" id="donate-nav-btn">
+               <i class="fas fa-heart"></i>
+               Support
+           </button>
+           <div class="karma-display" id="karma-display">
+               <i class="fas fa-star"></i>
+               <span id="user-karma">0</span> Karma
+           </div>
+           <button class="theme-toggle" id="theme-toggle">
+               <i class="fas fa-sun"></i>
+           </button>
+       </div>
+   </nav>
+
+   <!-- Hero Section -->
+   <section class="hero">
+       <div class="hero-content">
+           <h1>Share Your Truth.<br>Stay Anonymous.</h1>
+           <p class="hero-subtitle">
+               Join thousands expressing themselves freely in our secure, judgment-free community
+           </p>
+           <div class="hero-stats">
                <div class="hero-stat">
                    <span class="hero-stat-number" data-target="12847" id="total-confessions">0</span>
                    <span class="hero-stat-label">Confessions Shared</span>
@@ -983,10 +2126,10 @@
            <span>Live Activity</span>
        </div>
        <div id="activity-feed">
-           <div class="activity-item">Someone just shared their first confession</div>
-           <div class="activity-item">Community reached 13K confessions!</div>
-           <div class="activity-item">Anonymous earned their first badge</div>
+           <div class="activity-item">Anonymous shared in Trading category</div>
+           <div class="activity-item">Someone just earned their first badge</div>
            <div class="activity-item">New confession in Crypto category</div>
+           <div class="activity-item">Community reached 13K confessions!</div>
        </div>
    </div>
 
@@ -1043,7 +2186,7 @@
        <!-- Stats Container -->
        <div class="stats-container">
            <div class="stat-card">
-               <div class="stat-number" id="total-confessions-stat">35</div>
+               <div class="stat-number" id="total-confessions-stat">0</div>
                <div class="stat-label">Total Confessions</div>
            </div>
            <div class="stat-card">
@@ -1051,10 +2194,13 @@
                <div class="stat-label">Today's Confessions</div>
            </div>
            <div class="stat-card clickable" id="leaderboard-card">
-               <div class="stat-number" id="active-users-stat">1</div>
+               <div class="stat-number" id="active-users-stat">0</div>
                <div class="stat-label">Top Contributors</div>
            </div>
        </div>
+
+       <!-- Confession of the Day Container -->
+       <div id="confession-of-day-container"></div>
 
        <!-- Confession Form -->
        <div class="container confession-form" id="confession-form-container">
@@ -1099,118 +2245,478 @@
                    <div class="character-count">0/1000 characters</div>
                </div>
                
-               <div class="share-globally-container">
-                   <input type="checkbox" id="share-globally" checked>
+               <!-- Meme Section -->
+               <div class="meme-section">
+                   <label for="meme-url">
+                       <i class="fas fa-image"></i> Add a Meme (optional)
+                       <span class="meme-info-tooltip" title="Share a meme related to your confession">
+                           <i class="fas fa-info-circle"></i>
+                       </span>
+                   </label>
+                   <input type="url" id="meme-url" class="meme-input" placeholder="Enter image URL (IPFS or direct image link)">
+                   <div id="meme-preview" class="meme-preview"></div>
+                   <small class="meme-disclaimer">Only use memes you have rights to share. No NSFW content.</small>
+               </div>
+               
+               <!-- Wallet address section -->
+               <div class="wallet-section">
+                   <label for="wallet-address">
+                       <i class="fas fa-wallet"></i> Receive Tips (optional)
+                       <span class="wallet-info-tooltip" title="Add your crypto wallet address to receive tips directly from readers">
+                           <i class="fas fa-info-circle"></i>
+                       </span>
+                   </label>
+                   <select id="wallet-type" class="wallet-select">
+                       <option value="">Select wallet type</option>
+                       <option value="bitcoin">Bitcoin (BTC)</option>
+                       <option value="ethereum">Ethereum (ETH)</option>
+                       <option value="lightning">Lightning Network</option>
+                   </select>
+                   <input type="text" id="wallet-address" class="wallet-input" placeholder="Enter your wallet address" style="display: none;">
+                   <small class="wallet-disclaimer">Your wallet address will be visible to allow direct tipping</small>
+               </div>
+               
+               <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                   <input type="checkbox" id="share-globally" style="margin-right: 10px;" checked>
                    <label for="share-globally">Share globally</label>
                </div>
                
-               <div class="button-group">
-                   <button type="submit" id="submit-btn">
-                       <i class="fas fa-paper-plane"></i> Submit Confession
-                   </button>
-                   <button type="button" id="random-confession">
-                       <i class="fas fa-random"></i> Random Confession
-                   </button>
-               </div>
+               <button type="submit" id="submit-btn"><i class="fas fa-paper-plane"></i> Submit Confession</button>
            </form>
+
+           <div class="button-group">
+               <button id="random-confession"><i class="fas fa-random"></i> Random Confession</button>
+           </div>
+
+           <div id="admin-access">
+               <details>
+                   <summary><i class="fas fa-lock"></i> Admin Access</summary>
+                   <div style="margin-top: 15px;">
+                       <input type="password" id="admin-password" placeholder="Enter admin password">
+                       <button id="admin-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+                       <div id="admin-panel" style="margin-top: 10px; display: none;">
+                           <button id="clear-all"><i class="fas fa-trash-alt"></i> Clear All Confessions</button>
+                           <button id="sync-firebase"><i class="fas fa-cloud-upload-alt"></i> Sync to Firebase</button>
+                       </div>
+                   </div>
+               </details>
+           </div>
        </div>
 
        <!-- Recent Confessions Section -->
        <div class="container">
            <h2 class="form-title"><i class="fas fa-book-open"></i> Recent Confessions</h2>
+
+           <div class="search-filter-container">
+               <div class="search-container">
+                   <input type="text" class="search-input" id="search-input" placeholder="Search confessions...">
+                   <i class="fas fa-search search-icon"></i>
+               </div>
+               
+               <div class="filter-options">
+                   <select class="filter-select" id="sort-select">
+                       <option value="newest">Newest First</option>
+                       <option value="oldest">Oldest First</option>
+                       <option value="popular">Most Popular</option>
+                   </select>
+                   <select class="filter-select" id="category-filter">
+                       <option value="all">All Categories</option>
+                       <option value="alpha">Alpha</option>
+                       <option value="rekt">Rekt Story</option>
+                       <option value="gains">Gains</option>
+                       <option value="trading">Trading</option>
+                       <option value="shill">Shill</option>
+                       <option value="meme">Meme</option>
+                       <option value="ape">Ape Story</option>
+                   </select>
+               </div>
+           </div>
+
+           <!-- Confessions List -->
            <div id="confessions-list" class="confessions-list">
-               <div style="text-align: center; padding: 60px 20px; color: var(--text-light); font-style: italic;">
-                   <i class="fas fa-feather" style="font-size: 3rem; margin-bottom: 20px; color: var(--primary-light); display: block;"></i>
-                   No confessions found. Be the first to share!
+               <!-- Loading skeleton -->
+               <div class="skeleton"></div>
+               <div class="skeleton"></div>
+               <div class="skeleton"></div>
+           </div>
+           
+           <!-- Pagination -->
+           <div id="pagination" class="pagination"></div>
+       </div>
+   </div>
+
+   <!-- Welcome Modal -->
+   <div class="welcome-modal" id="welcome-modal">
+       <div class="welcome-content">
+           <div class="welcome-icon">
+               <i class="fas fa-mask"></i>
+           </div>
+           <h2 class="welcome-title">Welcome to Anonymous Confessions</h2>
+           <p class="welcome-text">
+               This is a safe space where you can share your thoughts, experiences, and confessions completely anonymously. 
+               Your privacy is our priority.
+           </p>
+           <button class="welcome-button" onclick="closeWelcomeModal()">
+               Get Started
+           </button>
+       </div>
+   </div>
+
+   <!-- Toast Notification -->
+   <div class="toast" id="toast">
+       <div class="toast-content">
+           <i class="fas fa-check-circle"></i>
+           <span id="toast-message">Confession submitted successfully!</span>
+       </div>
+   </div>
+
+   <!-- Donation Modal -->
+   <div id="donation-modal" class="donation-modal">
+       <div class="donation-modal-content">
+           <span class="close" onclick="closeDonationModal()">&times;</span>
+           <div class="donation-header">
+               <h2 class="donation-title">Support Our Community</h2>
+               <p class="donation-subtitle">Your support helps maintain this safe space for anonymous confessions</p>
+           </div>
+           
+           <div class="donation-amounts">
+               <button class="amount-btn" data-amount="5">$5</button>
+               <button class="amount-btn" data-amount="10">$10</button>
+               <button class="amount-btn" data-amount="25">$25</button>
+               <button class="amount-btn" data-amount="50">$50</button>
+               <button class="amount-btn" data-amount="100">$100</button>
+               <button class="amount-btn" data-amount="custom">Custom</button>
+           </div>
+           
+           <div class="custom-amount-container" id="custom-amount-container" style="display: none;">
+               <input type="number" class="custom-amount-input" id="custom-amount-input" placeholder="Enter amount in USD" min="1">
+           </div>
+           
+           <div class="payment-options">
+               <div class="payment-method" data-method="bitcoin">
+                   <i class="fab fa-bitcoin"></i>
+                   <div class="payment-info">
+                       <div class="payment-name">Bitcoin</div>
+                       <div class="payment-desc">BTC payments</div>
+                   </div>
+               </div>
+               <div class="payment-method" data-method="ethereum">
+                   <i class="fab fa-ethereum"></i>
+                   <div class="payment-info">
+                       <div class="payment-name">Ethereum</div>
+                       <div class="payment-desc">ETH payments</div>
+                   </div>
+               </div>
+               <div class="payment-method" data-method="lightning">
+                   <i class="fas fa-bolt"></i>
+                   <div class="payment-info">
+                       <div class="payment-name">Lightning Network</div>
+                       <div class="payment-desc">Fast BTC payments</div>
+                   </div>
+               </div>
+           </div>
+           <div class="donation-address" id="donation-address"></div>
+           
+           <div class="charity-section">
+               <label class="charity-checkbox">
+                   <input type="checkbox" id="charity-donation">
+                   Donate 10% to charity
+               </label>
+               <select class="charity-dropdown" id="charity-select">
+                   <option value="">Select charity</option>
+                   <option value="mental-health">Mental Health Foundation</option>
+                   <option value="privacy-rights">Electronic Frontier Foundation</option>
+                   <option value="free-speech">Freedom of Press Foundation</option>
+               </select>
+           </div>
+           
+           <button class="donate-submit-btn" id="donate-submit-btn" disabled>
+               Proceed to Payment
+           </button>
+       </div>
+   </div>
+
+   <!-- Leaderboard Modal -->
+   <div id="leaderboard-modal" class="modal">
+       <div class="modal-content">
+           <span class="close">&times;</span>
+           <h2><i class="fas fa-trophy"></i> Top Contributors</h2>
+           <div id="leaderboard-content">
+               <div class="loading">
+                   <i class="fas fa-spinner"></i>
                </div>
            </div>
        </div>
    </div>
 
+   <!-- Share Card Modal -->
+   <div id="share-card-modal" class="modal">
+       <div class="modal-content">
+           <span class="close" onclick="closeShareCardModal()">&times;</span>
+           <h2><i class="fas fa-image"></i> Share Card Preview</h2>
+           <div id="share-card-preview"></div>
+           <div style="text-align: center; margin-top: 20px;">
+               <button onclick="downloadShareCard()" style="background-color: var(--success-color); margin-right: 10px;">
+                   <i class="fas fa-download"></i> Download Card
+               </button>
+               <button onclick="closeShareCardModal()" style="background-color: var(--text-light);">
+                   <i class="fas fa-times"></i> Cancel
+               </button>
+           </div>
+       </div>
+   </div>
+
+   <!-- Achievement Popup -->
+   <div id="achievement-popup" class="achievement-popup">
+       <h4 id="achievement-title"></h4>
+       <p id="achievement-description"></p>
+   </div>
+
+   <!-- Share Card Canvas (hidden) -->
+   <div id="share-card-canvas" style="position: absolute; left: -9999px; top: -9999px;">
+       <div class="share-card" style="width: 600px; background: white;">
+           <div class="share-card-header">
+               <div class="share-card-logo">
+                   <i class="fas fa-feather-alt"></i>
+                   <span>Anonymous Confessions</span>
+               </div>
+               <div id="share-card-date"></div>
+           </div>
+           <div class="share-card-content" id="share-card-text"></div>
+           <div class="share-card-footer">
+               <div id="share-card-stats"></div>
+               <div id="share-card-qr" class="qr-code"></div>
+           </div>
+       </div>
+   </div>
+
    <script>
-       // Basic functionality for the website
-       let userKarma = 480;
+       // Configuration
+       const CONFESSIONS_PER_PAGE = 10;
+       const MAX_CONFESSION_LENGTH = 1000;
+       const AUTO_ARCHIVE_DAYS = 30;
+       const FORBIDDEN_WORDS = ['hate', 'kill', 'racist', 'sexist'];
+       
+       // Firebase Configuration
+       const FIREBASE_SETTINGS = {
+           collection: 'anonymous-confessions',
+           userCollection: 'users',
+           donationCollection: 'donations',
+           fundingCollection: 'funding',
+           limit: 100
+       };
+       
+       // Donation Configuration
+       const DONATION_ADDRESSES = {
+           bitcoin: '1YourBitcoinAddressHere',
+           ethereum: '0xYourEthereumAddressHere',
+           lightning: 'lightning:YourLightningAddressHere'
+       };
+       
+       const FUNDING_GOALS = {
+           server: { target: 500, current: 0 },
+           feature: { target: 2000, current: 0 },
+           charity: { target: 10000, current: 0 }
+       };
+
+       // Karma & Achievement System Configuration
+       const KARMA_POINTS = {
+           submitConfession: 10,
+           receiveReaction: 1,
+           receiveReply: 2,
+           receiveLove: 3,
+           dailyConfession: 5,
+           popularConfession: 20,
+           donateSmall: 50,
+           donateMedium: 100,
+           donateLarge: 250,
+           donateCharity: 500,
+           globalContribution: 50
+       };
+
+       const ACHIEVEMENTS = {
+           firstConfession: {
+               id: 'first_confession',
+               title: 'First Steps',
+               description: 'Submit your first confession',
+               karma: 50
+           },
+           popularConfession: {
+               id: 'popular_confession',
+               title: 'Crowd Favorite',
+               description: 'Get 50+ reactions on a confession',
+               karma: 100
+           },
+           dailyStreak: {
+               id: 'daily_streak',
+               title: 'Regular Contributor',
+               description: 'Submit confessions 7 days in a row',
+               karma: 200
+           },
+           conversationStarter: {
+               id: 'conversation_starter',
+               title: 'Conversation Starter',
+               description: 'Get 10+ replies on a confession',
+               karma: 150
+           },
+           karmaLegend: {
+               id: 'karma_legend',
+               title: 'Karma Legend',
+               description: 'Reach 1000 karma points',
+               karma: 500
+           },
+           supporter: {
+               id: 'supporter',
+               title: 'Community Supporter',
+               description: 'Make your first donation',
+               karma: 100
+           },
+           philanthropist: {
+               id: 'philanthropist',
+               title: 'Philanthropist',
+               description: 'Donate to charity',
+               karma: 1000
+           },
+           cryptoWhale: {
+               id: 'crypto_whale',
+               title: 'Crypto Whale',
+               description: 'Donate over $100',
+               karma: 500
+           },
+           globalContributor: {
+               id: 'global_contributor',
+               title: 'Global Contributor',
+               description: 'Share your first confession globally',
+               karma: 100
+           }
+       };
+
+       // Crypto-specific achievements
+       const CRYPTO_ACHIEVEMENTS = {
+           diamondHands: {
+               id: 'diamond_hands',
+               title: 'Diamond Hands',
+               description: 'Mention holding through a 50%+ dip',
+               karma: 150,
+               icon: 'fas fa-gem'
+           },
+           paperHands: {
+               id: 'paper_hands',
+               title: 'Paper Hands',
+               description: 'Confess to selling too early',
+               karma: 50,
+               icon: 'fas fa-scroll'
+           },
+           earlyApe: {
+               id: 'early_ape',
+               title: 'Early Ape',
+               description: 'Got in before 100 holders',
+               karma: 300,
+               icon: 'fas fa-rocket'
+           },
+           whale: {
+               id: 'whale',
+               title: 'Crypto Whale',
+               description: 'Donate over 0.1 ETH equivalent',
+               karma: 500,
+               icon: 'fas fa-whale'
+           },
+           degen: {
+               id: 'degen',
+               title: 'Certified Degen',
+               description: 'Post 10+ confessions in the "ape" category',
+               karma: 200,
+               icon: 'fas fa-fire'
+           }
+       };
+
+       // State management
+       let currentPage = 1;
+       let currentCategory = 'all';
+       let currentSort = 'newest';
+       let searchQuery = '';
        let selectedCategory = null;
        let isSubmitting = false;
+       let userKarma = 0;
+       let userAchievements = [];
+       let userId = null;
+       let selectedDonationAmount = null;
+       let selectedPaymentMethod = null;
+       let donations = [];
+       let userDonations = [];
+       let currentTipConfessionId = null;
+       let isGlobalMode = true;
+       let firebaseInitialized = false;
+       let autoRefreshInterval = null;
+       let lastRefreshTime = null;
 
-       // Initialize app
-       function initializeApp() {
-           console.log("Initializing app...");
-           
-           // Event listeners
-           document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
-           document.getElementById('random-confession').addEventListener('click', showRandomConfession);
-           
-           // Category tag event listeners
-           document.querySelectorAll('.category-tag').forEach(tag => {
-               tag.addEventListener('click', function() {
-                   document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-                   this.classList.add('active');
-                   selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
-               });
-           });
-           
-           // Character count
-           const textArea = document.getElementById('confession-text');
-           const charCount = document.querySelector('.character-count');
-           
-           textArea.addEventListener('input', function() {
-               const count = this.value.length;
-               charCount.textContent = `${count}/1000 characters`;
-               
-               if (count > 900) {
-                   charCount.classList.add('warning');
-               } else {
-                   charCount.classList.remove('warning');
+       // Initialize Firebase when the script loads
+       let initFirebaseInterval;
+       function checkFirebaseLoaded() {
+           console.log("Checking if Firebase is loaded...");
+           if (window.firebaseServices) {
+               console.log("Firebase services found in window object");
+               clearInterval(initFirebaseInterval);
+               initializeFirebase();
+           }
+       }
+       initFirebaseInterval = setInterval(checkFirebaseLoaded, 100);
+
+       // Initialize Firebase
+       function initializeFirebase() {
+           try {
+               console.log("Initializing Firebase...");
+               const savedSettings = localStorage.getItem('firebaseSettings');
+               if (savedSettings) {
+                   Object.assign(FIREBASE_SETTINGS, JSON.parse(savedSettings));
+                   console.log("Loaded saved Firebase settings:", FIREBASE_SETTINGS);
                }
-           });
-           
-           // Navigation links
-           document.getElementById('home-link').addEventListener('click', (e) => {
-               e.preventDefault();
-               window.scrollTo({ top: 0, behavior: 'smooth' });
-           });
-           
-           document.getElementById('about-link').addEventListener('click', (e) => {
-               e.preventDefault();
-               alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
-           });
-           
-           document.getElementById('rules-link').addEventListener('click', (e) => {
-               e.preventDefault();
-               document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
-           });
-           
-           // Category card interactions
-           document.querySelectorAll('.category-card').forEach(card => {
-               card.addEventListener('click', function() {
-                   const category = this.getAttribute('data-category');
-                   selectedCategory = category;
+               
+               updateConnectionStatus('connecting');
+               
+               if (!window.firebaseServices || !window.firebaseServices.db || !window.firebaseServices.collection) {
+                   console.error("Firebase SDK not properly loaded");
+                   updateConnectionStatus('offline');
+                   return;
+               }
+               
+               if (navigator.onLine) {
+                   firebaseInitialized = true;
+                   updateConnectionStatus('online');
+                   console.log("Firebase initialized successfully");
                    
-                   // Set the category in the form
-                   document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-                   const categoryTag = document.querySelector(`.category-tag[data-category="${category}"]`);
-                   if (categoryTag) {
-                       categoryTag.classList.add('active');
+                   testFirebaseConnection();
+                   
+                   if (isGlobalMode) {
+                       loadGlobalConfessions();
+                       startAutoRefresh();
                    }
-                   
-                   showConfessionForm();
+               } else {
+                   console.error("Browser is offline");
+                   updateConnectionStatus('offline');
+               }
+               
+               window.addEventListener('online', () => {
+                   console.log("Browser went online");
+                   updateConnectionStatus('online');
+                   if (isGlobalMode) {
+                       loadGlobalConfessions();
+                       startAutoRefresh();
+                   }
                });
-           });
-           
-           // Start enhanced animations
-           createFloatingBubbles();
-           updateLiveActivity();
-           
-           // Animate counters
-           setTimeout(() => {
-               document.querySelectorAll('.hero-stat-number').forEach(counter => {
-                   const target = parseInt(counter.getAttribute('data-target'));
-                   animateCounter(counter, target);
+               
+               window.addEventListener('offline', () => {
+                   console.log("Browser went offline");
+                   updateConnectionStatus('offline');
+                   stopAutoRefresh();
                });
-           }, 2000);
+           } catch (error) {
+               console.error("Firebase initialization error:", error);
+               updateConnectionStatus('offline');
+           }
        }
 
+       // Enhanced UI Functions
        function createFloatingBubbles() {
            const container = document.getElementById('floatingElements');
            
@@ -1257,12 +2763,14 @@
 
        function updateLiveActivity() {
            const activities = [
-               "Someone just shared their first confession",
+               "Anonymous shared in Trading category",
+               "Someone just earned their first badge",
+               "New confession in Crypto category", 
                "Community reached 13K confessions!",
-               "Anonymous earned their first badge",
-               "New confession in Crypto category",
                "Anonymous received 50+ reactions",
-               "New member joined the community"
+               "New member joined the community",
+               "Someone shared their first confession",
+               "Anonymous earned Diamond Hands badge"
            ];
            
            const feed = document.getElementById('activity-feed');
@@ -1275,7 +2783,7 @@
                newItem.textContent = randomActivity;
                newItem.style.opacity = '0';
                
-               feed.insertBefore(newItem, feed.firstChild);
+feed.insertBefore(newItem, feed.firstChild);
                
                setTimeout(() => {
                    newItem.style.opacity = '1';
@@ -1285,6 +2793,25 @@
                    feed.removeChild(feed.lastChild);
                }
            }, 5000);
+       }
+
+       function showToast(message, type = 'success') {
+           const toast = document.getElementById('toast');
+           const toastMessage = document.getElementById('toast-message');
+           const icon = toast.querySelector('i');
+           
+           toastMessage.textContent = message;
+           toast.className = `toast toast-${type} show`;
+           
+           if (type === 'success') {
+               icon.className = 'fas fa-check-circle';
+           } else if (type === 'error') {
+               icon.className = 'fas fa-exclamation-circle';
+           }
+           
+           setTimeout(() => {
+               toast.classList.remove('show');
+           }, 4000);
        }
 
        function showConfessionForm() {
@@ -1303,6 +2830,1012 @@
            }
        }
 
+       function closeWelcomeModal() {
+           const modal = document.getElementById('welcome-modal');
+           if (modal) {
+               modal.classList.remove('active');
+               localStorage.setItem('welcomeShown', 'true');
+           }
+       }
+
+       function toggleTheme() {
+           const html = document.documentElement;
+           const currentTheme = html.getAttribute('data-theme');
+           const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+           
+           html.setAttribute('data-theme', newTheme);
+           localStorage.setItem('theme', newTheme);
+           
+           const icon = document.querySelector('#theme-toggle i');
+           if (icon) {
+               icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+           }
+       }
+
+       // Test Firebase connection
+       async function testFirebaseConnection() {
+           console.log("Testing Firebase connection...");
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, collection, getDocs, query, limit } = window.firebaseServices;
+               
+               const testQuery = query(collection(db, FIREBASE_SETTINGS.collection), limit(1));
+               
+               getDocs(testQuery)
+                   .then((snapshot) => {
+                       console.log(`Firebase connection successful. Found ${snapshot.size} documents.`);
+                       
+                       if (snapshot.size === 0) {
+                           createFirstConfession();
+                       }
+                       
+                       return true;
+                   })
+                   .catch((error) => {
+                       console.error("Firebase connection test failed:", error);
+                       return false;
+                   });
+           } catch (error) {
+               console.error("Firebase test error:", error);
+               return false;
+           }
+       }
+
+       // Create the first confession to initialize the collection
+       async function createFirstConfession() {
+           try {
+               console.log("Creating first confession to initialize collection");
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+               
+               const firstConfession = {
+                   text: "Welcome to Anonymous Confessions! This is the first confession.",
+                   userId: "system",
+                   timestamp: new Date().toISOString(),
+                   serverTimestamp: serverTimestamp(),
+                   views: 0,
+                   reactions: {
+                       like: 0,
+                       dislike: 0,
+                       love: 0,
+                       haha: 0,
+                       wow: 0,
+                       sad: 0
+                   },
+                   replies: [],
+                   reports: 0,
+                   reported: false,
+                   tips: 0,
+                   donors: [],
+                   popularity: 0,
+                   isGlobal: true,
+                   category: null
+               };
+               
+               const docRef = await addDoc(collection(db, FIREBASE_SETTINGS.collection), firstConfession);
+               console.log("First confession created with ID:", docRef.id);
+               
+               return true;
+           } catch (error) {
+               console.error("Error creating first confession:", error);
+               return false;
+           }
+       }
+
+       // Update the connection status indicator
+       function updateConnectionStatus(status) {
+           const statusElement = document.getElementById('connection-status');
+           statusElement.className = 'connection-status';
+           
+           if (status === 'online') {
+               statusElement.classList.add('status-online');
+               statusElement.innerHTML = '<i class="fas fa-wifi"></i><span>Online (Global)</span>';
+               setTimeout(() => {
+                   statusElement.style.opacity = '0.7';
+               }, 3000);
+           } else if (status === 'offline') {
+               statusElement.classList.add('status-offline');
+               statusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Offline (Local Only)</span>';
+           } else {
+               statusElement.classList.add('status-connecting');
+               statusElement.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Connecting...</span>';
+           }
+       }
+
+       // Generate consistent anonymous identities
+       function generateAnonIdentity(userId) {
+           let hash = 0;
+           for (let i = 0; i < userId.length; i++) {
+               hash = ((hash << 5) - hash) + userId.charCodeAt(i);
+               hash |= 0;
+           }
+           
+           const adjectives = ['Based', 'Bullish', 'Bearish', 'Diamond', 'Paper', 'Degen', 'Anon', 'Crypto', 'Moon', 'Whale', 'Ape'];
+           const nouns = ['Trader', 'Holder', 'Ape', 'Degen', 'Wallet', 'Bull', 'Bear', 'Shrimp', 'Whale', 'Dolphin'];
+           
+           const adjIndex = Math.abs(hash) % adjectives.length;
+           const nounIndex = Math.abs(hash >> 8) % nouns.length;
+           const number = Math.abs(hash) % 1000;
+           
+           return `${adjectives[adjIndex]}${nouns[nounIndex]}${number}`;
+       }
+
+       // Calculate degen score for a user
+       function calculateDegenScore(userId) {
+           const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const userConfessions = confessions.filter(c => c.userId === userId);
+           
+           let score = 0;
+           
+           score += userConfessions.length * 5;
+           
+           const apeStories = userConfessions.filter(c => c.category === 'ape').length;
+           const rektStories = userConfessions.filter(c => c.category === 'rekt').length;
+           score += (apeStories * 10) + (rektStories * 7);
+           
+           const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
+           const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
+           score += totalDonated * 2;
+           
+           if (apeStories >= 10 && !userAchievements.includes('degen')) {
+               userAchievements.push('degen');
+               addKarma(CRYPTO_ACHIEVEMENTS.degen.karma, 'achievement');
+               showAchievement(CRYPTO_ACHIEVEMENTS.degen);
+           }
+           
+           return Math.min(score, 1000);
+       }
+
+       // Initialize app
+       function initializeApp() {
+           console.log("Initializing app...");
+           
+           userId = localStorage.getItem('userId');
+           if (!userId) {
+               userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+               localStorage.setItem('userId', userId);
+           }
+           
+           loadUserData();
+           loadDonationData();
+           
+           const savedTheme = localStorage.getItem('theme') || 'dark';
+           document.documentElement.setAttribute('data-theme', savedTheme);
+           updateThemeToggleIcon(savedTheme);
+           
+           isGlobalMode = true;
+           localStorage.setItem('globalMode', 'true');
+           
+           const globalLink = document.getElementById('global-link');
+           globalLink.innerHTML = 'Local';
+           
+           if (isGlobalMode) {
+               startAutoRefresh();
+           }
+
+           // Event listeners
+           document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+           document.getElementById('global-link').addEventListener('click', toggleGlobalMode);
+           document.getElementById('confession-form').addEventListener('submit', handleConfessionSubmit);
+           document.getElementById('random-confession').addEventListener('click', showRandomConfession);
+           document.getElementById('admin-login').addEventListener('click', handleAdminLogin);
+           document.getElementById('clear-all').addEventListener('click', clearAllConfessions);
+           document.getElementById('sync-firebase').addEventListener('click', syncToFirebase);
+           document.getElementById('search-input').addEventListener('input', handleSearch);
+           document.getElementById('sort-select').addEventListener('change', handleSortChange);
+           document.getElementById('category-filter').addEventListener('change', handleCategoryFilterChange);
+           document.getElementById('karma-display').addEventListener('click', showLeaderboard);
+           document.getElementById('leaderboard-card').addEventListener('click', showLeaderboard);
+           document.getElementById('donate-nav-btn').addEventListener('click', openDonationModal);
+           document.getElementById('donate-submit-btn').addEventListener('click', processDonation);
+           document.getElementById('charity-donation').addEventListener('change', toggleCharityDropdown);
+           
+           // Wallet type selection
+           document.getElementById('wallet-type').addEventListener('change', function() {
+               const walletInput = document.getElementById('wallet-address');
+               if (this.value) {
+                   walletInput.style.display = 'block';
+                   walletInput.placeholder = `Enter your ${this.options[this.selectedIndex].text} address`;
+               } else {
+                   walletInput.style.display = 'none';
+                   walletInput.value = '';
+               }
+           });
+           
+           // Meme URL input
+           document.getElementById('meme-url').addEventListener('input', function() {
+               const memeUrl = this.value.trim();
+               const previewDiv = document.getElementById('meme-preview');
+               
+               if (memeUrl && isValidImageUrl(memeUrl)) {
+                   previewDiv.innerHTML = `<img src="${memeUrl}" alt="Meme preview">`;
+                   previewDiv.style.display = 'block';
+               } else {
+                   previewDiv.innerHTML = '';
+                   previewDiv.style.display = 'none';
+               }
+           });
+           
+           // Category tag event listeners
+           document.querySelectorAll('.category-tag').forEach(tag => {
+               tag.addEventListener('click', function() {
+                   document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                   this.classList.add('active');
+                   selectedCategory = this.dataset.category === 'all' ? null : this.dataset.category;
+               });
+           });
+           
+           // Donation event listeners
+           document.querySelectorAll('.amount-btn').forEach(btn => {
+               btn.addEventListener('click', function() {
+                   selectDonationAmount(this);
+               });
+           });
+           
+           document.querySelectorAll('.payment-method').forEach(method => {
+               method.addEventListener('click', function() {
+                   selectPaymentMethod(this);
+               });
+           });
+           
+           document.getElementById('custom-amount-input').addEventListener('input', function() {
+               selectedDonationAmount = this.value;
+               updateDonateButton();
+           });
+           
+           // Close modal event listeners
+           document.getElementById('leaderboard-modal').addEventListener('click', function(e) {
+               if (e.target.className === 'modal') {
+                   this.style.display = 'none';
+               }
+           });
+           
+           document.getElementById('share-card-modal').addEventListener('click', function(e) {
+               if (e.target.className === 'modal') {
+                   closeShareCardModal();
+               }
+           });
+           
+           document.getElementById('donation-modal').addEventListener('click', function(e) {
+               if (e.target.className === 'donation-modal') {
+                   closeDonationModal();
+               }
+           });
+           
+           document.querySelectorAll('.close').forEach(closeBtn => {
+               closeBtn.addEventListener('click', function() {
+                   const modal = this.closest('.modal, .donation-modal');
+                   if (modal) {
+                       if (modal.id === 'share-card-modal') {
+                           closeShareCardModal();
+                       } else if (modal.id === 'donation-modal') {
+                           closeDonationModal();
+                       } else {
+                           modal.style.display = 'none';
+                       }
+                   }
+               });
+           });
+           
+           // Character count
+           const textArea = document.getElementById('confession-text');
+           const charCount = document.querySelector('.character-count');
+           
+           textArea.addEventListener('input', function() {
+               const count = this.value.length;
+               charCount.textContent = `${count}/${MAX_CONFESSION_LENGTH} characters`;
+               
+               if (count > MAX_CONFESSION_LENGTH * 0.9) {
+                   charCount.classList.add('warning');
+               } else {
+                   charCount.classList.remove('warning');
+               }
+           });
+           
+           // Navigation links
+           document.getElementById('home-link').addEventListener('click', (e) => {
+               e.preventDefault();
+               window.scrollTo({ top: 0, behavior: 'smooth' });
+           });
+           
+           document.getElementById('about-link').addEventListener('click', (e) => {
+               e.preventDefault();
+               alert('Anonymous Confessions - A safe space to share your thoughts anonymously. Created with love for the community.');
+           });
+           
+           document.getElementById('rules-link').addEventListener('click', (e) => {
+               e.preventDefault();
+               document.querySelector('.rules-banner').scrollIntoView({ behavior: 'smooth' });
+           });
+           
+           // Category card interactions
+           document.querySelectorAll('.category-card').forEach(card => {
+               card.addEventListener('click', function() {
+                   const category = this.getAttribute('data-category');
+                   selectedCategory = category;
+                   
+                   // Set the category in the form
+                   document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                   const categoryTag = document.querySelector(`.category-tag[data-category="${category}"]`);
+                   if (categoryTag) {
+                       categoryTag.classList.add('active');
+                   }
+                   
+                   showConfessionForm();
+                   showToast(`Selected ${category} category`, 'success');
+               });
+           });
+           
+           // Check if admin access should be visible
+           const isAdmin = sessionStorage.getItem('isAdmin');
+           if (isAdmin) {
+               document.getElementById('admin-access').style.display = 'block';
+               document.getElementById('admin-panel').style.display = 'block';
+               document.body.classList.add('admin-mode');
+           }
+           
+           // Check if welcome modal should be shown
+           const welcomeShown = localStorage.getItem('welcomeShown');
+           if (!welcomeShown) {
+               setTimeout(() => {
+                   const welcomeModal = document.getElementById('welcome-modal');
+                   if (welcomeModal) {
+                       welcomeModal.classList.add('active');
+                   }
+               }, 1000);
+           }
+           
+           // Start enhanced animations
+           createFloatingBubbles();
+           updateLiveActivity();
+           
+           // Animate counters
+           setTimeout(() => {
+               document.querySelectorAll('.hero-stat-number').forEach(counter => {
+                   const target = parseInt(counter.getAttribute('data-target'));
+                   animateCounter(counter, target);
+               });
+           }, 2000);
+           
+           // Initial load
+           updateStatistics();
+           autoArchiveOldConfessions();
+           checkSharedConfession();
+           
+           setInterval(updateStatistics, 60000);
+           checkDailyStreak();
+       }
+
+       function updateThemeToggleIcon(theme) {
+           const iconElement = document.querySelector('#theme-toggle i');
+           if (theme === 'dark') {
+               iconElement.className = 'fas fa-sun';
+           } else {
+               iconElement.className = 'fas fa-moon';
+           }
+       }
+
+       // Auto-refresh functionality
+       function startAutoRefresh() {
+           if (autoRefreshInterval) return;
+           
+           console.log("Starting auto-refresh for global confessions");
+           lastRefreshTime = new Date();
+           
+           autoRefreshInterval = setInterval(() => {
+               if (isGlobalMode && firebaseInitialized && navigator.onLine) {
+                   checkForNewConfessions();
+               }
+           }, 30000);
+       }
+
+       function stopAutoRefresh() {
+           if (autoRefreshInterval) {
+               console.log("Stopping auto-refresh");
+               clearInterval(autoRefreshInterval);
+               autoRefreshInterval = null;
+           }
+       }
+
+       // Check for new confessions since last refresh
+       async function checkForNewConfessions() {
+           try {
+               if (!window.firebaseServices || !lastRefreshTime) return;
+               
+               const { db, collection, getDocs, query, where, orderBy } = window.firebaseServices;
+               
+               const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+               
+               const newConfessionsQuery = query(
+                   confessionsRef,
+                   where('timestamp', '>', lastRefreshTime.toISOString()),
+                   orderBy('timestamp', 'desc')
+               );
+               
+               const querySnapshot = await getDocs(newConfessionsQuery);
+               
+               if (!querySnapshot.empty) {
+                   console.log(`Found ${querySnapshot.size} new confession(s)`);
+                   showNewConfessionsNotification(querySnapshot.size);
+                   
+                   if (currentPage === 1 && currentSort === 'newest' && currentCategory === 'all' && !searchQuery) {
+                       loadGlobalConfessions();
+                   }
+               }
+               
+               lastRefreshTime = new Date();
+           } catch (error) {
+               console.error("Error checking for new confessions:", error);
+           }
+       }
+
+       // Show notification about new confessions
+       function showNewConfessionsNotification(count) {
+           const notification = document.createElement('div');
+           notification.className = 'new-confessions-notification';
+           notification.style.cssText = `
+               position: fixed;
+               top: 80px;
+               right: 20px;
+               background: var(--primary-color);
+               color: white;
+               padding: 12px 20px;
+               border-radius: 8px;
+               box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+               z-index: 1000;
+               cursor: pointer;
+               animation: slideIn 0.3s ease-out;
+               display: flex;
+               align-items: center;
+               gap: 8px;
+               font-size: 0.9rem;
+               font-weight: 500;
+           `;
+           
+           notification.innerHTML = `
+               <i class="fas fa-bell"></i>
+               <span>${count} new confession${count > 1 ? 's' : ''}</span>
+               <i class="fas fa-times" style="margin-left: 10px; opacity: 0.7; cursor: pointer;" onclick="event.stopPropagation(); this.closest('.new-confessions-notification').remove();"></i>
+           `;
+           
+           notification.onclick = () => {
+               if (currentPage !== 1 || currentSort !== 'newest' || currentCategory !== 'all' || searchQuery) {
+                   currentPage = 1;
+                   currentSort = 'newest';
+                   currentCategory = 'all';
+                   searchQuery = '';
+                   
+                   document.getElementById('sort-select').value = 'newest';
+                   document.getElementById('category-filter').value = 'all';
+                   document.getElementById('search-input').value = '';
+               }
+               
+               loadGlobalConfessions();
+               window.scrollTo({ top: 0, behavior: 'smooth' });
+               notification.remove();
+           };
+           
+           document.body.appendChild(notification);
+           
+           setTimeout(() => {
+               if (notification.parentNode) {
+                   notification.remove();
+               }
+           }, 10000);
+       }
+
+       // Toggle between local and global mode
+       function toggleGlobalMode(force) {
+           const newGlobalMode = typeof force !== 'undefined' ? force : !isGlobalMode;
+           
+           if (newGlobalMode && (!firebaseInitialized || !navigator.onLine)) {
+               showErrorMessage('Firebase is not available. Please check your connection and try again.');
+               return;
+           }
+           
+           isGlobalMode = newGlobalMode;
+           localStorage.setItem('globalMode', isGlobalMode);
+           
+           const globalLink = document.getElementById('global-link');
+           if (isGlobalMode) {
+               globalLink.innerHTML = 'Local';
+               loadGlobalConfessions();
+               startAutoRefresh();
+           } else {
+               globalLink.innerHTML = 'Global';
+               loadConfessions();
+               stopAutoRefresh();
+           }
+           
+           currentPage = 1;
+           showSuccessMessage(isGlobalMode ? 'Switched to global mode' : 'Switched to local mode');
+       }
+
+       // Load confessions from Firebase
+       async function loadGlobalConfessions() {
+           try {
+               console.log("Loading global confessions...");
+               const confessionsContainer = document.getElementById('confessions-list');
+               confessionsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
+               
+               if (!window.firebaseServices) {
+                   console.error("Firebase services are not available");
+                   showErrorMessage('Firebase services are not available');
+                   return;
+               }
+               
+               const { db, collection, getDocs, query, orderBy, limit, where } = window.firebaseServices;
+               
+               const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+               console.log("Collection reference created for:", FIREBASE_SETTINGS.collection);
+               
+               let firestoreQuery;
+               
+               try {
+                   if (currentCategory !== 'all') {
+                       firestoreQuery = query(
+                           confessionsRef,
+                           where('category', '==', currentCategory),
+                           orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+                           limit(FIREBASE_SETTINGS.limit)
+                       );
+                   } else {
+                       if (currentSort === 'popular') {
+                           firestoreQuery = query(
+                               confessionsRef,
+                               orderBy('popularity', 'desc'),
+                               limit(FIREBASE_SETTINGS.limit)
+                           );
+                       } else {
+                           firestoreQuery = query(
+                               confessionsRef,
+                               orderBy('timestamp', currentSort === 'oldest' ? 'asc' : 'desc'),
+                               limit(FIREBASE_SETTINGS.limit)
+                           );
+                       }
+                   }
+                   console.log("Query built successfully");
+                   
+                   console.log("Executing Firestore query...");
+                   const querySnapshot = await getDocs(firestoreQuery);
+                   console.log("Query executed, processing results...");
+                   
+                   let confessions = [];
+                   querySnapshot.forEach((doc) => {
+                       console.log("Processing document:", doc.id);
+                       const confession = {
+                           id: doc.id,
+                           ...doc.data()
+                       };
+                       confessions.push(confession);
+                   });
+                   
+                   console.log(`Found ${confessions.length} confessions`);
+                   
+                   if (searchQuery) {
+                       const query = searchQuery.toLowerCase();
+                       confessions = confessions.filter(c => c.text.toLowerCase().includes(query));
+                   }
+                   
+                   displayConfessions(confessions);
+                   
+                   if (confessions.length === 0) {
+                       console.log("No confessions found, creating the first one");
+                       await createFirstConfession();
+                       loadGlobalConfessions();
+                   }
+               } catch (error) {
+                   console.error("Error in query execution:", error);
+                   throw error;
+               }
+           } catch (error) {
+               console.error("Error loading global confessions:", error);
+               showErrorMessage('Error loading global confessions. Check your connection.');
+               confessionsContainer.innerHTML = `<div class="no-confessions"><i class="fas fa-exclamation-circle"></i>Error loading global confessions: ${error.message}</div>`;
+           }
+       }
+
+       // Initialize when DOM is loaded
+       document.addEventListener('DOMContentLoaded', function() {
+           initializeApp();
+           
+           // Load confessions after a delay to show loading state
+           setTimeout(() => {
+               if (isGlobalMode) {
+                   loadGlobalConfessions();
+               } else {
+                   loadConfessions();
+               }
+           }, 1500);
+       });
+
+       // Placeholder for remaining functions - continuing with key functionality
+       function loadConfessions() {
+           try {
+               const confessionsContainer = document.getElementById('confessions-list');
+               let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+               
+               confessions = applyFilters(confessions);
+               
+               const totalPages = Math.ceil(confessions.length / CONFESSIONS_PER_PAGE);
+               const start = (currentPage - 1) * CONFESSIONS_PER_PAGE;
+               const end = start + CONFESSIONS_PER_PAGE;
+               const pageConfessions = confessions.slice(start, end);
+               
+               displayConfessions(pageConfessions, totalPages);
+           } catch (error) {
+               console.error("Error in loadConfessions:", error);
+               document.getElementById('confessions-list').innerHTML = '<div class="error">Error loading confessions. Please refresh the page.</div>';
+           }
+       }
+
+       function displayConfessions(confessions, totalPages) {
+           const confessionsContainer = document.getElementById('confessions-list');
+           
+           if (confessions.length === 0) {
+               confessionsContainer.innerHTML = '<div class="no-confessions"><i class="fas fa-feather"></i>No confessions found. Be the first to share!</div>';
+               document.getElementById('pagination').innerHTML = '';
+               return;
+           }
+           
+           confessionsContainer.innerHTML = '';
+           
+           confessions.forEach(confession => {
+               const confessionElement = createConfessionElement(confession);
+               confessionsContainer.appendChild(confessionElement);
+               incrementViewCount(confession.id);
+           });
+           
+           if (totalPages) {
+               createPagination(totalPages);
+           }
+       }
+
+       function applyFilters(confessions) {
+           let filtered = [...confessions];
+           
+           if (currentCategory !== 'all') {
+               filtered = filtered.filter(c => c.category === currentCategory);
+           }
+           
+           if (searchQuery) {
+               const query = searchQuery.toLowerCase();
+               filtered = filtered.filter(c => c.text.toLowerCase().includes(query));
+           }
+           
+           switch (currentSort) {
+               case 'oldest':
+                   filtered.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                   break;
+               case 'popular':
+                   filtered.sort((a, b) => {
+                       const aReactions = Object.values(a.reactions || {}).reduce((sum, val) => sum + val, 0);
+                       const bReactions = Object.values(b.reactions || {}).reduce((sum, val) => sum + val, 0);
+                       return bReactions - aReactions;
+                   });
+                   break;
+               default:
+                   filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+           }
+           
+           return filtered;
+       }
+
+       // Check if an image URL is valid
+       function isValidImageUrl(url) {
+           return url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null || 
+                  url.startsWith('https://ipfs.io/') || 
+                  url.startsWith('ipfs://');
+       }
+
+       function createConfessionElement(confession) {
+           const confessionElement = document.createElement('div');
+           confessionElement.className = `confession-card ${confession.reported ? 'reported' : ''}`;
+           confessionElement.setAttribute('data-id', confession.id);
+           
+           const categoryBadge = confession.category ? 
+               `<span class="category-badge">${confession.category}</span>` : '';
+           
+           const anonIdentity = generateAnonIdentity(confession.userId);
+           const anonBadge = `<span class="anon-badge"><i class="fas fa-user-secret"></i> ${anonIdentity}</span>`;
+           
+           const totalReactions = Object.values(confession.reactions || {}).reduce((sum, val) => sum + val, 0);
+           
+           const isDonor = userDonations.length > 0;
+           const donorBadge = isDonor ? '<span class="donor-badge"><i class="fas fa-gem"></i> Donor</span>' : '';
+           
+           const isWhale = userDonations.some(d => d.amount > 100);
+           const whaleBadge = isWhale ? 
+               `<span class="donor-badge" style="background: linear-gradient(135deg, #00c6ff, #0072ff);"><i class="fas fa-whale"></i> Whale</span>` : '';
+
+           const degenScore = calculateDegenScore(confession.userId);
+           const degenBadge = degenScore > 100 ? 
+               `<span class="degen-badge" style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 8px;">
+                   <i class="fas fa-fire"></i> Degen ${Math.floor(degenScore / 10)}/100
+               </span>` : '';
+           
+           const tipAmount = confession.tips || 0;
+           const tipBadge = tipAmount > 0 ? `<span class="tip-badge">$${tipAmount} tipped</span>` : '';
+           
+           const walletBadge = confession.walletAddress ? 
+               `<span class="wallet-badge">
+                   <i class="fas fa-wallet"></i> ${confession.walletType} Tips
+               </span>` : '';
+           
+           const globalBadge = confession.isGlobal ? 
+               `<span class="global-badge">
+                   <i class="fas fa-globe"></i> Global
+               </span>` : '';
+           
+           const tipButtonText = confession.walletAddress ? 
+               '<i class="fas fa-hand-holding-usd"></i> Tip Author' : 
+               '<i class="fas fa-hand-holding-usd"></i> Tip';
+               
+           confessionElement.innerHTML = `
+               <div class="confession-header">
+                   ${categoryBadge} ${anonBadge} ${globalBadge}
+               </div>
+               <p class="confession-text">${confession.text}</p>
+               ${confession.memeUrl ? `
+                  <div class="confession-meme">
+<img src="${confession.memeUrl}" alt="Confession meme" style="max-width: 100%; max-height: 300px; border-radius: 8px; margin: 10px 0;">
+                  </div>` : ''
+               }
+               <div class="confession-footer">
+                   <div class="confession-meta">
+                       <span><i class="far fa-clock"></i> ${formatDate(new Date(confession.timestamp))}</span>
+                       <span><i class="far fa-eye"></i> ${confession.views || 0} views</span>
+                       ${donorBadge} ${whaleBadge} ${degenBadge} ${tipBadge} ${walletBadge}
+                   </div>
+                   <div class="confession-actions">
+                       ${createReactionButtons(confession)}
+                       <button class="tip-btn" onclick="tipConfession('${confession.id}')">
+                           ${tipButtonText}
+                       </button>
+                       <button class="share-btn" onclick="openShareOptions(event, '${confession.id}')">
+                           <i class="fas fa-share-alt"></i>
+                       </button>
+                       <div class="share-options" id="share-options-${confession.id}">
+                           <button class="share-option-btn" onclick="shareToTwitter('${confession.id}')">
+                               <i class="fab fa-twitter"></i> Twitter
+                           </button>
+                           <button class="share-option-btn" onclick="copyShareLink('${confession.id}')">
+                               <i class="fas fa-link"></i> Copy Link
+                           </button>
+                           <button class="share-option-btn" onclick="createShareCard('${confession.id}')">
+                               <i class="fas fa-image"></i> Create Card
+                           </button>
+                       </div>
+                       <button class="report-button" onclick="reportConfession('${confession.id}')">
+                           <i class="fas fa-flag"></i>
+                       </button>
+                   </div>
+               </div>
+               ${createRepliesSection(confession)}
+               <button class="admin-action" onclick="deleteConfession('${confession.id}')">
+                   <i class="fas fa-times"></i>
+               </button>
+           `;
+           
+           if (totalReactions >= 50 && confession.userId === userId && !userAchievements.includes('popular_confession')) {
+               userAchievements.push('popular_confession');
+               addKarma(ACHIEVEMENTS.popularConfession.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.popularConfession);
+           }
+           
+           return confessionElement;
+       }
+
+       function createReactionButtons(confession) {
+           const reactions = [
+               { name: 'like', icon: 'fas fa-thumbs-up' },
+               { name: 'dislike', icon: 'fas fa-thumbs-down' },
+               { name: 'love', icon: 'fas fa-heart' },
+               { name: 'haha', icon: 'fas fa-laugh' },
+               { name: 'wow', icon: 'fas fa-surprise' },
+               { name: 'sad', icon: 'fas fa-sad-tear' }
+           ];
+           
+           return reactions.map(reaction => {
+               const count = confession.reactions ? (confession.reactions[reaction.name] || 0) : 0;
+               return `<button class="reaction-btn ${reaction.name}" onclick="reactToConfession('${confession.id}', '${reaction.name}')">
+                   <i class="${reaction.icon}"></i> <span class="reaction-count">${count}</span>
+               </button>`;
+           }).join('');
+       }
+
+       function createRepliesSection(confession) {
+           const replies = confession.replies || [];
+           const replyCount = replies.length;
+           
+           return `
+               <div class="replies-section">
+                   <button class="replies-toggle" onclick="toggleReplies('${confession.id}')">
+                       <i class="fas fa-comments"></i>
+                       Replies <span class="reply-count">(${replyCount})</span>
+                   </button>
+                   <div class="replies-container" id="replies-${confession.id}">
+                       ${replies.map(reply => {
+                           const replyAuthor = generateAnonIdentity(reply.userId);
+                           return `
+                           <div class="reply">
+                               <p>${reply.text}</p>
+                               <div class="reply-meta">
+                                   <span class="reply-author">${replyAuthor}</span>
+                                   <span class="reply-timestamp">${formatDate(new Date(reply.timestamp))}</span>
+                               </div>
+                           </div>
+                       `}).join('')}
+                       <div class="reply-form">
+                           <textarea class="reply-input" placeholder="Write a reply..." id="reply-input-${confession.id}"></textarea>
+                           <button class="reply-submit" onclick="submitReply('${confession.id}')">Reply</button>
+                       </div>
+                   </div>
+               </div>
+           `;
+       }
+
+       function formatDate(date) {
+           try {
+               const now = new Date();
+               const diffMs = now - date;
+               const diffSec = Math.floor(diffMs / 1000);
+               const diffMin = Math.floor(diffSec / 60);
+               const diffHour = Math.floor(diffMin / 60);
+               const diffDay = Math.floor(diffHour / 24);
+               
+               if (diffSec < 60) {
+                   return 'just now';
+               } else if (diffMin < 60) {
+                   return `${diffMin} minute${diffMin === 1 ? '' : 's'} ago`;
+               } else if (diffHour < 24) {
+                   return `${diffHour} hour${diffHour === 1 ? '' : 's'} ago`;
+               } else {
+                   return `${diffDay} day${diffDay === 1 ? '' : 's'} ago`;
+               }
+           } catch (error) {
+               console.error("Error formatting date:", error);
+               return "unknown time";
+           }
+       }
+
+       // User Data Management
+       function loadUserData() {
+           const userData = localStorage.getItem('userData_' + userId);
+           if (userData) {
+               const data = JSON.parse(userData);
+               userKarma = data.karma || 0;
+               userAchievements = data.achievements || [];
+           }
+           updateKarmaDisplay();
+       }
+
+       function saveUserData() {
+           const userData = {
+               karma: userKarma,
+               achievements: userAchievements,
+               lastSubmissionDate: new Date().toDateString()
+           };
+           localStorage.setItem('userData_' + userId, JSON.stringify(userData));
+           
+           if (isGlobalMode && firebaseInitialized) {
+               saveUserDataToFirebase(userData);
+           }
+       }
+
+       function updateKarmaDisplay() {
+           document.getElementById('user-karma').textContent = userKarma;
+       }
+
+       function addKarma(points, reason) {
+           userKarma += points;
+           updateKarmaDisplay();
+           saveUserData();
+           checkAchievements();
+       }
+
+       function showAchievement(achievement) {
+           const popup = document.getElementById('achievement-popup');
+           document.getElementById('achievement-title').textContent = achievement.title;
+           document.getElementById('achievement-description').textContent = achievement.description;
+           
+           popup.classList.add('show');
+           
+           setTimeout(() => {
+               popup.classList.remove('show');
+           }, 5000);
+       }
+
+       function checkAchievements() {
+           const confessions = isGlobalMode ? [] : (JSON.parse(localStorage.getItem('confessions')) || []);
+           const userConfessions = confessions.filter(c => c.userId === userId);
+           
+           if (userConfessions.length === 1 && !userAchievements.includes('first_confession')) {
+               userAchievements.push('first_confession');
+               addKarma(ACHIEVEMENTS.firstConfession.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.firstConfession);
+           }
+           
+           if (userKarma >= 1000 && !userAchievements.includes('karma_legend')) {
+               userAchievements.push('karma_legend');
+               addKarma(ACHIEVEMENTS.karmaLegend.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.karmaLegend);
+           }
+           
+           checkCryptoAchievements(userConfessions);
+           
+           saveUserData();
+       }
+
+       function checkCryptoAchievements(userConfessions) {
+           if (!userConfessions) {
+               const confessions = isGlobalMode ? [] : (JSON.parse(localStorage.getItem('confessions')) || []);
+               userConfessions = confessions.filter(c => c.userId === userId);
+           }
+           
+           if (!userAchievements.includes('diamond_hands')) {
+               const hasDiamondHands = userConfessions.some(c => 
+                   c.text.toLowerCase().includes('diamond hands') || 
+                   c.text.toLowerCase().includes('hodl') || 
+                   (c.text.toLowerCase().includes('dip') && c.text.toLowerCase().includes('50%')));
+               
+               if (hasDiamondHands) {
+                   userAchievements.push('diamond_hands');
+                   addKarma(CRYPTO_ACHIEVEMENTS.diamondHands.karma, 'achievement');
+                   showAchievement(CRYPTO_ACHIEVEMENTS.diamondHands);
+               }
+           }
+           
+           if (!userAchievements.includes('paper_hands')) {
+               const hasPaperHands = userConfessions.some(c => 
+                   c.text.toLowerCase().includes('paper hands') || 
+                   c.text.toLowerCase().includes('sold too early') || 
+                   c.text.toLowerCase().includes('panic sell'));
+               
+               if (hasPaperHands) {
+                   userAchievements.push('paper_hands');
+                   addKarma(CRYPTO_ACHIEVEMENTS.paperHands.karma, 'achievement');
+                   showAchievement(CRYPTO_ACHIEVEMENTS.paperHands);
+               }
+           }
+       }
+
+       function checkDailyStreak() {
+           const userData = localStorage.getItem('userData_' + userId);
+           if (userData) {
+               const data = JSON.parse(userData);
+               const lastSubmission = data.lastSubmissionDate;
+               const today = new Date().toDateString();
+               
+               if (lastSubmission && lastSubmission !== today) {
+                   const lastDate = new Date(lastSubmission);
+                   const diffTime = Math.abs(new Date() - lastDate);
+                   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                   
+                   if (diffDays === 1) {
+                       const currentStreak = (data.currentStreak || 0) + 1;
+                       data.currentStreak = currentStreak;
+                       
+                       if (currentStreak === 7 && !userAchievements.includes('daily_streak')) {
+                           userAchievements.push('daily_streak');
+                           addKarma(ACHIEVEMENTS.dailyStreak.karma, 'achievement');
+                           showAchievement(ACHIEVEMENTS.dailyStreak);
+                       }
+                   } else {
+                       data.currentStreak = 0;
+                   }
+                   
+                   localStorage.setItem('userData_' + userId, JSON.stringify(data));
+               }
+           }
+       }
+
        function handleConfessionSubmit(e) {
            e.preventDefault();
            
@@ -1311,9 +3844,20 @@
            const confessionText = document.getElementById('confession-text').value.trim();
            const submitBtn = document.getElementById('submit-btn');
            const shareGlobally = document.getElementById('share-globally').checked;
+           const memeUrl = document.getElementById('meme-url').value.trim();
            
            if (!confessionText) {
                showErrorMessage('Please enter a confession');
+               return;
+           }
+           
+           if (containsForbiddenWords(confessionText)) {
+               showErrorMessage('Your confession contains inappropriate content. Please revise and try again.');
+               return;
+           }
+           
+           if (shareGlobally && (!firebaseInitialized || !navigator.onLine)) {
+               showErrorMessage('Cannot share globally. Please check your connection or try again later.');
                return;
            }
            
@@ -1322,28 +3866,68 @@
            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
            
            setTimeout(() => {
+               if (shareGlobally) {
+                   addGlobalConfession(confessionText, selectedCategory, memeUrl);
+               } else {
+                   addLocalConfession(confessionText, selectedCategory, memeUrl);
+               }
+               
                document.getElementById('confession-text').value = '';
                document.querySelector('.character-count').textContent = '0/1000 characters';
                showSuccessMessage(shareGlobally ? 'Your confession has been shared globally!' : 'Your confession has been submitted successfully!');
+               
+               // Reset form fields
+               document.getElementById('meme-url').value = '';
+               document.getElementById('meme-preview').innerHTML = '';
+               document.getElementById('meme-preview').style.display = 'none';
                
                // Reset category selection
                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
                document.querySelector('.category-tag[data-category="all"]').classList.add('active');
                selectedCategory = null;
                
+               // Reset wallet fields
+               document.getElementById('wallet-type').value = '';
+               document.getElementById('wallet-address').value = '';
+               document.getElementById('wallet-address').style.display = 'none';
+               
+               addKarma(KARMA_POINTS.submitConfession, 'submission');
+               
+               if (shareGlobally && !userAchievements.includes('global_contributor')) {
+                   userAchievements.push('global_contributor');
+                   addKarma(ACHIEVEMENTS.globalContributor.karma, 'achievement');
+                   showAchievement(ACHIEVEMENTS.globalContributor);
+               }
+               
                isSubmitting = false;
                submitBtn.disabled = false;
                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Confession';
+               
+               if (isGlobalMode) {
+                   loadGlobalConfessions();
+               } else {
+                   loadConfessions();
+               }
+               
+               const confessionsContainer = document.getElementById('confessions-list');
+               if (confessionsContainer) {
+                   confessionsContainer.scrollIntoView({ behavior: 'smooth' });
+               }
            }, 1000);
        }
 
-       function showRandomConfession() {
-           alert('Random confession feature coming soon!');
+       function containsForbiddenWords(text) {
+           const lowerText = text.toLowerCase();
+           return FORBIDDEN_WORDS.some(word => lowerText.includes(word));
        }
 
        function showSuccessMessage(message = 'Your confession has been submitted successfully!') {
            const successMessage = document.getElementById('success-message');
-           successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+           if (message !== 'Your confession has been submitted successfully!') {
+               successMessage.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+           } else {
+               successMessage.innerHTML = `<i class="fas fa-check-circle"></i> Your confession has been submitted successfully!`;
+           }
            successMessage.style.display = 'flex';
            
            setTimeout(() => {
@@ -1362,7 +3946,1154 @@
            }, 3000);
        }
 
-       // Initialize when DOM is loaded
+       // Add a confession to Firebase
+       async function addGlobalConfession(text, category = null, memeUrl = null) {
+           try {
+               console.log("Adding global confession...");
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+               
+               const walletType = document.getElementById('wallet-type').value;
+               const walletAddress = document.getElementById('wallet-address').value.trim();
+               
+               const confessionsRef = collection(db, FIREBASE_SETTINGS.collection);
+               
+               const confession = {
+                   text: text,
+                   category: category,
+                   userId: userId,
+                   timestamp: new Date().toISOString(),
+                   views: 0,
+                   reactions: {
+                       like: 0,
+                       dislike: 0,
+                       love: 0,
+                       haha: 0,
+                       wow: 0,
+                       sad: 0
+                   },
+                   replies: [],
+                   reports: 0,
+                   reported: false,
+                   tips: 0,
+                   donors: [],
+                   walletType: walletType || null,
+                   walletAddress: walletAddress || null,
+                   memeUrl: isValidImageUrl(memeUrl) ? memeUrl : null,
+                   serverTimestamp: serverTimestamp(),
+                   popularity: 0,
+                   isGlobal: true
+               };
+               
+               const docRef = await addDoc(confessionsRef, confession);
+               console.log('Confession added to Firebase with ID:', docRef.id);
+               
+               saveConfessionLocally({
+                   ...confession,
+                   id: docRef.id
+               });
+               
+               checkDailyStreak();
+               checkAchievements();
+               
+               return true;
+           } catch (error) {
+               console.error("Error adding confession to Firebase:", error);
+               showErrorMessage("Error sharing globally. The confession was saved locally.");
+               
+               addLocalConfession(text, category, memeUrl);
+               return false;
+           }
+       }
+
+       function saveConfessionLocally(confession) {
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           confessions.unshift(confession);
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+       }
+
+       function addLocalConfession(text, category = null, memeUrl = null) {
+           try {
+               const walletType = document.getElementById('wallet-type').value;
+               const walletAddress = document.getElementById('wallet-address').value.trim();
+               
+               const confession = {
+                   id: 'conf_' + Date.now(),
+                   userId: userId,
+                   text: text,
+                   category: category,
+                   timestamp: new Date().toISOString(),
+                   views: 0,
+                   reactions: {
+                       like: 0,
+                       dislike: 0,
+                       love: 0,
+                       haha: 0,
+                       wow: 0,
+                       sad: 0
+                   },
+                   replies: [],
+                   reports: 0,
+                   reported: false,
+                   tips: 0,
+                   donors: [],
+                   walletType: walletType || null,
+                   walletAddress: walletAddress || null,
+                   memeUrl: isValidImageUrl(memeUrl) ? memeUrl : null,
+                   isGlobal: false
+               };
+               
+               let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+               confessions.unshift(confession);
+               
+               localStorage.setItem('confessions', JSON.stringify(confessions));
+               
+               loadConfessions();
+               updateStatistics();
+               checkDailyStreak();
+               checkAchievements();
+               
+               return true;
+           } catch (error) {
+               console.error("Error adding confession:", error);
+               showErrorMessage("There was an error saving your confession. Please try again.");
+               return false;
+           }
+       }
+
+       // Save user data to Firebase
+       async function saveUserDataToFirebase(userData) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, setDoc } = window.firebaseServices;
+               
+               const userRef = doc(db, FIREBASE_SETTINGS.userCollection, userId);
+               
+               await setDoc(userRef, {
+                   ...userData,
+                   lastSynced: new Date().toISOString()
+               });
+               
+               console.log('User data saved to Firebase');
+           } catch (error) {
+               console.error("Error saving user data to Firebase:", error);
+           }
+       }
+
+       // Event handlers
+       function handleSearch(e) {
+           searchQuery = e.target.value;
+           currentPage = 1;
+           
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           } else {
+               loadConfessions();
+           }
+       }
+
+       function handleSortChange(e) {
+           currentSort = e.target.value;
+           currentPage = 1;
+           
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           } else {
+               loadConfessions();
+           }
+       }
+
+       function handleCategoryFilterChange(e) {
+           currentCategory = e.target.value;
+           currentPage = 1;
+           
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           } else {
+               loadConfessions();
+           }
+       }
+
+       function handleAdminLogin() {
+           const password = document.getElementById('admin-password').value;
+           const adminPanel = document.getElementById('admin-panel');
+           
+           if (password === 'admin123') {
+               adminPanel.style.display = 'block';
+               document.getElementById('admin-password').value = '';
+               document.body.classList.add('admin-mode');
+               sessionStorage.setItem('isAdmin', 'true');
+           } else {
+               alert('Incorrect password');
+           }
+       }
+
+       function clearAllConfessions() {
+           if (confirm('Are you sure you want to clear all confessions? This action cannot be undone.')) {
+               if (isGlobalMode && firebaseInitialized) {
+                   clearAllGlobalConfessions();
+               } else {
+                   clearAllLocalConfessions();
+               }
+           }
+       }
+
+       function clearAllLocalConfessions() {
+           localStorage.removeItem('confessions');
+           localStorage.removeItem('archived_confessions');
+           
+           if (!isGlobalMode) {
+               loadConfessions();
+           }
+           
+           updateStatistics();
+       }
+
+       function syncToFirebase() {
+           showToast('Sync to Firebase feature coming soon!', 'success');
+       }
+
+       function updateStatistics() {
+           const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const today = new Date();
+           const todayConfessions = confessions.filter(c => {
+               const confDate = new Date(c.timestamp);
+               return confDate.toDateString() === today.toDateString();
+           });
+           
+           document.getElementById('total-confessions-stat').textContent = confessions.length;
+           document.getElementById('today-confessions-stat').textContent = todayConfessions.length;
+           document.getElementById('active-users-stat').textContent = getLocalActiveUsers();
+           
+           // Update hero stats as well
+           document.getElementById('total-confessions').textContent = confessions.length;
+           document.getElementById('today-confessions').textContent = todayConfessions.length;
+           document.getElementById('active-users').textContent = getLocalActiveUsers();
+       }
+
+       function getLocalActiveUsers() {
+           let activeUsers = 0;
+           for (let i = 0; i < localStorage.length; i++) {
+               const key = localStorage.key(i);
+               if (key.startsWith('userData_')) {
+                   activeUsers++;
+               }
+           }
+           return activeUsers;
+       }
+
+       function autoArchiveOldConfessions() {
+           if (isGlobalMode) return;
+           
+           const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           let archivedConfessions = JSON.parse(localStorage.getItem('archived_confessions')) || [];
+           
+           const now = new Date();
+           const cutoffDate = new Date(now.getTime() - (AUTO_ARCHIVE_DAYS * 24 * 60 * 60 * 1000));
+           
+           const newConfessions = confessions.filter(confession => {
+               const confessionDate = new Date(confession.timestamp);
+               if (confessionDate < cutoffDate) {
+                   archivedConfessions.push(confession);
+                   return false;
+               }
+               return true;
+           });
+           
+           if (newConfessions.length !== confessions.length) {
+               localStorage.setItem('confessions', JSON.stringify(newConfessions));
+               localStorage.setItem('archived_confessions', JSON.stringify(archivedConfessions));
+               loadConfessions();
+           }
+       }
+
+       function checkSharedConfession() {
+           const urlParams = new URLSearchParams(window.location.search);
+           const sharedConfessionId = urlParams.get('confession');
+           
+           if (sharedConfessionId) {
+               incrementViewCount(sharedConfessionId);
+               
+               let confession = getConfessionById(sharedConfessionId);
+               
+               if (confession) {
+                   highlightSharedConfession(sharedConfessionId);
+               } else {
+                   showErrorMessage('The shared confession could not be found.');
+               }
+           }
+       }
+
+       function getConfessionById(confessionId) {
+           const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           return confessions.find(c => c.id === confessionId);
+       }
+
+       function highlightSharedConfession(confessionId) {
+           setTimeout(() => {
+               const confessionElement = document.querySelector(`[data-id="${confessionId}"]`);
+               if (confessionElement) {
+                   confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                   confessionElement.style.backgroundColor = 'var(--primary-light)';
+                   setTimeout(() => {
+                       confessionElement.style.backgroundColor = '';
+                       confessionElement.style.transition = 'background-color 1s ease';
+                   }, 3000);
+               }
+           }, 500);
+       }
+
+       function incrementViewCount(confessionId) {
+           try {
+               if (isGlobalMode && firebaseInitialized) {
+                   incrementGlobalViewCount(confessionId);
+               }
+               
+               incrementLocalViewCount(confessionId);
+           } catch (error) {
+               console.error("Error incrementing view count:", error);
+           }
+       }
+
+       async function incrementGlobalViewCount(confessionId) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, updateDoc, increment } = window.firebaseServices;
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               
+               await updateDoc(confessionRef, {
+                   views: increment(1),
+                   popularity: increment(0.1)
+               });
+               
+               console.log(`View count incremented for confession ${confessionId} in Firebase`);
+           } catch (error) {
+               console.error("Error incrementing global view count:", error);
+           }
+       }
+
+       function incrementLocalViewCount(confessionId) {
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+           
+           if (confessionIndex !== -1) {
+               if (typeof confessions[confessionIndex].views !== 'number') {
+                   confessions[confessionIndex].views = 0;
+               }
+               
+               confessions[confessionIndex].views++;
+               localStorage.setItem('confessions', JSON.stringify(confessions));
+               return confessions[confessionIndex].views;
+           }
+           return 0;
+       }
+
+       function showRandomConfession() {
+           if (isGlobalMode && firebaseInitialized) {
+               showRandomGlobalConfession();
+           } else {
+               showRandomLocalConfession();
+           }
+       }
+
+       function showRandomLocalConfession() {
+           const confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           
+           if (confessions.length === 0) {
+               alert('No confessions available to show.');
+               return;
+           }
+           
+           const randomIndex = Math.floor(Math.random() * confessions.length);
+           const randomConfession = confessions[randomIndex];
+           
+           incrementViewCount(randomConfession.id);
+           
+           const sortedConfessions = applyFilters(confessions);
+           const confessionIndex = sortedConfessions.findIndex(c => c.id === randomConfession.id);
+           const page = Math.floor(confessionIndex / CONFESSIONS_PER_PAGE) + 1;
+           
+           if (page !== currentPage) {
+               changePage(page);
+           }
+           
+           setTimeout(() => {
+               const confessionElement = document.querySelector(`[data-id="${randomConfession.id}"]`);
+               if (confessionElement) {
+                   confessionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                   confessionElement.style.backgroundColor = 'var(--primary-light)';
+                   setTimeout(() => {
+                       confessionElement.style.backgroundColor = '';
+                       confessionElement.style.transition = 'background-color 1s ease';
+                   }, 2000);
+               }
+           }, 300);
+       }
+
+       function createPagination(totalPages) {
+           const paginationContainer = document.getElementById('pagination');
+           paginationContainer.innerHTML = '';
+           
+           if (totalPages <= 1) return;
+           
+           const prevBtn = document.createElement('button');
+           prevBtn.className = 'page-btn';
+           prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+           prevBtn.disabled = currentPage === 1;
+           prevBtn.onclick = () => changePage(currentPage - 1);
+           paginationContainer.appendChild(prevBtn);
+           
+           for (let i = 1; i <= totalPages; i++) {
+               if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                   const pageBtn = document.createElement('button');
+                   pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                   pageBtn.textContent = i;
+                   pageBtn.onclick = () => changePage(i);
+                   paginationContainer.appendChild(pageBtn);
+               } else if (i === currentPage - 3 || i === currentPage + 3) {
+                   const ellipsis = document.createElement('span');
+                   ellipsis.textContent = '...';
+                   ellipsis.style.margin = '0 5px';
+                   paginationContainer.appendChild(ellipsis);
+               }
+           }
+           
+           const nextBtn = document.createElement('button');
+           nextBtn.className = 'page-btn';
+           nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+           nextBtn.disabled = currentPage === totalPages;
+           nextBtn.onclick = () => changePage(currentPage + 1);
+           paginationContainer.appendChild(nextBtn);
+       }
+
+       function changePage(page) {
+           currentPage = page;
+           
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           } else {
+               loadConfessions();
+           }
+           
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+       }
+
+       function loadDonationData() {
+           const savedDonations = localStorage.getItem('donations');
+           if (savedDonations) {
+               donations = JSON.parse(savedDonations);
+           }
+           
+           const savedUserDonations = localStorage.getItem('userDonations_' + userId);
+           if (savedUserDonations) {
+               userDonations = JSON.parse(savedUserDonations);
+           }
+       }
+
+// Donation System Functions
+       function openDonationModal() {
+           document.getElementById('donation-modal').style.display = 'block';
+           
+           if (!currentTipConfessionId) {
+               const titleElement = document.querySelector('.donation-title');
+               const subtitleElement = document.querySelector('.donation-subtitle');
+               
+               if (titleElement) {
+                   titleElement.textContent = 'Support Our Community';
+               }
+               if (subtitleElement) {
+                   subtitleElement.textContent = 'Your support helps maintain this safe space for anonymous confessions';
+               }
+           }
+           
+           resetDonationForm();
+       }
+
+       function closeDonationModal() {
+           document.getElementById('donation-modal').style.display = 'none';
+           currentTipConfessionId = null;
+           resetDonationForm();
+       }
+
+       function resetDonationForm() {
+           document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+           document.querySelectorAll('.payment-method').forEach(method => method.classList.remove('selected'));
+           document.getElementById('custom-amount-container').style.display = 'none';
+           document.getElementById('custom-amount-input').value = '';
+           document.getElementById('donation-address').style.display = 'none';
+           document.getElementById('charity-donation').checked = false;
+           document.getElementById('charity-select').style.display = 'none';
+           document.getElementById('charity-select').value = '';
+           document.getElementById('donate-submit-btn').disabled = true;
+           selectedDonationAmount = null;
+           selectedPaymentMethod = null;
+       }
+
+       function selectDonationAmount(btn) {
+           document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+           btn.classList.add('selected');
+           
+           const amount = btn.dataset.amount;
+           if (amount === 'custom') {
+               document.getElementById('custom-amount-container').style.display = 'block';
+               selectedDonationAmount = document.getElementById('custom-amount-input').value;
+           } else {
+               document.getElementById('custom-amount-container').style.display = 'none';
+               selectedDonationAmount = amount;
+           }
+           
+           updateDonateButton();
+       }
+
+       function selectPaymentMethod(method) {
+           document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+           method.classList.add('selected');
+           selectedPaymentMethod = method.dataset.method;
+           
+           const addressDiv = document.getElementById('donation-address');
+           addressDiv.innerHTML = `
+               <div style="font-weight: 600; margin-bottom: 8px;">Send payment to:</div>
+               <div style="margin-bottom: 10px;">${DONATION_ADDRESSES[selectedPaymentMethod]}</div>
+               <button class="copy-address-btn" onclick="copyAddress('${DONATION_ADDRESSES[selectedPaymentMethod]}')">
+                   <i class="fas fa-copy"></i> Copy Address
+               </button>
+           `;
+           addressDiv.style.display = 'block';
+           
+           updateDonateButton();
+       }
+
+       function copyAddress(address) {
+           if (!address) {
+               showErrorMessage('No address available');
+               return;
+           }
+           
+           navigator.clipboard.writeText(address).then(() => {
+               showSuccessMessage('Address copied to clipboard!');
+           }).catch(() => {
+               const textArea = document.createElement('textarea');
+               textArea.value = address;
+               document.body.appendChild(textArea);
+               textArea.select();
+               try {
+                   document.execCommand('copy');
+                   showSuccessMessage('Address copied to clipboard!');
+               } catch (err) {
+                   prompt('Copy this address:', address);
+               }
+               document.body.removeChild(textArea);
+           });
+       }
+
+       function toggleCharityDropdown() {
+           const charitySelect = document.getElementById('charity-select');
+           if (document.getElementById('charity-donation').checked) {
+               charitySelect.style.display = 'block';
+           } else {
+               charitySelect.style.display = 'none';
+               charitySelect.value = '';
+           }
+       }
+
+       function updateDonateButton() {
+           const submitBtn = document.getElementById('donate-submit-btn');
+           if (selectedDonationAmount && selectedPaymentMethod && parseFloat(selectedDonationAmount) > 0) {
+               submitBtn.disabled = false;
+           } else {
+               submitBtn.disabled = true;
+           }
+       }
+
+       function processDonation() {
+           const amount = parseFloat(selectedDonationAmount);
+           if (!amount || amount <= 0) {
+               showErrorMessage('Please enter a valid donation amount');
+               return;
+           }
+           
+           const isCharity = document.getElementById('charity-donation').checked;
+           const charityType = document.getElementById('charity-select').value;
+           
+           const donation = {
+               id: 'donation_' + Date.now(),
+               userId: userId,
+               amount: amount,
+               method: selectedPaymentMethod,
+               isCharity: isCharity,
+               charityType: charityType,
+               timestamp: new Date().toISOString(),
+               verified: false
+           };
+           
+           if (currentTipConfessionId) {
+               donation.type = 'tip';
+               donation.confessionId = currentTipConfessionId;
+               
+               if (isGlobalMode && firebaseInitialized) {
+                   updateConfessionTipInFirebase(currentTipConfessionId, amount, userId);
+               } else {
+                   let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+                   const confessionIndex = confessions.findIndex(c => c.id === currentTipConfessionId);
+                   
+                   if (confessionIndex !== -1) {
+                       confessions[confessionIndex].tips = (confessions[confessionIndex].tips || 0) + amount;
+                       if (!confessions[confessionIndex].donors) {
+                           confessions[confessionIndex].donors = [];
+                       }
+                       confessions[confessionIndex].donors.push(userId);
+                       localStorage.setItem('confessions', JSON.stringify(confessions));
+                       
+                       const confessionOwner = confessions[confessionIndex].userId;
+                       if (confessionOwner && confessionOwner !== userId) {
+                           addKarmaToUser(confessionOwner, KARMA_POINTS.donateMedium);
+                       }
+                   }
+               }
+           } else {
+               donation.type = 'general';
+           }
+           
+           donations.push(donation);
+           userDonations.push(donation);
+           localStorage.setItem('donations', JSON.stringify(donations));
+           localStorage.setItem('userDonations_' + userId, JSON.stringify(userDonations));
+           
+           let karmaAwarded = 0;
+           if (amount <= 10) {
+               karmaAwarded = KARMA_POINTS.donateSmall;
+           } else if (amount <= 50) {
+               karmaAwarded = KARMA_POINTS.donateMedium;
+           } else {
+               karmaAwarded = KARMA_POINTS.donateLarge;
+           }
+           
+           if (isCharity) {
+               karmaAwarded += KARMA_POINTS.donateCharity;
+           }
+           
+           addKarma(karmaAwarded, 'donation');
+           checkDonationAchievements(donation);
+           showThankYouModal(amount, isCharity);
+           
+           currentTipConfessionId = null;
+           closeDonationModal();
+           
+           if (isGlobalMode) {
+               loadGlobalConfessions();
+           } else {
+               loadConfessions();
+           }
+       }
+
+       async function updateConfessionTipInFirebase(confessionId, amount, donorId) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, updateDoc, increment, arrayUnion } = window.firebaseServices;
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               
+               await updateDoc(confessionRef, {
+                   tips: increment(amount),
+                   donors: arrayUnion(donorId),
+                   popularity: increment(amount * 20)
+               });
+               
+               console.log(`Tip added to confession ${confessionId} in Firebase`);
+           } catch (error) {
+               console.error("Error updating tip in Firebase:", error);
+               showErrorMessage('Error saving tip to Firebase. The tip was processed locally.');
+           }
+       }
+
+       function showThankYouModal(amount, isCharity) {
+           const modal = document.createElement('div');
+           modal.className = 'donation-modal';
+           modal.style.display = 'block';
+           
+           modal.innerHTML = `
+               <div class="donation-modal-content thank-you-modal">
+                   <span class="close" onclick="this.closest('.donation-modal').remove()">&times;</span>
+                   <div class="thank-you-icon">
+                       <i class="fas fa-heart"></i>
+                   </div>
+                   <h2>Thank You for Your Support!</h2>
+                   <p>Your donation of $${amount} helps keep our community running.</p>
+                   ${isCharity ? '<p>10% of your donation will go to the selected charity.</p>' : ''}
+                   <p>You've earned karma points and are helping us reach our goals!</p>
+                   <button onclick="this.closest('.donation-modal').remove()" style="margin-top: 20px;">
+                       Close
+                   </button>
+               </div>
+           `;
+           
+           document.body.appendChild(modal);
+       }
+
+       function checkDonationAchievements(donation) {
+           if (userDonations.length === 1 && !userAchievements.includes('supporter')) {
+               userAchievements.push('supporter');
+               addKarma(ACHIEVEMENTS.supporter.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.supporter);
+           }
+           
+           if (donation.isCharity && !userAchievements.includes('philanthropist')) {
+               userAchievements.push('philanthropist');
+               addKarma(ACHIEVEMENTS.philanthropist.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.philanthropist);
+           }
+           
+           if (donation.amount > 100 && !userAchievements.includes('crypto_whale')) {
+               userAchievements.push('crypto_whale');
+               addKarma(ACHIEVEMENTS.cryptoWhale.karma, 'achievement');
+               showAchievement(ACHIEVEMENTS.cryptoWhale);
+           }
+           
+           saveUserData();
+       }
+
+       function addKarmaToUser(targetUserId, points) {
+           const userData = localStorage.getItem('userData_' + targetUserId);
+           if (userData) {
+               const data = JSON.parse(userData);
+               data.karma = (data.karma || 0) + points;
+               localStorage.setItem('userData_' + targetUserId, JSON.stringify(data));
+           }
+       }
+
+       function tipConfession(confessionId) {
+           const confession = getConfessionById(confessionId);
+           if (!confession) return;
+           
+           currentTipConfessionId = confessionId;
+           openDonationModal();
+           
+           const titleElement = document.querySelector('.donation-title');
+           const subtitleElement = document.querySelector('.donation-subtitle');
+           
+           if (titleElement) {
+               titleElement.textContent = 'Tip This Confession';
+           }
+           
+           if (subtitleElement) {
+               if (confession.walletAddress && confession.walletType) {
+                   subtitleElement.innerHTML = `
+                       Direct tip to author's ${confession.walletType.toUpperCase()} wallet<br>
+                       <small style="font-family: monospace; word-break: break-all;">${confession.walletAddress}</small>
+                   `;
+               } else {
+                   subtitleElement.textContent = 'Show appreciation for this confession (goes to platform)';
+               }
+           }
+           
+           if (confession.walletAddress && confession.walletType) {
+               const addressDiv = document.getElementById('donation-address');
+               addressDiv.innerHTML = `
+                   <div style="font-weight: 600; margin-bottom: 8px;">Send directly to author's wallet:</div>
+                   <div style="margin-bottom: 10px; word-break: break-all;">${confession.walletAddress}</div>
+                   <button class="copy-address-btn" onclick="copyAddress('${confession.walletAddress}')">
+                       <i class="fas fa-copy"></i> Copy Author's Address
+                   </button>
+               `;
+               addressDiv.style.display = 'block';
+               
+               const paymentMethods = document.querySelectorAll('.payment-method');
+               paymentMethods.forEach(method => {
+                   if (method.dataset.method === confession.walletType) {
+                       selectPaymentMethod(method);
+                   }
+               });
+           }
+       }
+
+       function showLeaderboard() {
+           const modal = document.getElementById('leaderboard-modal');
+           const content = document.getElementById('leaderboard-content');
+           
+           modal.style.display = 'block';
+           content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i></div>';
+           
+           const users = getLocalLeaderboardData();
+           displayLeaderboard(users);
+       }
+
+       function getLocalLeaderboardData() {
+           const users = [];
+           for (let i = 0; i < localStorage.length; i++) {
+               const key = localStorage.key(i);
+               if (key.startsWith('userData_')) {
+                   const userData = JSON.parse(localStorage.getItem(key));
+                   const userId = key.replace('userData_', '');
+                   const userDonations = JSON.parse(localStorage.getItem('userDonations_' + userId) || '[]');
+                   const totalDonated = userDonations.reduce((sum, d) => sum + d.amount, 0);
+                   
+                   users.push({
+                       id: userId,
+                       karma: userData.karma || 0,
+                       achievements: userData.achievements || [],
+                       totalDonated: totalDonated
+                   });
+               }
+           }
+           
+           users.sort((a, b) => b.karma - a.karma);
+           return users;
+       }
+
+       function displayLeaderboard(users) {
+           const content = document.getElementById('leaderboard-content');
+           
+           content.innerHTML = users.slice(0, 10).map((user, index) => {
+               const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+               const anonIdentity = generateAnonIdentity(user.id);
+               const donorBadge = user.totalDonated > 0 ? '<span class="donor-badge"><i class="fas fa-gem"></i></span>' : '';
+               const whaleBadge = user.totalDonated > 100 ? '<span class="donor-badge" style="background: linear-gradient(135deg, #00c6ff, #0072ff); margin-left: 5px;"><i class="fas fa-whale"></i></span>' : '';
+               
+               return `
+                   <div class="leaderboard-item">
+                       <span class="rank ${rankClass}">#${index + 1}</span>
+                       <div class="user-info">
+                           <span class="user-name">${anonIdentity}${donorBadge}${whaleBadge}</span>
+                           <div class="user-achievements">
+                               ${user.achievements.length} achievements | $${user.totalDonated} donated
+                           </div>
+                       </div>
+                       <span class="karma-badge">${user.karma} karma</span>
+                   </div>
+               `;
+           }).join('');
+       }
+
+       function reactToConfession(confessionId, reactionType) {
+           try {
+               if (isGlobalMode && firebaseInitialized) {
+                   reactToGlobalConfession(confessionId, reactionType);
+               } else {
+                   reactToLocalConfession(confessionId, reactionType);
+               }
+           } catch (error) {
+               console.error("Error in reactToConfession:", error);
+           }
+       }
+
+       async function reactToGlobalConfession(confessionId, reactionType) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, updateDoc, increment } = window.firebaseServices;
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               
+               await updateDoc(confessionRef, {
+                   [`reactions.${reactionType}`]: increment(1),
+                   popularity: increment(5)
+               });
+               
+               console.log(`Reaction added to confession ${confessionId} in Firebase`);
+               loadGlobalConfessions();
+           } catch (error) {
+               console.error("Error reacting to global confession:", error);
+               showErrorMessage("Error adding reaction. The reaction was processed locally.");
+               reactToLocalConfession(confessionId, reactionType);
+           }
+       }
+
+       function reactToLocalConfession(confessionId, reactionType) {
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+           
+           if (confessionIndex !== -1) {
+               if (!confessions[confessionIndex].reactions) {
+                   confessions[confessionIndex].reactions = {
+                       like: 0,
+                       dislike: 0,
+                       love: 0,
+                       haha: 0,
+                       wow: 0,
+                       sad: 0
+                   };
+               }
+               
+               confessions[confessionIndex].reactions[reactionType]++;
+               localStorage.setItem('confessions', JSON.stringify(confessions));
+               
+               const confessionOwner = confessions[confessionIndex].userId;
+               if (confessionOwner && confessionOwner !== userId) {
+                   const karmaPoints = reactionType === 'love' ? KARMA_POINTS.receiveLove : KARMA_POINTS.receiveReaction;
+                   addKarmaToUser(confessionOwner, karmaPoints);
+               }
+               
+               loadConfessions();
+           }
+       }
+
+       function toggleReplies(confessionId) {
+           const repliesContainer = document.getElementById(`replies-${confessionId}`);
+           if (repliesContainer) {
+               repliesContainer.classList.toggle('active');
+           }
+       }
+
+       function submitReply(confessionId) {
+           const replyInput = document.getElementById(`reply-input-${confessionId}`);
+           const replyText = replyInput.value.trim();
+           
+           if (!replyText) return;
+           
+           if (isGlobalMode && firebaseInitialized) {
+               submitReplyToFirebase(confessionId, replyText);
+           } else {
+               submitLocalReply(confessionId, replyText);
+           }
+           
+           replyInput.value = '';
+       }
+
+       async function submitReplyToFirebase(confessionId, replyText) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, updateDoc, arrayUnion } = window.firebaseServices;
+               
+               const reply = {
+                   id: 'reply_' + Date.now(),
+                   text: replyText,
+                   timestamp: new Date().toISOString(),
+                   userId: userId
+               };
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               
+               await updateDoc(confessionRef, {
+                   replies: arrayUnion(reply)
+               });
+               
+               console.log(`Reply added to confession ${confessionId} in Firebase`);
+               loadGlobalConfessions();
+           } catch (error) {
+               console.error("Error submitting reply to Firebase:", error);
+               showErrorMessage('Error submitting reply to Firebase. Trying locally...');
+               submitLocalReply(confessionId, replyText);
+           }
+       }
+
+       function submitLocalReply(confessionId, replyText) {
+           const reply = {
+               id: 'reply_' + Date.now(),
+               text: replyText,
+               timestamp: new Date().toISOString(),
+               userId: userId
+           };
+           
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+           
+           if (confessionIndex !== -1) {
+               if (!confessions[confessionIndex].replies) {
+                   confessions[confessionIndex].replies = [];
+               }
+               
+               confessions[confessionIndex].replies.push(reply);
+               localStorage.setItem('confessions', JSON.stringify(confessions));
+               
+               const confessionOwner = confessions[confessionIndex].userId;
+               if (confessionOwner && confessionOwner !== userId) {
+                   addKarmaToUser(confessionOwner, KARMA_POINTS.receiveReply);
+               }
+               
+               if (confessions[confessionIndex].replies.length >= 10 && 
+                   confessions[confessionIndex].userId === userId && 
+                   !userAchievements.includes('conversation_starter')) {
+                   userAchievements.push('conversation_starter');
+                   addKarma(ACHIEVEMENTS.conversationStarter.karma, 'achievement');
+                   showAchievement(ACHIEVEMENTS.conversationStarter);
+               }
+               
+               loadConfessions();
+           }
+       }
+
+       function openShareOptions(event, confessionId) {
+           event.stopPropagation();
+           const shareOptions = document.getElementById(`share-options-${confessionId}`);
+           
+           document.querySelectorAll('.share-options').forEach(el => {
+               if (el !== shareOptions) {
+                   el.classList.remove('active');
+               }
+           });
+           
+           shareOptions.classList.toggle('active');
+           
+           const button = event.currentTarget;
+           shareOptions.style.top = `${button.offsetHeight + 5}px`;
+           shareOptions.style.right = '0';
+           
+           setTimeout(() => {
+               document.addEventListener('click', function closeShareOptions(e) {
+                   if (!shareOptions.contains(e.target) && e.target !== button) {
+                       shareOptions.classList.remove('active');
+                       document.removeEventListener('click', closeShareOptions);
+                   }
+               });
+           }, 100);
+       }
+
+       function shareToTwitter(confessionId) {
+           const confession = getConfessionById(confessionId);
+           if (confession) {
+               const text = confession.text.substring(0, 200) + (confession.text.length > 200 ? '...' : '');
+               const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+               const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}&hashtags=confession,anonymous`;
+               window.open(twitterUrl, '_blank');
+           }
+       }
+
+       function copyShareLink(confessionId) {
+           const url = `${window.location.origin}${window.location.pathname}?confession=${confessionId}`;
+           navigator.clipboard.writeText(url).then(() => {
+               showSuccessMessage('Link copied to clipboard!');
+           }).catch(() => {
+               prompt('Copy this link:', url);
+           });
+       }
+
+       function createShareCard(confessionId) {
+           showToast('Share card feature coming soon!', 'success');
+       }
+
+       function reportConfession(confessionId) {
+           try {
+               if (isGlobalMode && firebaseInitialized) {
+                   reportGlobalConfession(confessionId);
+               } else {
+                   reportLocalConfession(confessionId);
+               }
+           } catch (error) {
+               console.error("Error in reportConfession:", error);
+           }
+       }
+
+       async function reportGlobalConfession(confessionId) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, updateDoc, increment } = window.firebaseServices;
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               
+               await updateDoc(confessionRef, {
+                   reports: increment(1),
+                   reported: true
+               });
+               
+               console.log(`Confession ${confessionId} reported in Firebase`);
+               loadGlobalConfessions();
+               alert('Thank you for reporting. We will review this confession.');
+           } catch (error) {
+               console.error("Error reporting global confession:", error);
+               showErrorMessage("Error reporting confession. The report was processed locally.");
+               reportLocalConfession(confessionId);
+           }
+       }
+
+       function reportLocalConfession(confessionId) {
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           const confessionIndex = confessions.findIndex(c => c.id === confessionId);
+           
+           if (confessionIndex !== -1) {
+               if (!confessions[confessionIndex].reports) {
+                   confessions[confessionIndex].reports = 0;
+               }
+               
+               confessions[confessionIndex].reports++;
+               
+               if (confessions[confessionIndex].reports >= 5) {
+                   confessions[confessionIndex].reported = true;
+               }
+               
+               localStorage.setItem('confessions', JSON.stringify(confessions));
+               loadConfessions();
+               alert('Thank you for reporting. We will review this confession.');
+           }
+       }
+
+       function deleteConfession(confessionId) {
+           if (confirm('Are you sure you want to delete this confession?')) {
+               if (isGlobalMode && firebaseInitialized) {
+                   deleteGlobalConfession(confessionId);
+               } else {
+                   deleteLocalConfession(confessionId);
+               }
+           }
+       }
+
+       async function deleteGlobalConfession(confessionId) {
+           try {
+               if (!window.firebaseServices) {
+                   throw new Error('Firebase services not available');
+               }
+               
+               const { db, doc, deleteDoc } = window.firebaseServices;
+               
+               const confessionRef = doc(db, FIREBASE_SETTINGS.collection, confessionId);
+               await deleteDoc(confessionRef);
+               
+               console.log(`Confession ${confessionId} deleted from Firebase`);
+               deleteLocalConfession(confessionId, false);
+               loadGlobalConfessions();
+           } catch (error) {
+               console.error("Error deleting global confession:", error);
+               showErrorMessage("Error deleting confession. The deletion was processed locally.");
+               deleteLocalConfession(confessionId);
+           }
+       }
+
+       function deleteLocalConfession(confessionId, reload = true) {
+           let confessions = JSON.parse(localStorage.getItem('confessions')) || [];
+           confessions = confessions.filter(c => c.id !== confessionId);
+           localStorage.setItem('confessions', JSON.stringify(confessions));
+           
+           if (reload) {
+               loadConfessions();
+               updateStatistics();
+           }
+       }
+
+       function closeShareCardModal() {
+           const modal = document.getElementById('share-card-modal');
+           modal.style.display = 'none';
+       }
+
+       // Additional placeholder functions for Firebase operations not fully implemented
+       async function showRandomGlobalConfession() {
+           showToast('Random global confession feature coming soon!', 'success');
+       }
+
+       async function clearAllGlobalConfessions() {
+           showToast('This feature is restricted for safety', 'error');
+       }
+
+       // Initialize everything when DOM is ready
        document.addEventListener('DOMContentLoaded', function() {
            initializeApp();
        });
