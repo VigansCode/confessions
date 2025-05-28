@@ -397,6 +397,99 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
         }
 
+        /* Contract Address Bar */
+       .contract-bar {
+           position: fixed;
+           top: 50%;
+           left: 30px;
+           transform: translateY(-50%);
+           background: var(--glass-bg);
+           backdrop-filter: blur(20px);
+           border: 1px solid var(--glass-border);
+           border-radius: 20px;
+           padding: 20px;
+           width: 280px;
+           z-index: 100;
+           opacity: 0;
+           animation: slideInLeft 1s ease 2s forwards;
+           cursor: pointer;
+           transition: all 0.3s ease;
+       }
+
+       .contract-bar:hover {
+           transform: translateY(-50%) translateX(5px);
+           box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+       }
+
+       .contract-header {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           margin-bottom: 15px;
+           color: var(--text-color);
+           font-weight: 600;
+       }
+
+       .contract-header i {
+           color: var(--crypto-color);
+           animation: pulse 2s infinite;
+       }
+
+       .contract-address {
+           font-family: monospace;
+           font-size: 0.85rem;
+           color: var(--text-color);
+           background: rgba(245, 158, 11, 0.1);
+           padding: 12px;
+           border-radius: 10px;
+           border: 1px solid rgba(245, 158, 11, 0.3);
+           word-break: break-all;
+           margin-bottom: 10px;
+           transition: all 0.3s ease;
+       }
+
+       .contract-address:hover {
+           background: rgba(245, 158, 11, 0.2);
+           border-color: var(--crypto-color);
+       }
+
+       .contract-copy-btn {
+           width: 100%;
+           background: linear-gradient(135deg, var(--crypto-color), #e6951e);
+           color: white;
+           border: none;
+           padding: 10px;
+           border-radius: 8px;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 8px;
+           font-size: 0.9rem;
+       }
+
+       .contract-copy-btn:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+       }
+
+       .contract-copied {
+           background: var(--success-color) !important;
+       }
+
+       @keyframes slideInLeft {
+           from {
+               opacity: 0;
+               transform: translateX(-100px) translateY(-50%);
+           }
+           to {
+               opacity: 1;
+               transform: translateX(0) translateY(-50%);
+           }
+       }
+
         /* Live Activity Feed */
         .live-activity {
             position: fixed;
@@ -2147,6 +2240,21 @@ left: 10px;
            </div>
        </div>
    </section>
+
+   <!-- Contract Address Bar -->
+<div class="contract-bar" onclick="copyContractAddress()">
+    <div class="contract-header">
+        <i class="fas fa-file-contract"></i>
+        <span>Contract Address</span>
+    </div>
+    <div class="contract-address" id="contract-address">
+        0x1234567890abcdef1234567890abcdef12345678
+    </div>
+    <button class="contract-copy-btn" id="contract-copy-btn">
+        <i class="fas fa-copy"></i>
+        <span>Click to Copy</span>
+    </button>
+</div>
 
    <!-- Live Activity Feed -->
    <div class="live-activity">
@@ -5095,6 +5203,52 @@ feed.insertBefore(newItem, feed.firstChild);
            }
        }
    }
+
+   // Contract Address Functionality
+function copyContractAddress() {
+    const contractAddress = document.getElementById('contract-address').textContent.trim();
+    const copyBtn = document.getElementById('contract-copy-btn');
+    const btnText = copyBtn.querySelector('span');
+    
+    if (!contractAddress) {
+        showErrorMessage('No contract address available');
+        return;
+    }
+    
+    navigator.clipboard.writeText(contractAddress).then(() => {
+        // Visual feedback
+        copyBtn.classList.add('contract-copied');
+        btnText.textContent = 'Copied!';
+        
+        showSuccessMessage('Contract address copied to clipboard!');
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            copyBtn.classList.remove('contract-copied');
+            btnText.textContent = 'Click to Copy';
+        }, 2000);
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = contractAddress;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            copyBtn.classList.add('contract-copied');
+            btnText.textContent = 'Copied!';
+            showSuccessMessage('Contract address copied to clipboard!');
+            
+            setTimeout(() => {
+                copyBtn.classList.remove('contract-copied');
+                btnText.textContent = 'Click to Copy';
+            }, 2000);
+        } catch (err) {
+            prompt('Copy this contract address:', contractAddress);
+        }
+        document.body.removeChild(textArea);
+    });
+}
 
    // Additional placeholder functions for Firebase operations not fully implemented
    async function showRandomGlobalConfession() {
