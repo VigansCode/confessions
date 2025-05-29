@@ -271,8 +271,8 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #000000;
+    border: 1px solid #000000;
     color: var(--text-color);
     text-decoration: none;
     transition: all 0.3s ease;
@@ -297,6 +297,7 @@
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    filter: brightness(0) invert(1);
 }
 
 .social-icon i {
@@ -304,10 +305,10 @@
 }
 
 .social-icon-img {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
-    filter: brightness(0.8);
+    filter: brightness(0) invert(1);
     transition: all 0.3s ease;
 }
 .social-icon:hover .social-icon-img {
