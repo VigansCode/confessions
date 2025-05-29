@@ -278,6 +278,17 @@
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-icon::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: -1;
 }
 
 .social-icon:hover {
@@ -2273,7 +2284,7 @@
     <a href="#" class="nav-link" id="global-link">Local</a>
     <div class="social-icons">
         <a href="https://twitter.com/anonfess_lol" target="_blank" class="social-icon" title="Follow us on X">
-            <i class="fab fa-x-twitter"></i>
+<i class="fab fa-twitter"></i>
         </a>
         <a href="https://pump.fun" target="_blank" class="social-icon" title="Pump.fun">
             <i class="fas fa-rocket"></i>
