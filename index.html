@@ -257,6 +257,41 @@
             color: var(--karma-gold);
         }
 
+        /* Social Icons */
+.social-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-size: 1rem;
+}
+
+.social-icon:hover {
+    transform: translateY(-2px);
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.social-icon i {
+    font-size: 0.9rem;
+}
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -2142,6 +2177,16 @@
               gap: 15px;
           }
 
+          .social-icons {
+    gap: 10px;
+}
+
+.social-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+}
+
           .hero h1 {
               font-size: 3rem;
           }
@@ -2221,21 +2266,32 @@
 <div class="logo-container">
 <img src="https://github.com/VigansCode/confessions/raw/main/raw.png?v=2" alt="Anonfess" class="logo-icon">
 </div>
-      <div class="nav-links">
-          <a href="#" class="nav-link" id="home-link">Home</a>
-          <a href="#" class="nav-link" id="about-link">About</a>
-          <a href="#" class="nav-link" id="rules-link">Rules</a>
-          <a href="#" class="nav-link" id="global-link">Local</a>
-          <button class="support-btn" id="donate-nav-btn">
-              <i class="fas fa-heart"></i>
-              Support
-          </button>
-          <div class="karma-display" id="karma-display">
-              <i class="fas fa-star"></i>
-              <span id="user-karma">0</span> Karma
-          </div>
-      </div>
-  </nav>
+<div class="nav-links">
+    <a href="#" class="nav-link" id="home-link">Home</a>
+    <a href="#" class="nav-link" id="about-link">About</a>
+    <a href="#" class="nav-link" id="rules-link">Rules</a>
+    <a href="#" class="nav-link" id="global-link">Local</a>
+    <div class="social-icons">
+        <a href="https://twitter.com/anonfess_lol" target="_blank" class="social-icon" title="Follow us on X">
+            <i class="fab fa-x-twitter"></i>
+        </a>
+        <a href="https://pump.fun" target="_blank" class="social-icon" title="Pump.fun">
+            <i class="fas fa-rocket"></i>
+        </a>
+        <a href="https://dexscreener.com" target="_blank" class="social-icon" title="Dexscreener">
+            <i class="fas fa-chart-line"></i>
+        </a>
+    </div>
+    <button class="support-btn" id="donate-nav-btn">
+        <i class="fas fa-heart"></i>
+        Support
+    </button>
+    <div class="karma-display" id="karma-display">
+        <i class="fas fa-star"></i>
+        <span id="user-karma">0</span> Karma
+    </div>
+</div>
+</nav>
 
   <!-- Hero Section -->
   <section class="hero">
