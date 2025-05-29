@@ -303,6 +303,17 @@
     font-size: 0.9rem;
 }
 
+.social-icon-img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0.8);
+    transition: all 0.3s ease;
+}
+.social-icon:hover .social-icon-img {
+    filter: brightness(1) invert(1);
+}
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -2282,17 +2293,17 @@
     <a href="#" class="nav-link" id="about-link">About</a>
     <a href="#" class="nav-link" id="rules-link">Rules</a>
     <a href="#" class="nav-link" id="global-link">Local</a>
-    <div class="social-icons">
-        <a href="https://twitter.com/anonfess_lol" target="_blank" class="social-icon" title="Follow us on X">
-<i class="fab fa-twitter"></i>
-        </a>
-        <a href="https://pump.fun" target="_blank" class="social-icon" title="Pump.fun">
-            <i class="fas fa-rocket"></i>
-        </a>
-        <a href="https://dexscreener.com" target="_blank" class="social-icon" title="Dexscreener">
-            <i class="fas fa-chart-line"></i>
-        </a>
-    </div>
+<div class="social-icons">
+    <a href="https://twitter.com/anonfess_lol" target="_blank" class="social-icon" title="Follow us on X">
+        <img src="https://github.com/VigansCode/confessions/raw/main/x.png" alt="X" class="social-icon-img">
+    </a>
+    <a href="https://pump.fun" target="_blank" class="social-icon" title="Pump.fun">
+        <img src="https://github.com/VigansCode/confessions/raw/main/pump.png" alt="Pump.fun" class="social-icon-img">
+    </a>
+    <a href="https://dexscreener.com" target="_blank" class="social-icon" title="Dexscreener">
+        <img src="https://github.com/VigansCode/confessions/raw/main/dexscreener.png" alt="Dexscreener" class="social-icon-img">
+    </a>
+</div>
     <button class="support-btn" id="donate-nav-btn">
         <i class="fas fa-heart"></i>
         Support
