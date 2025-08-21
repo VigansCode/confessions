@@ -3230,22 +3230,22 @@ async function createFirstConfession() {
       }
 
       // Generate consistent anonymous identities
-      function generateAnonIdentity(userId) {
-          let hash = 0;
-          for (let i = 0; i < userId.length; i++) {
-              hash = ((hash << 5) - hash) + userId.charCodeAt(i);
-              hash |= 0;
-          }
-          
-          const adjectives = ['Based', 'Bullish', 'Bearish', 'Diamond', 'Paper', 'Degen', 'Anon', 'Crypto', 'Moon', 'Whale', 'Ape'];
-          const nouns = ['Trader', 'Holder', 'Ape', 'Degen', 'Wallet', 'Bull', 'Bear', 'Shrimp', 'Whale', 'Dolphin'];
-          
-          const adjIndex = Math.abs(hash) % adjectives.length;
-          const nounIndex = Math.abs(hash >> 8) % nouns.length;
-          const number = Math.abs(hash) % 1000;
-          
-          return `${adjectives[adjIndex]}${nouns[nounIndex]}${number}`;
-      }
+function generateAnonIdentity(userId) {
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+        hash = ((hash << 5) - hash) + userId.charCodeAt(i);
+        hash |= 0;
+    }
+    
+    const adjectives = ['Repentant', 'Seeking', 'Lost', 'Faithful', 'Humble', 'Broken', 'Hopeful', 'Weary', 'Devoted', 'Struggling', 'Penitent', 'Anonymous', 'Confessing', 'Praying'];
+    const nouns = ['Soul', 'Sinner', 'Believer', 'Pilgrim', 'Seeker', 'Child', 'Servant', 'Heart', 'Spirit', 'Wanderer', 'Confessor', 'Penitent'];
+    
+    const adjIndex = Math.abs(hash) % adjectives.length;
+    const nounIndex = Math.abs(hash >> 8) % nouns.length;
+    const number = Math.abs(hash) % 1000;
+    
+    return `${adjectives[adjIndex]}${nouns[nounIndex]}${number}`;
+}
 
       // Calculate degen score for a user
       function calculateDegenScore(userId) {
