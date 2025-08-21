@@ -2405,11 +2405,12 @@
         <div class="activity-pulse"></div>
         <span>Live Activity</span>
     </div>
-<div id="activity-feed">
-    <div class="activity-item">Someone confessed their deepest sin</div>
-    <div class="activity-item">Anonymous found absolution through confession</div>
-    <div class="activity-item">A soul unburdened themselves in Greed</div>
-    <div class="activity-item">Someone earned their Penitence badge</div>
+    <div id="activity-feed">
+        <div class="activity-item">Anonymous confessed in Pride category</div>
+        <div class="activity-item">Someone found peace through confession</div>
+        <div class="activity-item">New confession in Wrath category</div>
+        <div class="activity-item">Community reached 13K confessions!</div>
+    </div>
 </div>
 
   <!-- Categories Section -->
@@ -3047,23 +3048,17 @@
           requestAnimationFrame(update);
       }
 
-function updateLiveActivity() {
-    const activities = [
-        "Someone confessed their deepest sin",
-        "Anonymous found absolution through confession", 
-        "A soul unburdened themselves in Greed",
-        "Someone earned their Penitence badge",
-        "Anonymous sought forgiveness for Pride",
-        "A confession was heard in the booth",
-        "Someone repented their sins in Wrath",
-        "Anonymous earned their Redemption badge",
-        "A soul confessed their struggle with Envy",
-        "Someone found peace through absolution",
-        "Anonymous shared their burden in Sloth",
-        "A confession brought healing and hope",
-        "Someone earned their Forgiveness badge",
-        "Anonymous received spiritual guidance"
-    ];
+      function updateLiveActivity() {
+          const activities = [
+              "Anonymous shared in Trading category",
+              "Someone just earned their first badge",
+              "New confession in Crypto category", 
+              "Community reached 13K confessions!",
+              "Anonymous received 50+ reactions",
+              "New member joined the community",
+              "Someone shared their first confession",
+              "Anonymous earned Diamond Hands badge"
+          ];
           
           const feed = document.getElementById('activity-feed');
           if (!feed) return;
