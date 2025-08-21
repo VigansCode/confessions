@@ -3166,48 +3166,48 @@ function updateLiveActivity() {
       }
 
       // Create the first confession to initialize the collection
-      async function createFirstConfession() {
-          try {
-              console.log("Creating first confession to initialize collection");
-              if (!window.firebaseServices) {
-                  throw new Error('Firebase services not available');
-              }
-              
-              const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
-              
-              const firstConfession = {
-                  text: "Welcome to Anonymous Confessions! This is the first confession.",
-                  userId: "system",
-                  timestamp: new Date().toISOString(),
-                  serverTimestamp: serverTimestamp(),
-                  views: 0,
-                  reactions: {
-                      like: 0,
-                      dislike: 0,
-                      love: 0,
-                      haha: 0,
-                      wow: 0,
-                      sad: 0
-                  },
-                  replies: [],
-                  reports: 0,
-                  reported: false,
-                  tips: 0,
-                  donors: [],
-                  popularity: 0,
-                  isGlobal: true,
-                  category: null
-              };
-              
-              const docRef = await addDoc(collection(db, FIREBASE_SETTINGS.collection), firstConfession);
-              console.log("First confession created with ID:", docRef.id);
-              
-              return true;
-          } catch (error) {
-              console.error("Error creating first confession:", error);
-              return false;
-          }
-      }
+async function createFirstConfession() {
+    try {
+        console.log("Creating first confession to initialize collection");
+        if (!window.firebaseServices) {
+            throw new Error('Firebase services not available');
+        }
+        
+        const { db, collection, addDoc, serverTimestamp } = window.firebaseServices;
+        
+        const firstConfession = {
+            text: "Welcome to the Confession Booth! This sacred space is ready to receive your confessions.",
+            userId: "system",
+            timestamp: new Date().toISOString(),
+            serverTimestamp: serverTimestamp(),
+            views: 0,
+            reactions: {
+                like: 0,
+                dislike: 0,
+                love: 0,
+                haha: 0,
+                wow: 0,
+                sad: 0
+            },
+            replies: [],
+            reports: 0,
+            reported: false,
+            tips: 0,
+            donors: [],
+            popularity: 0,
+            isGlobal: true,
+            category: null
+        };
+        
+        const docRef = await addDoc(collection(db, FIREBASE_SETTINGS.collection), firstConfession);
+        console.log("First confession created with ID:", docRef.id);
+        
+        return true;
+    } catch (error) {
+        console.error("Error creating first confession:", error);
+        return false;
+    }
+}
 
       // Update the connection status indicator
       function updateConnectionStatus(status) {
