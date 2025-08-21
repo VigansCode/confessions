@@ -2405,13 +2405,12 @@
           <div class="activity-pulse"></div>
           <span>Live Activity</span>
       </div>
-      <div id="activity-feed">
-          <div class="activity-item">Anonymous shared in Trading category</div>
-          <div class="activity-item">Someone just earned their first badge</div>
-          <div class="activity-item">New confession in Crypto category</div>
-          <div class="activity-item">Community reached 13K confessions!</div>
-      </div>
-  </div>
+<div id="activity-feed">
+    <div class="activity-item">Anonymous confessed in Pride category</div>
+    <div class="activity-item">Someone found peace through confession</div>
+    <div class="activity-item">New confession in Wrath category</div>
+    <div class="activity-item">Community reached 13K confessions!</div>
+</div>
 
   <!-- Categories Section -->
   <section class="categories-section">
@@ -3048,39 +3047,45 @@
           requestAnimationFrame(update);
       }
 
-      function updateLiveActivity() {
-          const activities = [
-              "Anonymous shared in Trading category",
-              "Someone just earned their first badge",
-              "New confession in Crypto category", 
-              "Community reached 13K confessions!",
-              "Anonymous received 50+ reactions",
-              "New member joined the community",
-              "Someone shared their first confession",
-              "Anonymous earned Diamond Hands badge"
-          ];
-          
-          const feed = document.getElementById('activity-feed');
-          if (!feed) return;
-          
-          setInterval(() => {
-              const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-              const newItem = document.createElement('div');
-              newItem.className = 'activity-item';
-              newItem.textContent = randomActivity;
-              newItem.style.opacity = '0';
-              
-              feed.insertBefore(newItem, feed.firstChild);
-              
-              setTimeout(() => {
-                  newItem.style.opacity = '1';
-              }, 100);
-              
-              if (feed.children.length > 4) {
-                  feed.removeChild(feed.lastChild);
-              }
-          }, 5000);
-      }
+function updateLiveActivity() {
+    const activities = [
+        "Someone confessed their sins in Pride category",
+        "Anonymous found peace through confession",
+        "New confession in Wrath category",
+        "Community reached 13K confessions!",
+        "Someone received forgiveness and healing",
+        "New soul entered the confession booth",
+        "Anonymous shared their burden in Greed",
+        "Someone earned their Repentance badge",
+        "Anonymous confessed in Envy category", 
+        "New member joined our sanctuary",
+        "Someone found redemption through confession",
+        "Anonymous shared their struggle with Sloth",
+        "Community member earned Forgiveness badge",
+        "Someone received 50+ prayers and support"
+    ];
+    
+    const feed = document.getElementById('activity-feed');
+    if (!feed) return;
+    
+    setInterval(() => {
+        const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+        const newItem = document.createElement('div');
+        newItem.className = 'activity-item';
+        newItem.textContent = randomActivity;
+        newItem.style.opacity = '0';
+        
+        feed.insertBefore(newItem, feed.firstChild);
+        
+        setTimeout(() => {
+            newItem.style.opacity = '1';
+        }, 100);
+        
+        if (feed.children.length > 4) {
+            feed.removeChild(feed.lastChild);
+        }
+    }, 5000);
+}
 
       function showToast(message, type = 'success') {
           const toast = document.getElementById('toast');
