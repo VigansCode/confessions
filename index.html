@@ -3048,39 +3048,47 @@
           requestAnimationFrame(update);
       }
 
-      function updateLiveActivity() {
-          const activities = [
-              "Anonymous shared in Trading category",
-              "Someone just earned their first badge",
-              "New confession in Crypto category", 
-              "Community reached 13K confessions!",
-              "Anonymous received 50+ reactions",
-              "New member joined the community",
-              "Someone shared their first confession",
-              "Anonymous earned Diamond Hands badge"
-          ];
-          
-          const feed = document.getElementById('activity-feed');
-          if (!feed) return;
-          
-          setInterval(() => {
-              const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-              const newItem = document.createElement('div');
-              newItem.className = 'activity-item';
-              newItem.textContent = randomActivity;
-              newItem.style.opacity = '0';
-              
-              feed.insertBefore(newItem, feed.firstChild);
-              
-              setTimeout(() => {
-                  newItem.style.opacity = '1';
-              }, 100);
-              
-              if (feed.children.length > 4) {
-                  feed.removeChild(feed.lastChild);
-              }
-          }, 5000);
-      }
+function updateLiveActivity() {
+    const activities = [
+        "Someone confessed their deepest sin",
+        "Anonymous found absolution through confession",
+        "A soul unburdened themselves in Greed",
+        "Someone earned their Penitence badge",
+        "Anonymous sought forgiveness for Pride",
+        "A confession was heard in the booth",
+        "Someone repented their sins in Wrath",
+        "Anonymous earned their Redemption badge",
+        "A soul confessed their struggle with Envy",
+        "Someone found peace through absolution",
+        "Anonymous shared their burden in Sloth",
+        "A confession brought healing and hope",
+        "Someone earned their Forgiveness badge",
+        "Anonymous received spiritual guidance",
+        "A soul entered the confession booth",
+        "Someone found redemption through confession"
+    ];
+    
+    const feed = document.getElementById('activity-feed');
+    if (!feed) return;
+    
+    setInterval(() => {
+        const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+        const newItem = document.createElement('div');
+        newItem.className = 'activity-item';
+        newItem.textContent = randomActivity;
+        newItem.style.opacity = '0';
+        
+        feed.insertBefore(newItem, feed.firstChild);
+        
+        setTimeout(() => {
+            newItem.style.opacity = '1';
+        }, 100);
+        
+        if (feed.children.length > 4) {
+            feed.removeChild(feed.lastChild);
+        }
+    }, 5000);
+}
 
       function showToast(message, type = 'success') {
           const toast = document.getElementById('toast');
